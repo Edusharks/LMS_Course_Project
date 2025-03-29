@@ -18,17 +18,17 @@
         --transition-speed: 0.3s;
         --transition-ease: ease;
     }
-    
-    html { 
-        scroll-behavior: smooth; 
-        box-sizing: border-box; 
-        font-size: var(--base-font-size); 
+
+    html {
+        scroll-behavior: smooth;
+        box-sizing: border-box;
+        font-size: var(--base-font-size);
     }
-    
-    *, *:before, *:after { 
-        box-sizing: inherit; 
+
+    *, *:before, *:after {
+        box-sizing: inherit;
     }
-    
+
     body {
         font-family: var(--base-font-family);
         margin: 0;
@@ -38,46 +38,46 @@
         line-height: 1.6;
         transition: background-color var(--transition-speed) var(--transition-ease), color var(--transition-speed) var(--transition-ease);
     }
-    
-    .container { 
-        max-width: 1200px; 
-        margin: 0 auto; 
-        padding: 20px 15px; 
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px 15px;
     }
-    
-    h2 { 
-        color: var(--primary); 
-        border-bottom: 3px solid var(--secondary); 
-        padding-bottom: 8px; 
-        display: inline-block; 
-        font-size: 1.4rem; 
-        margin-top: 0; 
-        margin-bottom: 25px; 
-        transition: color var(--transition-speed) var(--transition-ease), border-color var(--transition-speed) var(--transition-ease); 
+
+    h2 {
+        color: var(--primary);
+        border-bottom: 3px solid var(--secondary);
+        padding-bottom: 8px;
+        display: inline-block;
+        font-size: 1.4rem;
+        margin-top: 0;
+        margin-bottom: 25px;
+        transition: color var(--transition-speed) var(--transition-ease), border-color var(--transition-speed) var(--transition-ease);
     }
-    
-    h3 { 
-        color: var(--dark); 
-        margin-top: 30px; 
-        margin-bottom: 15px; 
-        font-size: 1.2rem; 
+
+    h3 {
+        color: var(--dark);
+        margin-top: 30px;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
     }
-    
-    @keyframes fadeIn { 
-        from { opacity: 0; transform: translateY(10px); } 
-        to { opacity: 1; transform: translateY(0); } 
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
-    
-    .sr-only { 
-        position: absolute; 
-        width: 1px; 
-        height: 1px; 
-        padding: 0; 
-        margin: -1px; 
-        overflow: hidden; 
-        clip: rect(0, 0, 0, 0); 
-        white-space: nowrap; 
-        border-width: 0; 
+
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
     }
 
     .page-header {
@@ -95,7 +95,7 @@
         position: relative;
         transition: background var(--transition-speed) var(--transition-ease);
     }
-    
+
     .page-header img.header-image {
         width: 120px;
         height: 120px;
@@ -103,22 +103,22 @@
         border-radius: 12px;
         border: 4px solid white;
     }
-    
-    .page-header .header-title-container { 
-        flex-grow: 1; 
+
+    .page-header .header-title-container {
+        flex-grow: 1;
     }
-    
-    .page-header .header-title { 
-        color: white; 
-        margin: 0 0 8px 0; 
-        font-size: 1.9rem; 
-        text-shadow: 1px 1px 4px rgba(0,0,0,0.25); 
+
+    .page-header .header-title {
+        color: white;
+        margin: 0 0 8px 0;
+        font-size: 1.9rem;
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.25);
     }
-    
-    .page-header .header-subtitle { 
-        color: rgba(255, 255, 255, 0.95); 
-        font-size: 1.05rem; 
-        margin: 0; 
+
+    .page-header .header-subtitle {
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 1.05rem;
+        margin: 0;
     }
 
     .edit-btn, .export-btn, .back-btn {
@@ -140,34 +140,34 @@
         z-index: 10;
         text-decoration: none;
     }
-    
-    .edit-btn:hover, .export-btn:hover, .back-btn:hover { 
-        background-color: rgba(255, 255, 255, 0.5); 
-        transform: scale(1.1); 
-        box-shadow: 0 4px 9px rgba(0,0,0,0.25); 
-    }
-    
-    #course-view .page-header .edit-btn { 
-        right: 20px; 
-    }
-    
-    #course-view .page-header .export-btn { 
-        right: 75px; 
-    }
-    
-    #project-view .page-header .edit-btn { 
-        right: 20px; 
-    }
-    
-    #project-view .page-header .back-btn { 
-        right: 75px; 
-        font-size: 24px; 
+
+    .edit-btn:hover, .export-btn:hover, .back-btn:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+        transform: scale(1.1);
+        box-shadow: 0 4px 9px rgba(0,0,0,0.25);
     }
 
-    #course-view { 
-        animation: fadeIn 0.5s; 
+    #course-view .page-header .edit-btn {
+        right: 20px;
     }
-    
+
+    #course-view .page-header .export-btn {
+        right: 75px;
+    }
+
+    #project-view .page-header .edit-btn {
+        right: 20px;
+    }
+
+    #project-view .page-header .back-btn {
+        right: 75px;
+        font-size: 24px;
+    }
+
+    #course-view {
+        animation: fadeIn 0.5s;
+    }
+
     #course-description-container {
         background-color: white;
         padding: 25px;
@@ -177,11 +177,106 @@
         font-size: 1.05rem;
         line-height: 1.7;
     }
-    
-    #course-description-container h2 { 
-        margin-bottom: 15px; 
+
+    #course-description-container h2 {
+        margin-bottom: 15px;
         font-size: 1.3rem;
     }
+
+    /* --- NEW: Course Multimedia Section Styles --- */
+    #course-multimedia-section {
+        background-color: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        margin-bottom: 30px;
+        position: relative; /* For positioning the toggle button */
+        overflow: hidden; /* Prevents content overflow when minimized */
+         transition: padding-top 0.3s ease, padding-bottom 0.3s ease; /* Smooth transition */
+    }
+
+    #course-multimedia-section h2 {
+        margin-bottom: 20px;
+        font-size: 1.3rem;
+    }
+
+    #course-multimedia-content {
+        margin-top: 15px;
+        max-width: 100%;
+        overflow: hidden;
+        border-radius: 12px;
+        background-color: #f0f0f0; /* Placeholder bg */
+         transition: max-height 0.4s ease-out, opacity 0.3s ease-in;
+         max-height: 1000px; /* Large enough for content */
+         opacity: 1;
+    }
+
+    #course-multimedia-content img,
+    #course-multimedia-content iframe {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 3px 8px rgba(0,0,0,.1);
+    }
+    /* Aspect ratio for video/presentation if needed */
+    #course-multimedia-content .media-wrapper-16-9 {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 */
+        height: 0;
+        overflow: hidden;
+    }
+     #course-multimedia-content .media-wrapper-16-9 iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+     }
+
+
+    #toggle-multimedia-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: rgba(0, 0, 0, 0.1);
+        color: var(--dark);
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 1;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        transition: background-color 0.3s, transform 0.2s;
+        z-index: 5;
+        padding: 0; /* Remove default padding */
+    }
+
+    #toggle-multimedia-btn:hover {
+        background-color: rgba(0, 0, 0, 0.2);
+        transform: scale(1.05);
+    }
+
+    /* Minimized State */
+    #course-multimedia-section.multimedia-minimized {
+         padding-top: 15px; /* Reduce padding when minimized */
+         padding-bottom: 15px;
+    }
+     #course-multimedia-section.multimedia-minimized #course-multimedia-content {
+        max-height: 0;
+        opacity: 0;
+        margin-top: 0; /* Remove margin when hidden */
+        overflow: hidden; /* Ensure content is fully hidden */
+    }
+    /* --- End Course Multimedia Styles --- */
+
 
     #projectGrid {
         display: grid;
@@ -189,7 +284,7 @@
         gap: 25px;
         margin-top: 20px;
     }
-    
+
     .project-tab {
         background-color: white;
         border-radius: 15px;
@@ -203,12 +298,12 @@
         color: inherit;
         position: relative;
     }
-    
+
     .project-tab:hover {
         transform: translateY(-6px);
         box-shadow: 0 10px 25px rgba(0,0,0,0.12);
     }
-    
+
     .project-tab img {
         width: 100%;
         height: 200px;
@@ -216,7 +311,7 @@
         display: block;
         border-bottom: 1px solid #eee;
     }
-    
+
     .project-tab-info {
         padding: 20px 15px;
         text-align: center;
@@ -226,14 +321,14 @@
         align-items: center;
         justify-content: center;
     }
-    
+
     .project-tab-info span {
         font-weight: 600;
         color: var(--primary);
         font-size: 1.1rem;
         transition: color var(--transition-speed) var(--transition-ease);
     }
-    
+
     .completion-tick {
         position: absolute;
         top: 12px;
@@ -256,19 +351,19 @@
     #project-view {
         animation: fadeIn 0.5s;
     }
-    
-    #project-view .page-header .header-image { 
-        width: 100px; 
-        height: 100px; 
-        border-radius: 10px; 
+
+    #project-view .page-header .header-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 10px;
     }
-    
-    #project-view .page-header .header-title { 
-        font-size: 1.7rem; 
+
+    #project-view .page-header .header-title {
+        font-size: 1.7rem;
     }
-    
-    #project-view .page-header .header-subtitle { 
-        font-size: 1rem; 
+
+    #project-view .page-header .header-subtitle {
+        font-size: 1rem;
     }
 
     .progress-container {
@@ -279,7 +374,7 @@
         height: 12px;
         overflow: hidden;
     }
-    
+
     .progress-bar {
         height: 100%;
         background: linear-gradient(90deg, var(--primary), var(--secondary));
@@ -287,7 +382,7 @@
         width: 0%;
         transition: width .5s ease-in-out, background var(--transition-speed) var(--transition-ease);
     }
-    
+
     #projectTabs {
         display: flex;
         gap: 10px;
@@ -296,18 +391,18 @@
         padding-bottom: 8px;
         -webkit-overflow-scrolling: touch;
     }
-    
+
     #projectTabs::-webkit-scrollbar {
         height: 4px;
         background-color: #eee;
         border-radius: 2px;
     }
-    
+
     #projectTabs::-webkit-scrollbar-thumb {
         background-color: var(--primary);
         border-radius: 2px;
     }
-    
+
     #projectTabs .tab {
         padding: 10px 20px;
         background-color: #fff;
@@ -321,20 +416,20 @@
         transition: background-color .3s, color .3s, transform .2s, box-shadow .3s;
         border: 1px solid #eee;
     }
-    
+
     #projectTabs .tab.active {
         background-color: var(--primary);
         color: #fff;
         transform: translateY(-3px);
         box-shadow: 0 5px 12px rgba(var(--primary-rgb, 94, 129, 244),.3);
     }
-    
+
     #projectTabs .tab:hover:not(.active) {
         background-color: #eef2ff;
         transform: translateY(-2px);
         box-shadow: 0 4px 11px rgba(0,0,0,.08);
     }
-    
+
     #projectTabContentContainer .tab-content {
         display: none;
         background-color: #fff;
@@ -344,12 +439,12 @@
         animation: fadeIn .5s ease-out;
         margin-bottom: 25px;
     }
-    
-    #projectTabContentContainer .tab-content h2 { 
-        font-size: 1.3rem; 
-        margin-bottom: 20px; 
+
+    #projectTabContentContainer .tab-content h2 {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
     }
-    
+
     #projectTabContentContainer .tab-content.active {
         display: block;
     }
@@ -363,7 +458,7 @@
         border-radius: 12px;
         box-shadow: 0 5px 12px rgba(0,0,0,.1);
     }
-    
+
     .video-container iframe {
         position: absolute;
         top: 0;
@@ -373,12 +468,12 @@
         border-radius: 12px;
         border: none;
     }
-    
+
     .slide {
         display: none;
         text-align: center;
     }
-    
+
     .slideshow {
         position: relative;
         margin: 20px 0;
@@ -386,7 +481,7 @@
         padding: 20px;
         border-radius: 12px;
     }
-    
+
     .slide-content-wrapper {
         position: relative;
         padding-bottom: 56.25%;
@@ -397,7 +492,7 @@
         background-color: #eee;
         border-radius: 10px;
     }
-    
+
     .slide iframe, .slide img {
         position: absolute;
         top: 0;
@@ -409,18 +504,18 @@
         box-shadow: 0 4px 12px rgba(0,0,0,.1);
         background-color: transparent;
     }
-    
+
     .slide p {
         margin: 15px 0 0;
         font-size: .95rem;
         color: #444;
     }
-    
+
     .slide.active {
         display: block;
         animation: fadeIn .5s;
     }
-    
+
     .slide-nav {
         text-align: center;
         margin-top: 20px;
@@ -428,7 +523,7 @@
         justify-content: space-between;
         gap: 15px;
     }
-    
+
     .slide-nav button {
         background-color: var(--primary);
         color: #fff;
@@ -440,13 +535,13 @@
         transition: background-color .3s, transform .2s, box-shadow .3s;
         box-shadow: 0 2px 5px rgba(0,0,0,.1);
     }
-    
+
     .slide-nav button:hover {
         background-color: #4a6cdc;
         transform: scale(1.05);
         box-shadow: 0 4px 8px rgba(0,0,0,.15);
     }
-    
+
     .step {
         display: flex;
         gap: 20px;
@@ -459,7 +554,7 @@
         box-shadow: 0 2px 6px rgba(0,0,0,.05);
         transition: border-color var(--transition-speed) var(--transition-ease);
     }
-    
+
     .step-number {
         background-color: var(--secondary);
         color: #fff;
@@ -475,13 +570,13 @@
         margin-top: 4px;
         transition: background-color var(--transition-speed) var(--transition-ease);
     }
-    
+
     .step-content {
         flex: 1;
         display: flex;
         flex-direction: column;
     }
-    
+
     .step-content strong {
         font-size: 1.1rem;
         color: var(--primary);
@@ -489,18 +584,18 @@
         margin-bottom: 8px;
         transition: color var(--transition-speed) var(--transition-ease);
     }
-    
+
     .step-content p.description {
         margin: 0 0 15px;
         font-size: 1rem;
         color: #333;
         line-height: 1.6;
     }
-    
+
     .step-content p.description:last-child {
         margin-bottom: 0;
     }
-    
+
     .step-content .step-media {
         margin-top: 15px;
         max-width: 100%;
@@ -509,7 +604,7 @@
         border-radius: 10px;
         background-color: #f0f0f0;
     }
-    
+
     .step-content .step-media img {
         display: block;
         max-width: 100%;
@@ -517,7 +612,7 @@
         border-radius: 10px;
         box-shadow: 0 3px 8px rgba(0,0,0,.1);
     }
-    
+
     .step-content .step-media iframe {
         display: block;
         width: 100%;
@@ -535,21 +630,21 @@
         box-shadow: 0 3px 10px rgba(94,129,244,.12);
         border: 1px solid #e0e8ff;
     }
-    
+
     .quiz-question p.question-text {
         margin: 0 0 20px;
         font-size: 1.05rem;
         font-weight: 700;
         color: var(--dark);
     }
-    
+
     .quiz-options {
         margin-top: 15px;
         display: flex;
         flex-direction: column;
         gap: 10px;
     }
-    
+
     .quiz-option {
         display: block;
         padding: 14px 18px;
@@ -564,32 +659,32 @@
         text-align: left;
         opacity: 1;
     }
-    
+
     .quiz-option:hover {
         background-color: #e8ecf3;
         border-color: #c4cde0;
         transform: translateX(3px);
     }
-    
+
     .quiz-option.selected {
         border-color: var(--primary);
         background-color: #e8f0fe;
         font-weight: 500;
     }
-    
+
     .quiz-option.correct {
         background-color: var(--success);
         color: #fff;
         border-color: #63c899;
         font-weight: 700;
     }
-    
+
     .quiz-option.correct.selected {
         background-color: var(--success);
         color: #fff;
         border-color: #63c899;
     }
-    
+
     .quiz-option.incorrect.selected {
         background-color: var(--danger);
         color: #fff;
@@ -599,7 +694,7 @@
         text-decoration-thickness: 2px;
         border-color: #e66a6a!important;
     }
-    
+
     .quiz-question.answered .quiz-option:not(.selected):not(.correct) {
         opacity: .6;
         cursor: default;
@@ -608,11 +703,11 @@
         text-decoration: none;
         transform: none;
     }
-    
+
     .quiz-question.answered .quiz-option.correct:not(.selected) {
         opacity: 1;
     }
-    
+
     .quiz-feedback {
         margin-top: 15px;
         padding: 12px 18px;
@@ -623,19 +718,19 @@
         border-style: solid;
         font-weight: 500;
     }
-    
+
     .quiz-feedback.correct {
         background-color: #e6f7ed;
         color: #1d6c45;
         border-color: #c3e6cb;
     }
-    
+
     .quiz-feedback.incorrect {
         background-color: #fde8e8;
         color: #9b1c1c;
         border-color: #f5c6cb;
     }
-    
+
     .final-quiz-result {
         margin-top: 25px;
         padding: 18px;
@@ -644,19 +739,19 @@
         font-weight: 700;
         font-size: 1.15rem;
     }
-    
+
     .final-quiz-result.success {
         background-color: #e6f7ed;
         color: #1d6c45;
         border: 1px solid #c3e6cb;
     }
-    
+
     .final-quiz-result.fail {
         background-color: #fde8e8;
         color: #9b1c1c;
         border: 1px solid #f5c6cb;
     }
-    
+
     .submit-btn {
         background-color: var(--accent);
         color: var(--dark);
@@ -676,13 +771,13 @@
         box-shadow: 0 3px 8px rgba(0,0,0,.15);
         transition: background-color var(--transition-speed) var(--transition-ease), color var(--transition-speed) var(--transition-ease), box-shadow var(--transition-speed) var(--transition-ease), transform var(--transition-speed) var(--transition-ease);
     }
-    
+
     .submit-btn:hover:not(:disabled) {
         background-color: #ffc833;
         box-shadow: 0 5px 12px rgba(0,0,0,.2);
         transform: translateY(-2px);
     }
-    
+
     .submit-btn:disabled {
         background-color: #ccc;
         color: #666;
@@ -704,7 +799,7 @@
         overflow-y: auto;
         padding: 40px 15px;
     }
-    
+
     .modal-content {
         background-color: #fff;
         margin: 40px auto;
@@ -715,7 +810,7 @@
         box-shadow: 0 8px 25px rgba(0,0,0,.3);
         position: relative;
     }
-    
+
     .close-modal {
         position: absolute;
         top: 15px;
@@ -729,19 +824,19 @@
         padding: 5px;
         transition: color 0.3s;
     }
-    
+
     .close-modal:hover {
         color: #333;
     }
-    
+
     .modal h2 {
         margin-bottom: 25px;
     }
-    
+
     .edit-form {
         margin-top: 25px;
     }
-    
+
     .edit-form label {
         display: block;
         margin-bottom: 6px;
@@ -749,7 +844,7 @@
         color: var(--primary);
         font-size: .95rem;
     }
-    
+
     .edit-form input[type=text], .edit-form input[type=url], .edit-form textarea, .edit-form select {
         width: 100%;
         padding: 12px;
@@ -760,13 +855,13 @@
         box-sizing: border-box;
         transition: border-color 0.3s;
     }
-    
+
     .edit-form input:focus, .edit-form textarea:focus, .edit-form select:focus {
         border-color: var(--primary);
         outline: none;
         box-shadow: 0 0 0 2px rgba(var(--primary-rgb, 94, 129, 244), 0.2);
     }
-    
+
     .edit-form textarea {
         resize: vertical;
         min-height: 80px;
@@ -786,37 +881,37 @@
         transition: background-color .3s, transform 0.2s, box-shadow 0.3s;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    
+
     .edit-form button:hover, button.remove-item-btn:hover, button.add-item-btn:hover {
         background-color: #4a6cdc;
         transform: translateY(-1px);
         box-shadow: 0 3px 6px rgba(0,0,0,0.15);
     }
-    
+
     .modal-actions {
         margin-top: 30px;
         text-align: right;
         border-top: 1px solid #eee;
         padding-top: 20px;
     }
-    
+
     .modal-actions button {
         display: inline-block;
     }
-    
+
     .modal-actions button[onclick^="save"] {
         background-color: var(--success);
     }
-    
+
     .modal-actions button[onclick^="save"]:hover {
         background-color: #63c899;
     }
-    
+
     .modal-actions button[onclick^="closeModal"] {
         background-color: #aaa;
         margin-right: 0;
     }
-    
+
     .modal-actions button[onclick^="closeModal"]:hover {
         background-color: #888;
     }
@@ -835,12 +930,12 @@
         justify-content: center;
         box-shadow: none;
     }
-    
+
     button.remove-item-btn:hover {
         background-color: #e66a6a;
         transform: scale(1.1);
     }
-    
+
     button.add-item-btn {
         background-color: var(--success);
         display: inline-block;
@@ -849,17 +944,17 @@
         margin-right: 0;
         width: fit-content;
     }
-    
+
     button.add-item-btn:hover {
         background-color: #63c899;
     }
-    
+
     .edit-section {
         margin-top: 25px;
         padding-top: 20px;
         border-top: 1px solid #eee;
     }
-    
+
     .edit-item-group {
         margin-bottom: 25px;
         padding: 20px;
@@ -869,13 +964,13 @@
         position: relative;
         box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
-    
+
     .edit-item-group .remove-item-btn {
         position: absolute;
         top: 15px;
         right: 15px;
     }
-    
+
     .edit-item-group>label {
         font-weight: 700;
         color: var(--dark);
@@ -884,33 +979,40 @@
         display: block;
         margin-bottom: 10px;
     }
-    
+
     .edit-item-group label {
         font-weight: 500;
         color: #555;
         font-size: .9rem;
     }
-    
+
     .edit-item-group input[type=text], .edit-item-group input[type=url], .edit-item-group textarea, .edit-item-group select {
         margin-bottom: 12px;
     }
-    
+
     .media-controls {
         margin-top: 15px;
         padding-top: 15px;
         border-top: 1px dashed #eee;
     }
-    
+
     .media-controls label {
         font-weight: 500;
         color: #555;
         font-size: .9rem;
     }
-    
+
     .media-url-input-container {
         margin-top: 8px;
     }
-    
+
+    /* NEW: Course Multimedia Editor Fields Container */
+    .course-multimedia-editor-fields {
+        margin-top: 8px;
+        padding-left: 10px;
+        border-left: 3px solid #eee;
+    }
+
     .incorrect-answer-label {
         font-size: .9rem;
         color: #777;
@@ -925,7 +1027,7 @@
         flex-wrap: wrap;
         align-items: center;
     }
-    
+
     .color-option {
         width: 32px;
         height: 32px;
@@ -934,13 +1036,13 @@
         border: 2px solid #ddd;
         transition: transform .2s, border-color .2s, box-shadow .2s;
     }
-    
+
     .color-option.selected {
         border: 3px solid var(--dark);
         transform: scale(1.15);
         box-shadow: 0 0 8px rgba(0,0,0,0.2);
     }
-    
+
     input[type=color] {
         width: 38px;
         height: 38px;
@@ -952,16 +1054,16 @@
         vertical-align: middle;
         background-color: white;
     }
-    
+
     input[type=color]::-webkit-color-swatch-wrapper {
         padding: 0;
     }
-    
+
     input[type=color]::-webkit-color-swatch {
         border: none;
         border-radius: 50%;
     }
-    
+
     input[type=color].inherited-style {
         border: 2px dashed #aaa !important;
     }
@@ -972,7 +1074,7 @@
         margin-bottom: 18px;
         flex-wrap: wrap;
     }
-    
+
     .font-option {
         padding: 6px 14px;
         border: 1px solid #ddd;
@@ -981,26 +1083,26 @@
         transition: background-color .3s, color .3s, border-color .3s;
         font-size: 0.9rem;
     }
-    
+
     .font-option.selected {
         background-color: var(--primary);
         color: #fff;
         border-color: var(--primary);
         font-weight: 500;
     }
-    
+
     .font-option:hover:not(.selected) {
         background-color: #eef2ff;
         border-color: #c4cde0;
     }
-    
+
     .size-selector {
         display: flex;
         gap: 10px;
         align-items: center;
         margin-bottom: 18px;
     }
-    
+
     .size-option {
         padding: 6px 14px;
         border: 1px solid #ddd;
@@ -1009,14 +1111,14 @@
         transition: background-color .3s, color .3s, border-color .3s;
         font-size: 0.9rem;
     }
-    
+
     .size-option.selected {
         background-color: var(--primary);
         color: #fff;
         border-color: var(--primary);
         font-weight: 500;
     }
-    
+
     .size-option:hover:not(.selected) {
         background-color: #eef2ff;
         border-color: #c4cde0;
@@ -1027,7 +1129,7 @@
         padding-top: 20px;
         border-top: 1px solid #eee;
     }
-    
+
     #projectTabsEditor h4 {
         margin-bottom: 18px;
         color: var(--primary);
@@ -1036,13 +1138,13 @@
         padding-bottom: 6px;
         font-size: 1.1rem;
     }
-    
+
     #projectTabsList {
         max-height: 350px;
         overflow-y: auto;
         padding-right: 10px;
     }
-    
+
     .project-tab-edit-item {
         display: grid;
         grid-template-columns: auto 1fr auto;
@@ -1055,26 +1157,26 @@
         background-color: #fff;
         box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
-    
+
     .project-tab-edit-item .index {
         font-weight: bold;
         font-size: 1rem;
         color: var(--secondary);
     }
-    
+
     .project-tab-edit-item .inputs {
         display: flex;
         flex-direction: column;
         gap: 8px;
     }
-    
+
     .project-tab-edit-item label {
         font-size: 0.85rem;
         margin-bottom: 3px;
         color: #555;
         font-weight: 500;
     }
-    
+
     .project-tab-edit-item input {
         padding: 8px;
         font-size: 0.9rem;
@@ -1088,7 +1190,7 @@
         display: inline-block;
         font-size: 1.15rem;
     }
-    
+
     #projectEditModal .edit-section h5 {
         color: var(--dark);
         margin-top: 25px;
@@ -1096,13 +1198,13 @@
         font-size: 1.05rem;
         font-weight: 600;
     }
-    
+
     #projectEditModal #editingProjectNameLabel {
         color: var(--secondary);
         font-weight: bold;
     }
-    
-    #projectEditModal .form-hint {
+
+    #projectEditModal .form-hint, #courseEditModal .form-hint { /* Apply hint style in course modal too */
         font-size: 0.85rem;
         color: #666;
         margin-top: -10px;
@@ -1113,7 +1215,7 @@
         .container {
             padding: 30px;
         }
-        
+
         .page-header {
             flex-direction: row;
             text-align: left;
@@ -1121,142 +1223,150 @@
             padding: 30px 35px;
             gap: 30px;
         }
-        
+
         #course-view .page-header img.header-image {
             width: 150px;
             height: 150px;
             border-radius: 15px;
         }
-        
+
         .page-header .header-title {
             font-size: 2.2rem;
         }
-        
+
         .page-header .header-subtitle {
             font-size: 1.2rem;
         }
-        
+
         .step {
             align-items: center;
         }
-        
+
         .step-number {
             margin-top: 0;
             width: 40px;
             height: 40px;
             font-size: 1.1rem;
         }
-        
+
         .step-content .step-media {
             max-width: 65%;
             margin-left: auto;
             margin-right: auto;
         }
-        
+
         #project-view .page-header img.header-image {
             width: 120px;
             height: 120px;
         }
-        
+
         #project-view .page-header .header-title {
             font-size: 2.1rem;
         }
-        
+
         #project-view .page-header .header-subtitle {
             font-size: 1.1rem;
         }
-        
+
         #projectTabs .tab {
             padding: 12px 25px;
             font-size: 1rem;
         }
     }
-    
+
     @media (max-width:600px) {
         .container {
             padding: 15px 10px;
         }
-        
+
         .page-header {
             padding: 20px 15px;
         }
-        
+
         #projectTabContentContainer .tab-content {
             padding: 20px;
         }
-        
+
         .edit-btn, .export-btn, .back-btn {
             width: 36px;
             height: 36px;
             font-size: 18px;
             top: 15px;
         }
-        
+
         #course-view .page-header .edit-btn {
             right: 15px;
         }
-        
+
         #course-view .page-header .export-btn {
             right: 65px;
         }
-        
+
         #project-view .page-header .edit-btn {
             right: 15px;
         }
-        
+
         #project-view .page-header .back-btn {
             right: 65px;
             font-size: 22px;
         }
-        
+
         h2 {
             font-size: 1.3rem;
         }
-        
+
         .page-header .header-title {
             font-size: 1.6rem;
         }
-        
+
         .page-header .header-subtitle {
             font-size: .95rem;
         }
-        
+
         .modal-content {
             padding: 25px 20px;
         }
-        
+
+        #course-multimedia-section { /* Adjust padding for small screens */
+             padding: 20px 15px;
+        }
+         #toggle-multimedia-btn { /* Adjust position for small screens */
+             top: 15px;
+             right: 15px;
+         }
+
         .step {
             flex-direction: column;
             align-items: flex-start;
             gap: 10px;
         }
-        
+
         .step-number {
             margin-top: 0;
             margin-bottom: 5px;
         }
-        
+
         .step-content .step-media {
             max-width: 100%;
         }
-        
+
         #project-view .page-header .header-title {
             font-size: 1.5rem;
         }
-        
+
         #project-view .page-header .header-subtitle {
             font-size: .95rem;
         }
-        
+
         .modal-actions {
             text-align: center;
         }
-        
+
         .modal-actions button {
             width: 48%;
             margin: 5px 1%;
         }
-        
+
         .modal-actions button[onclick^="closeModal"] {
             margin-right: 1%;
         }
@@ -1283,6 +1393,20 @@
             <h2>About This Course</h2>
             <p id="courseDescription">Loading course description...</p>
         </section>
+
+        <!-- ===== NEW: Course Multimedia Section ===== -->
+        <section id="course-multimedia-section" style="display: none;"> {/* Initially hidden, JS will show if type is not 'none' */}
+             <h2>Introduction</h2> {/* Or use courseData.courseMultimedia.title if set? */}
+             <button id="toggle-multimedia-btn" onclick="toggleCourseMultimedia()" aria-label="Toggle Multimedia Visibility" title="Minimize/Maximize">
+                 — {/* Minimize Symbol */}
+             </button>
+             <div id="course-multimedia-content">
+                 <!-- Multimedia (Image/Video/Iframe) will be inserted here by JS -->
+                 <p>Loading multimedia...</p>
+             </div>
+        </section>
+        <!-- ===== End Course Multimedia Section ===== -->
+
 
         <section>
             <h2>Projects</h2>
@@ -1369,7 +1493,7 @@
 <!-- == COURSE Editor Modal == -->
 <div id="courseEditModal" class="modal">
     <div class="modal-content">
-        <span class="close-modal" onclick="closeModal('courseEditModal')" title="Close Editor" aria-label="Close Course Editor">&times;</span>
+        <span class="close-modal" onclick="closeModal('courseEditModal')" title="Close Editor" aria-label="Close Course Editor">×</span>
         <h2>Edit Course Details</h2>
         <form class="edit-form" onsubmit="event.preventDefault(); saveCourseChanges();">
             <section class="edit-section" style="border-top: none; padding-top: 0;">
@@ -1383,6 +1507,29 @@
                 <label for="editCourseDescription">Course Description:</label>
                 <textarea id="editCourseDescription" rows="6"></textarea>
             </section>
+
+            <!-- === NEW: Course Multimedia Editor === -->
+             <section id="courseMultimediaEditor" class="edit-section">
+                 <h4>Course Multimedia (Optional)</h4>
+                 <p class="form-hint">Add an introductory image, video, or presentation displayed above the projects on the course page.</p>
+                 <label for="editCourseMultimediaType">Multimedia Type:</label>
+                 <select id="editCourseMultimediaType" onchange="toggleCourseMultimediaEditorFields(this.value)">
+                     <option value="none">None (Hidden)</option>
+                     <option value="image">Image</option>
+                     <option value="video">Video Embed</option>
+                     <option value="presentation">Presentation Embed</option>
+                 </select>
+
+                 <div id="courseMultimediaEditorFieldsContainer" class="course-multimedia-editor-fields" style="display:none;"> {/* Initially hidden */}
+                     <label for="editCourseMultimediaUrl">Media URL:</label>
+                     <input type="url" id="editCourseMultimediaUrl" placeholder="Enter Image URL or Embed URL...">
+
+                     <label for="editCourseMultimediaTitle">Media Title (Optional):</label>
+                     <input type="text" id="editCourseMultimediaTitle" placeholder="e.g., Course Intro Video (used for accessibility)">
+                 </div>
+             </section>
+             <!-- === End Course Multimedia Editor === -->
+
 
             <!-- Course Theme Color Editor -->
             <section id="courseStyleEditor" class="edit-section">
@@ -1420,6 +1567,8 @@
             <!-- Project Tabs Editor -->
             <section id="projectTabsEditor" class="edit-section">
                  <h4>Manage Project Tabs</h4>
+                  <!-- UPDATED Hint Text -->
+                 <p class="form-hint">Add, remove, or rename project tabs. Max ${MAX_PROJECTS} projects.</p>
                  <div id="projectTabsList">
                      <!-- Project tab edit items will be listed here -->
                  </div>
@@ -1438,7 +1587,7 @@
 <!-- == PROJECT Editor Modal (Merged) == -->
 <div id="projectEditModal" class="modal">
     <div class="modal-content">
-        <span class="close-modal" onclick="closeModal('projectEditModal')" title="Close Editor" aria-label="Close Project Editor">&times;</span>
+        <span class="close-modal" onclick="closeModal('projectEditModal')" title="Close Editor" aria-label="Close Project Editor">×</span>
         <h2>Edit Project Details</h2>
          <p style="font-size: 0.9rem; color: #555; margin-bottom: 20px;">Editing project: <strong id="editingProjectNameLabel"></strong></p>
         <form class="edit-form" onsubmit="event.preventDefault(); saveProjectChanges();">
@@ -1495,7 +1644,9 @@
                  <label for="editProject_VideoUrl">Video Embed URL:</label>
                  <input type="url" id="editProject_VideoUrl" placeholder="e.g., https://www.youtube.com/embed/VIDEO_ID">
                  <label for="editProject_VideoKeyPoints">Key Points (one per line, below video):</label>
-                 <textarea id="editProject_VideoKeyPoints" rows="5" placeholder="Point 1&#10;Point 2&#10;Point 3..."></textarea>
+                 <textarea id="editProject_VideoKeyPoints" rows="5" placeholder="Point 1
+Point 2
+Point 3..."></textarea>
             </section>
 
             <!-- === Slides Edit === -->
@@ -1582,7 +1733,7 @@
 
             <div class="modal-actions">
                 <button type="button" onclick="closeModal('projectEditModal')">Cancel</button>
-                <button type="submit">Save Project</button> 
+                <button type="submit">Save Project</button>
             </div>
         </form>
     </div>
@@ -1595,6 +1746,13 @@
         title: "Micro:bit Adventures",
         description: "Explore the exciting world of physical computing with the BBC micro:bit! This course contains several projects designed to introduce you to coding concepts and hardware interaction in a fun, hands-on way.",
         imageUrl: "https://images.unsplash.com/photo-1619410283995-43d9134e7656?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZ3JhbW1pbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+        // NEW: Course Multimedia Data
+        courseMultimedia: {
+             type: 'image', // 'none', 'image', 'video', 'presentation'
+             url: 'https://microbit.org/images/microbit-new-hero.jpg', // Example Image URL
+             title: 'BBC micro:bit device', // Optional title/alt text
+             minimized: false // Initial state
+         },
         // Course-level theme colors
         style: {
             primaryColor: '#5E81F4',   // Blue
@@ -1703,7 +1861,7 @@
                  style: { fontFamily: null, baseSize: null, primaryColor: null, secondaryColor: null, accentColor: null },
                  isCompleted: false
              }
-            // Add more project objects here...
+            // Add more project objects here... (up to 15)
         ]
     };
 
@@ -1713,7 +1871,9 @@
     let currentSlideIndex = 0;
 
     // --- Constants for limits ---
-    const MAX_PROJECTS = 9; const MAX_SLIDES = 10; const MAX_CHALLENGES = 10;
+    // UPDATED Project Limit
+    const MAX_PROJECTS = 15;
+    const MAX_SLIDES = 10; const MAX_CHALLENGES = 10;
     const MAX_LEARN_ITEMS = 8; const MAX_QUIZ_QUESTIONS = 10; const MAX_INCORRECT_ANSWERS = 3;
 
     // --- THEME APPLICATION ---
@@ -1800,7 +1960,7 @@
         currentProjectDataCache = null;
         document.title = courseData.title || "Course Viewer";
         applyCourseTheme(); // Reset theme to course defaults
-        renderCoursePage(); // Re-render to show updated completion ticks
+        renderCoursePage(); // Re-render to show updated completion ticks AND multimedia section
         window.scrollTo(0, 0);
     }
 
@@ -1850,6 +2010,10 @@
         if(courseImg) { courseImg.src = course.imageUrl || ''; courseImg.alt = course.title + " Image"; }
         document.getElementById('courseDescription').textContent = course.description;
 
+        // === Render Course Multimedia ===
+        renderCourseMultimedia();
+
+        // === Render Project Grid ===
         const grid = document.getElementById('projectGrid');
         grid.innerHTML = ''; // Clear existing
 
@@ -1885,7 +2049,7 @@
             if (project.isCompleted) {
                 const tick = document.createElement('span');
                 tick.className = 'completion-tick';
-                tick.innerHTML = '&#10004;'; // Checkmark symbol
+                tick.innerHTML = '✔'; // Checkmark symbol
                 tick.setAttribute('aria-label', 'Project Completed');
                 tick.title = 'Project Completed';
                 tab.appendChild(tick);
@@ -1894,6 +2058,94 @@
             grid.appendChild(tab);
         });
     }
+
+    // --- NEW: Course Multimedia Rendering ---
+    function renderCourseMultimedia() {
+         const section = document.getElementById('course-multimedia-section');
+         const contentDiv = document.getElementById('course-multimedia-content');
+         const toggleBtn = document.getElementById('toggle-multimedia-btn');
+         const multimediaData = courseData.courseMultimedia || { type: 'none', url: '', title: '', minimized: false };
+
+         if (!section || !contentDiv || !toggleBtn) {
+             console.error("Multimedia elements not found in DOM.");
+             return;
+         }
+
+         // Reset state
+         contentDiv.innerHTML = '';
+         section.classList.remove('multimedia-minimized');
+
+         if (multimediaData.type === 'none' || !multimediaData.url) {
+             section.style.display = 'none'; // Hide the entire section
+             return;
+         }
+
+         // Show the section if type is not 'none' and URL exists
+         section.style.display = 'block';
+
+         const url = multimediaData.url.trim();
+         const title = multimediaData.title?.trim() || 'Course Multimedia'; // Use provided title or default
+
+         // Create media element based on type
+         if (multimediaData.type === 'image') {
+             const img = document.createElement('img');
+             img.src = url;
+             img.alt = title;
+             img.loading = 'lazy';
+             contentDiv.appendChild(img);
+         } else if (multimediaData.type === 'video' || multimediaData.type === 'presentation') {
+             // Use a wrapper for potential aspect ratio styling
+             const wrapper = document.createElement('div');
+             wrapper.className = 'media-wrapper-16-9'; // Add class for 16:9 aspect ratio
+             const iframe = document.createElement('iframe');
+             iframe.src = url;
+             iframe.title = title;
+             iframe.frameBorder = "0";
+             iframe.loading = 'lazy';
+             iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+             iframe.allowFullscreen = true;
+             iframe.sandbox="allow-scripts allow-same-origin allow-presentation"; // Security for embeds
+             wrapper.appendChild(iframe);
+             contentDiv.appendChild(wrapper);
+         } else {
+             contentDiv.innerHTML = '<p style="color: #888; font-style: italic;">Unsupported multimedia type.</p>';
+         }
+
+         // Set initial minimized state and button text/symbol
+         if (multimediaData.minimized) {
+             section.classList.add('multimedia-minimized');
+             toggleBtn.innerHTML = '+'; // Plus symbol for expand
+             toggleBtn.title = 'Maximize';
+             toggleBtn.setAttribute('aria-label', 'Maximize Multimedia');
+         } else {
+             section.classList.remove('multimedia-minimized');
+             toggleBtn.innerHTML = '—'; // Minus symbol for minimize
+             toggleBtn.title = 'Minimize';
+             toggleBtn.setAttribute('aria-label', 'Minimize Multimedia');
+         }
+    }
+
+     // --- NEW: Toggle Course Multimedia Visibility ---
+     function toggleCourseMultimedia() {
+         const section = document.getElementById('course-multimedia-section');
+         const toggleBtn = document.getElementById('toggle-multimedia-btn');
+         if (!section || !toggleBtn || !courseData.courseMultimedia) return;
+
+         // Toggle the state in data
+         courseData.courseMultimedia.minimized = !courseData.courseMultimedia.minimized;
+
+         // Toggle the class and button appearance
+         section.classList.toggle('multimedia-minimized');
+         if (courseData.courseMultimedia.minimized) {
+             toggleBtn.innerHTML = '+'; // Plus symbol
+             toggleBtn.title = 'Maximize';
+             toggleBtn.setAttribute('aria-label', 'Maximize Multimedia');
+         } else {
+             toggleBtn.innerHTML = '—'; // Minus symbol
+             toggleBtn.title = 'Minimize';
+             toggleBtn.setAttribute('aria-label', 'Minimize Multimedia');
+         }
+     }
 
 
     // --- PROJECT PAGE RENDERING ---
@@ -2318,9 +2570,37 @@
          modal.querySelector('#editCourseTitle').value = courseData.title || '';
          modal.querySelector('#editCourseImage').value = courseData.imageUrl || '';
          modal.querySelector('#editCourseDescription').value = courseData.description || '';
+
+          // Load Course Multimedia fields
+         const multiData = courseData.courseMultimedia || { type: 'none', url: '', title: '' };
+         const multiTypeSelect = modal.querySelector('#editCourseMultimediaType');
+         const multiUrlInput = modal.querySelector('#editCourseMultimediaUrl');
+         const multiTitleInput = modal.querySelector('#editCourseMultimediaTitle');
+         if (multiTypeSelect) multiTypeSelect.value = multiData.type;
+         if (multiUrlInput) multiUrlInput.value = multiData.url || '';
+         if (multiTitleInput) multiTitleInput.value = multiData.title || '';
+         toggleCourseMultimediaEditorFields(multiData.type); // Show/hide fields based on loaded type
+
          renderProjectTabsEditor(); // Render the list of projects for management
          loadCourseColorSelections(); // Load current course colors into pickers
          modal.style.display = 'block';
+    }
+
+    // NEW: Show/hide multimedia URL/Title fields in the COURSE editor
+    function toggleCourseMultimediaEditorFields(selectedType) {
+         const fieldsContainer = document.getElementById('courseMultimediaEditorFieldsContainer');
+         const urlInput = document.getElementById('editCourseMultimediaUrl');
+         const titleInput = document.getElementById('editCourseMultimediaTitle');
+         if (!fieldsContainer || !urlInput || !titleInput) return;
+
+         if (selectedType === 'none') {
+             fieldsContainer.style.display = 'none';
+             urlInput.required = false; // Not required if hidden
+         } else {
+             fieldsContainer.style.display = 'block';
+             urlInput.required = true; // URL is required if type is selected
+              urlInput.placeholder = (selectedType === 'image') ? 'Enter Image URL...' : 'Enter Video/Presentation Embed URL...';
+         }
     }
 
      function renderProjectTabsEditor() {
@@ -2433,10 +2713,43 @@
      }
 
     function saveCourseChanges() {
+         const modal = document.getElementById('courseEditModal');
+         if (!modal) return;
+
+         // --- Validation for Multimedia URL if type is not 'none' ---
+         const multiType = modal.querySelector('#editCourseMultimediaType')?.value || 'none';
+         const multiUrlInput = modal.querySelector('#editCourseMultimediaUrl');
+         const multiUrl = multiUrlInput?.value.trim();
+         let isValid = true;
+
+         if (multiType !== 'none' && !multiUrl) {
+             alert(`Please provide a valid URL for the selected Course Multimedia type (${multiType}).`);
+             multiUrlInput?.focus();
+             multiUrlInput.style.borderColor = 'red';
+             isValid = false;
+         } else if (multiUrlInput) {
+             multiUrlInput.style.borderColor = ''; // Reset border if valid or not required
+         }
+
+         if (!isValid) return; // Stop saving if validation failed
+         // --- End Validation ---
+
          // Save Course Title, Image, Description
          courseData.title = document.getElementById('editCourseTitle')?.value.trim() || courseData.title;
          courseData.imageUrl = document.getElementById('editCourseImage')?.value.trim() || courseData.imageUrl;
          courseData.description = document.getElementById('editCourseDescription')?.value.trim() || courseData.description;
+
+         // Save Course Multimedia settings
+         if (!courseData.courseMultimedia) courseData.courseMultimedia = {}; // Initialize if needed
+         courseData.courseMultimedia.type = multiType;
+         if (multiType === 'none') {
+             courseData.courseMultimedia.url = '';
+             courseData.courseMultimedia.title = '';
+         } else {
+             courseData.courseMultimedia.url = multiUrl;
+             courseData.courseMultimedia.title = modal.querySelector('#editCourseMultimediaTitle')?.value.trim() || '';
+         }
+         // Note: We don't reset 'minimized' here, keep the user's preference.
 
          // Save Project Tab Names and Images (from the editor list)
          document.querySelectorAll('#projectTabsList .project-tab-edit-item').forEach(item => {
@@ -2451,7 +2764,7 @@
          // Course colors are saved implicitly via selectCourseColor
 
          applyCourseTheme(); // Apply potentially changed course colors globally
-         renderCoursePage(); // Re-render the main course page
+         renderCoursePage(); // Re-render the main course page (including multimedia)
          closeModal('courseEditModal');
          alert("Course changes saved successfully!");
     }
@@ -3016,9 +3329,8 @@
             exportDocElement.querySelectorAll('.edit-btn').forEach(btn => btn.remove());
             exportDocElement.querySelectorAll('.export-btn').forEach(btn => btn.remove()); // Course export button
 
-            // --- IMPORTANT FIX: Keep the Back Button for the Project View ---
+            // --- Keep the Back Button for the Project View ---
             // The line removing '.back-btn' is removed, as it's needed for navigation in the exported file.
-            // exportDocElement.querySelectorAll('.back-btn').forEach(btn => btn.remove()); // DO NOT REMOVE THIS
 
             // --- Prepare for Viewer State ---
             // Reset view state to show course view by default in the exported file
@@ -3027,6 +3339,23 @@
             // Clear any lingering project-specific inline styles from the project view container
              const exportProjectViewEl = exportDocElement.querySelector('#project-view');
              if(exportProjectViewEl) { exportProjectViewEl.style.fontFamily = ''; exportProjectViewEl.style.fontSize = ''; }
+
+             // Prepare multimedia section for export (ensure correct initial state)
+             const exportMultiSection = exportDocElement.querySelector('#course-multimedia-section');
+             if (exportMultiSection) {
+                if (courseData.courseMultimedia?.type === 'none' || !courseData.courseMultimedia?.url) {
+                     exportMultiSection.style.display = 'none';
+                 } else {
+                     exportMultiSection.style.display = 'block';
+                     exportMultiSection.classList.toggle('multimedia-minimized', !!courseData.courseMultimedia?.minimized);
+                     // Update button in export template based on data
+                     const exportToggleBtn = exportMultiSection.querySelector('#toggle-multimedia-btn');
+                     if (exportToggleBtn) {
+                         exportToggleBtn.innerHTML = courseData.courseMultimedia?.minimized ? '&#x2B;' : '—';
+                     }
+                 }
+             }
+
 
             // Reset quiz state visually in the template before embedding data
             exportDocElement.querySelectorAll('.quiz-question').forEach(q => {
@@ -3049,8 +3378,7 @@
                 .replace(/</g, '\\u003c') // Escape potential HTML tags within data
                 .replace(/>/g, '\\u003e');
 
-            // Minified Viewer Logic (Generated based on the editor's functions)
-            // Includes theme application, view switching, content rendering, interactions, utils
+            // Updated Minified Viewer Logic (Includes multimedia rendering and toggle)
             viewerScript.textContent = `
 // --- EXPORTED VIEWER SCRIPT (SELF-CONTAINED) ---
 const courseDataForView = ${courseDataString};
@@ -3058,7 +3386,6 @@ let currentSlideIndex = 0; let currentProjectIdForView = null;
 // Utils
 function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
 function hexToRgb(h){let r=/^#?([a-f\\d]{2})([a-f\\d]{2})([a-f\\d]{2})$/i.exec(h);return r?{r:parseInt(r[1],16),g:parseInt(r[2],16),b:parseInt(r[3],16)}:null}
-function areColorsEqual(c1,c2){if(!c1||!c2)return c1===c2;if(c1.toLowerCase()===c2.toLowerCase())return!0;const cvt=c=>{const x=document.createElement('canvas').getContext('2d');if(!x)return null;x.fillStyle=c;const cc=x.fillStyle;if(cc.startsWith('rgba'))return cc;if(cc.startsWith('#')){const r=hexToRgb(cc);return r?\`rgba(\${r.r}, \${r.g}, \${r.b}, 1)\`:null}if(cc.startsWith('rgb('))return cc.replace('rgb(','rgba(').replace(')',', 1)');return cc};try{const r1=cvt(c1),r2=cvt(c2);return r1&&r2&&r1===r2}catch(e){return String(c1).trim().toLowerCase()===String(c2).trim().toLowerCase()}}
 // Theme
 function applyThemeClrs(p,s,a){const r=document.documentElement;r.style.setProperty('--primary',p||'#5E81F4');r.style.setProperty('--secondary',s||'#FF7AC6');r.style.setProperty('--accent',a||'#FFB800');const pr=hexToRgb(p||'#5E81F4');if(pr)r.style.setProperty('--primary-rgb',\`\${pr.r}, \${pr.g}, \${pr.b}\`);const sr=hexToRgb(s||'#FF7AC6');if(sr)r.style.setProperty('--secondary-rgb',\`\${sr.r}, \${sr.g}, \${sr.b}\`)}
 function applyCourseThemeForView(){const cs=courseDataForView.style||{};applyThemeClrs(cs.primaryColor,cs.secondaryColor,cs.accentColor);const r=document.documentElement;r.style.setProperty('--base-font-family',"'Segoe UI', sans-serif");r.style.setProperty('--base-font-size','16px');const pv=document.getElementById('project-view');if(pv){pv.style.fontFamily='';pv.style.fontSize=''}}
@@ -3068,13 +3395,15 @@ function showCourseView(){document.getElementById('course-view').style.display='
 function showProjectView(pid){const p=courseDataForView.projects.find(pr=>pr.id===pid);if(!p){showCourseView();return}currentProjectIdForView=pid;renderProjectPageForView(p);document.getElementById('course-view').style.display='none';document.getElementById('project-view').style.display='block';document.title=p.projectTitle||"Project";applyCourseThemeForView();applyProjectStylesForView(p);window.scrollTo(0,0);try{history.pushState({projectId:pid},p.projectTitle||'',\`#project-\${pid}\`)}catch(e){}}
 window.onpopstate=function(e){if(e.state&&e.state.projectId){showProjectView(e.state.projectId)}else{showCourseView()}};
 // Rendering
-function renderCoursePageForView(){const c=courseDataForView;document.getElementById('courseTitle').textContent=c.title;const i=document.getElementById('courseImage');if(i){i.src=c.imageUrl||'';i.alt=c.title+" Image"}document.getElementById('courseDescription').textContent=c.description;const g=document.getElementById('projectGrid');g.innerHTML='';if(!c.projects||c.projects.length===0){g.innerHTML='<p style="text-align:center;color:#666;">No projects.</p>';return}c.projects.forEach(p=>{if(!p||!p.id)return;const t=document.createElement('a');t.className='project-tab';t.href=\`#project-\${p.id}\`;t.onclick=e=>{e.preventDefault();showProjectView(p.id)};t.innerHTML=\`<img src="\${p.tabImage||'https://via.placeholder.com/300x200/eee/999?text=Prj'}" alt="\${p.tabName||'Project'}" loading="lazy"><div class="project-tab-info"><span>\${p.tabName||'Project'}</span></div>\`;if(p.isCompleted){const k=document.createElement('span');k.className='completion-tick';k.innerHTML='&#10004;';k.setAttribute('aria-label','Completed');k.title='Completed';t.appendChild(k)}g.appendChild(t)})}
+function renderCoursePageForView(){const c=courseDataForView;document.getElementById('courseTitle').textContent=c.title;const i=document.getElementById('courseImage');if(i){i.src=c.imageUrl||'';i.alt=c.title+" Image"}document.getElementById('courseDescription').textContent=c.description;renderCourseMultimediaForView();const g=document.getElementById('projectGrid');g.innerHTML='';if(!c.projects||c.projects.length===0){g.innerHTML='<p style="text-align:center;color:#666;">No projects.</p>';return}c.projects.forEach(p=>{if(!p||!p.id)return;const t=document.createElement('a');t.className='project-tab';t.href=\`#project-\${p.id}\`;t.onclick=e=>{e.preventDefault();showProjectView(p.id)};t.innerHTML=\`<img src="\${p.tabImage||'https://via.placeholder.com/300x200/eee/999?text=Prj'}" alt="\${p.tabName||'Project'}" loading="lazy"><div class="project-tab-info"><span>\${p.tabName||'Project'}</span></div>\`;if(p.isCompleted){const k=document.createElement('span');k.className='completion-tick';k.innerHTML='&#10004;';k.setAttribute('aria-label','Completed');k.title='Completed';t.appendChild(k)}g.appendChild(t)})}
+function renderCourseMultimediaForView(){const s=document.getElementById('course-multimedia-section'),d=document.getElementById('course-multimedia-content'),b=document.getElementById('toggle-multimedia-btn'),m=courseDataForView.courseMultimedia||{type:'none',url:'',title:'',minimized:!1};if(!s||!d||!b)return;d.innerHTML='';s.classList.remove('multimedia-minimized');if(m.type==='none'||!m.url){s.style.display='none';return}s.style.display='block';const u=m.url.trim(),t=m.title?.trim()||'Course Multimedia';if(m.type==='image'){const i=document.createElement('img');i.src=u;i.alt=t;i.loading='lazy';d.appendChild(i)}else if(m.type==='video'||m.type==='presentation'){const w=document.createElement('div');w.className='media-wrapper-16-9';const f=document.createElement('iframe');f.src=u;f.title=t;f.frameBorder="0";f.loading='lazy';f.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";f.allowFullscreen=!0;f.sandbox="allow-scripts allow-same-origin allow-presentation";w.appendChild(f);d.appendChild(w)}else{d.innerHTML='<p>Unsupported type.</p>'}if(m.minimized){s.classList.add('multimedia-minimized');b.innerHTML='&#x2B;';b.title='Maximize';b.setAttribute('aria-label','Maximize')}else{s.classList.remove('multimedia-minimized');b.innerHTML='—';b.title='Minimize';b.setAttribute('aria-label','Minimize')}}
+function toggleCourseMultimedia(){const s=document.getElementById('course-multimedia-section'),b=document.getElementById('toggle-multimedia-btn');if(!s||!b||!courseDataForView.courseMultimedia)return;courseDataForView.courseMultimedia.minimized=!courseDataForView.courseMultimedia.minimized;s.classList.toggle('multimedia-minimized');if(courseDataForView.courseMultimedia.minimized){b.innerHTML='&#x2B;';b.title='Maximize';b.setAttribute('aria-label','Maximize')}else{b.innerHTML='—';b.title='Minimize';b.setAttribute('aria-label','Minimize')}}
 function renderProjectPageForView(p){if(!p)return;const pv=document.getElementById('project-view');if(!pv)return;const h=pv.querySelector('#project-header');if(h){h.querySelector('#projectImage').src=p.projectHeaderImage||p.tabImage||'';h.querySelector('#projectImage').alt=p.projectTitle+" Hdr";h.querySelector('#projectTitle').textContent=p.projectTitle;h.querySelector('#projectSubtitle').textContent=p.projectSubtitle}const ct=pv.querySelector('#projectTabContentContainer');if(!ct)return;const ov=ct.querySelector('#overview');if(ov){ov.querySelector('#overviewText').textContent=p.overviewText||'';renderLearnItemsForProjectView(p.learnData||[],ov.querySelector('#learnContainer'))}const vd=ct.querySelector('#video');if(vd){vd.querySelector('#videoIntroText').textContent=p.videoIntroText||'';vd.querySelector('#videoTitle').textContent=p.videoTitle||'';vd.querySelector('#mainVideo').src=p.videoUrl||'';const ul=vd.querySelector('#videoKeyPoints');ul.innerHTML='';(p.videoKeyPoints||[]).forEach(pt=>{if(pt&&pt.trim())ul.innerHTML+=\`<li>\${pt}</li>\`});if(!ul.innerHTML)ul.innerHTML='<li style="color:#888;font-style:italic;">No key points.</li>'}const sl=ct.querySelector('#slides');if(sl)renderSlideshowForProjectView(p.slidesData||[],sl.querySelector('#slideshowContainer'));const ch=ct.querySelector('#challenges');if(ch)renderChallengesForProjectView(p.challengesData||[],ch.querySelector('#challengesContainer'));const qz=ct.querySelector('#quiz');if(qz)renderQuizForProjectView(p.quizData||[],qz.querySelector('#quizContainer'),qz.querySelector('#submitQuizBtn'));const tb=pv.querySelector('#projectTabs');const ftb=tb?.querySelector('.tab');if(ftb){const ca=ftb.getAttribute('onclick')||'';const m=ca.match(/openProjectTab\\('([^']+)'/);openProjectTab(m?m[1]:'overview',ftb)}else{updateProjectProgressBar('')}}
-function renderMedia(typ,url,tit){if(!url)return'';if(typ==='image')return\`<img src="\${url}" loading="lazy" alt="\${tit}">\`;if(typ==='video')return\`<iframe src="\${url}" frameborder="0" loading="lazy" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation" title="\${tit}"></iframe>\`;return''}
-function renderLearnItemsForProjectView(d,c){if(!c)return;c.innerHTML='';const v=(d||[]).filter(i=>i.title&&i.title.trim());if(v.length===0){c.innerHTML='<p style="color:#888;font-style:italic;">No objectives.</p>';return}v.forEach((i,x)=>{const e=document.createElement('div');e.className='step';e.innerHTML=\`<div class="step-number">\${x+1}</div><div class="step-content"><strong>\${i.title}</strong>\${i.description?\`<p class="description">\${i.description}</p>\`:''}<div class="step-media" style="display: none;"></div></div>\`;const m=e.querySelector('.step-media');const mu=renderMedia(i.mediaType,i.mediaUrl,i.title||'Media');if(mu){m.style.display='block';m.innerHTML=mu}c.appendChild(e)})}
-function renderChallengesForProjectView(d,c){if(!c)return;c.innerHTML='';const v=(d||[]).filter(i=>i.title&&i.title.trim());if(v.length===0){c.innerHTML='<p style="color:#888;font-style:italic;">No challenges.</p>';return}v.forEach(i=>{const e=document.createElement('div');e.className='step';e.innerHTML=\`<div class="step-number" style="background-color:var(--accent);color:var(--dark);">★</div><div class="step-content"><strong>\${i.title}</strong>\${i.description?\`<p class="description">\${i.description}</p>\`:''}<div class="step-media" style="display: none;"></div></div>\`;const m=e.querySelector('.step-media');const mu=renderMedia(i.mediaType,i.mediaUrl,i.title||'Media');if(mu){m.style.display='block';m.innerHTML=mu}c.appendChild(e)})}
-function renderSlideshowForProjectView(d,c){const n=c?.closest('.tab-content#slides')?.querySelector('.slide-nav');if(!c||!n){console.error("Slideshow/nav fail");return}c.innerHTML='';const v=(d||[]).filter(s=>s.url&&s.url.trim());if(v.length===0){c.innerHTML='<p style="color:#888;font-style:italic;">No slides.</p>';n.style.display='none';return}n.style.display='flex';v.forEach((s,x)=>{const dv=document.createElement('div');dv.className='slide';const u=s.url.trim();const t=s.type==='image'?'image':'iframe';const ds=s.description||'';const ti=ds||'Slide '+(x+1);dv.innerHTML=\`<div class="slide-content-wrapper"></div>\${ds?\`<p>\${ds}</p>\`:''}\`;const w=dv.querySelector('.slide-content-wrapper');w.innerHTML=renderMedia(t,u,ti);c.appendChild(dv)});currentSlideIndex=0;showSlide(0)}
-function renderQuizForProjectView(d,c,b){if(!c||!b)return;c.innerHTML='';c.closest('.tab-content#quiz')?.querySelector('.final-quiz-result')?.remove();b.disabled=!1;b.style.display='none';const v=(d||[]).filter(q=>q.questionText&&q.questionText.trim()&&q.correctAnswer&&q.correctAnswer.trim());if(v.length===0){c.innerHTML='<p style="color:#888;font-style:italic;">No quiz.</p>';return}b.style.display='block';v.forEach((q,x)=>{const dv=document.createElement('div');dv.className='quiz-question';dv.innerHTML=\`<p class="question-text">\${x+1}. \${q.questionText}</p><div class="quiz-options"></div><div class="quiz-feedback correct" style="display:none;">Correct!</div><div class="quiz-feedback incorrect" style="display:none;"></div>\`;const od=dv.querySelector('.quiz-options');let os=[q.correctAnswer.trim()];(q.incorrectAnswers||[]).forEach(a=>{if(a&&a.trim())os.push(a.trim())});shuffleArray(os);os.forEach(ot=>{const cr=ot===q.correctAnswer.trim();const oe=document.createElement('div');oe.className='quiz-option';oe.textContent=ot;oe.setAttribute('role','button');oe.setAttribute('tabindex','0');oe.onclick=()=>selectQuizOption(oe);oe.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectQuizOption(oe)}};oe.setAttribute('data-is-correct',cr.toString());od.appendChild(oe)});c.appendChild(dv)})}
+function renderMedia(typ,url,tit){if(!url)return'';if(typ==='image')return\`<img src="\${url}" loading="lazy" alt="\${tit}">\`;if(typ==='video'||typ==='presentation')return\`<iframe src="\${url}" frameborder="0" loading="lazy" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation" title="\${tit}"></iframe>\`;return''}
+function renderLearnItemsForProjectView(d,c){if(!c)return;c.innerHTML='';const v=(d||[]).filter(i=>i.title&&i.title.trim());if(v.length===0){c.innerHTML='<p style="color:#888;">No objectives.</p>';return}v.forEach((i,x)=>{const e=document.createElement('div');e.className='step';e.innerHTML=\`<div class="step-number">\${x+1}</div><div class="step-content"><strong>\${i.title}</strong>\${i.description?\`<p class="description">\${i.description}</p>\`:''}<div class="step-media" style="display: none;"></div></div>\`;const m=e.querySelector('.step-media');const mu=renderMedia(i.mediaType,i.mediaUrl,i.title||'Media');if(mu){m.style.display='block';m.innerHTML=mu}c.appendChild(e)})}
+function renderChallengesForProjectView(d,c){if(!c)return;c.innerHTML='';const v=(d||[]).filter(i=>i.title&&i.title.trim());if(v.length===0){c.innerHTML='<p style="color:#888;">No challenges.</p>';return}v.forEach(i=>{const e=document.createElement('div');e.className='step';e.innerHTML=\`<div class="step-number" style="background-color:var(--accent);color:var(--dark);">★</div><div class="step-content"><strong>\${i.title}</strong>\${i.description?\`<p class="description">\${i.description}</p>\`:''}<div class="step-media" style="display: none;"></div></div>\`;const m=e.querySelector('.step-media');const mu=renderMedia(i.mediaType,i.mediaUrl,i.title||'Media');if(mu){m.style.display='block';m.innerHTML=mu}c.appendChild(e)})}
+function renderSlideshowForProjectView(d,c){const n=c?.closest('.tab-content#slides')?.querySelector('.slide-nav');if(!c||!n){return}c.innerHTML='';const v=(d||[]).filter(s=>s.url&&s.url.trim());if(v.length===0){c.innerHTML='<p style="color:#888;">No slides.</p>';n.style.display='none';return}n.style.display='flex';v.forEach((s,x)=>{const dv=document.createElement('div');dv.className='slide';const u=s.url.trim();const t=s.type==='image'?'image':'iframe';const ds=s.description||'';const ti=ds||'Slide '+(x+1);dv.innerHTML=\`<div class="slide-content-wrapper"></div>\${ds?\`<p>\${ds}</p>\`:''}\`;const w=dv.querySelector('.slide-content-wrapper');w.innerHTML=renderMedia(t,u,ti);c.appendChild(dv)});currentSlideIndex=0;showSlide(0)}
+function renderQuizForProjectView(d,c,b){if(!c||!b)return;c.innerHTML='';c.closest('.tab-content#quiz')?.querySelector('.final-quiz-result')?.remove();b.disabled=!1;b.style.display='none';const v=(d||[]).filter(q=>q.questionText&&q.questionText.trim()&&q.correctAnswer&&q.correctAnswer.trim());if(v.length===0){c.innerHTML='<p style="color:#888;">No quiz.</p>';return}b.style.display='block';v.forEach((q,x)=>{const dv=document.createElement('div');dv.className='quiz-question';dv.innerHTML=\`<p class="question-text">\${x+1}. \${q.questionText}</p><div class="quiz-options"></div><div class="quiz-feedback correct" style="display:none;">Correct!</div><div class="quiz-feedback incorrect" style="display:none;"></div>\`;const od=dv.querySelector('.quiz-options');let os=[q.correctAnswer.trim()];(q.incorrectAnswers||[]).forEach(a=>{if(a&&a.trim())os.push(a.trim())});shuffleArray(os);os.forEach(ot=>{const cr=ot===q.correctAnswer.trim();const oe=document.createElement('div');oe.className='quiz-option';oe.textContent=ot;oe.setAttribute('role','button');oe.setAttribute('tabindex','0');oe.onclick=()=>selectQuizOption(oe);oe.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectQuizOption(oe)}};oe.setAttribute('data-is-correct',cr.toString());od.appendChild(oe)});c.appendChild(dv)})}
 // Interactions
 function openProjectTab(tn,el){const c=document.getElementById('projectTabContentContainer');if(!c)return;c.querySelectorAll('.tab-content').forEach(tc=>tc.classList.remove('active'));const bs=document.getElementById('projectTabs');if(bs)bs.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));const t=c.querySelector('#'+tn);if(t)t.classList.add('active');el?.classList.add('active');updateProjectProgressBar(tn)}
 function updateProjectProgressBar(tn){const p=document.getElementById('progressBar');if(!p)return;let r=0;const o=['overview','video','slides','challenges','quiz'];const i=o.indexOf(tn);if(i>=0)r=((i+1)/o.length)*100;p.style.width=r+'%'}
@@ -3086,7 +3415,7 @@ function submitQuiz(){const qs=document.querySelectorAll('#project-view #quizCon
 // Init
 document.addEventListener('DOMContentLoaded', function() {
     applyCourseThemeForView();
-    renderCoursePageForView();
+    renderCoursePageForView(); // Render course page including multimedia
     let dsp=!1;
     if (window.location.hash && window.location.hash.startsWith('#project-')) {
         const pid = window.location.hash.substring(9);
@@ -3123,7 +3452,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Course Editor/Viewer Initializing...");
         // checkProjectCompletionStatus(); // Load completion status if using persistence
         applyCourseTheme(); // Apply initial theme
-        renderCoursePage(); // Render the course grid
+        renderCoursePage(); // Render the course grid AND multimedia
 
         // Check hash on load for deep linking into a project (in editor mode)
         let displayedProject = false;
