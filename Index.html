@@ -1,1 +1,1763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micro:bit Adventure | Beating Heart Project</title>
+    <style>
+:root {
+    --primary: #5E81F4;
+    --secondary: #FF7AC6;
+    --accent: #FFB800;
+    --light: #F5F7FA;
+    --dark: #1A1D28;
+    --success: #7CE7AC;
+}
 
+body {
+    font-family: 'Comic Sans MS', 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--light);
+    color: var(--dark);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+.project-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    text-align: center;
+    position: relative;
+}
+
+.project-header img {
+    width: 120px;
+    height: auto;
+    border-radius: 10px;
+    border: 3px solid white;
+}
+
+.project-title {
+    color: white;
+    margin: 0;
+    font-size: 1.5rem;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.tab {
+    padding: 8px 15px;
+    background-color: white;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    white-space: nowrap;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.tab.active {
+    background-color: var(--primary);
+    color: white;
+}
+
+.tab-content {
+    display: none;
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    animation: fadeIn 0.5s;
+    margin-bottom: 20px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tab-content.active {
+    display: block;
+}
+
+h2 {
+    color: var(--primary);
+    border-bottom: 3px solid var(--secondary);
+    padding-bottom: 8px;
+    display: inline-block;
+    font-size: 1.3rem;
+    margin-top: 0;
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    margin: 15px 0;
+    border-radius: 10px;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.slide {
+    display: none;
+    text-align: left;
+}
+
+.slideshow {
+    position: relative;
+    margin: 15px 0;
+}
+
+.slide-content-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+.slide iframe, .slide img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background-color: #f5f5f5;
+}
+
+.slide p {
+    margin: 10px 0 0;
+    font-size: 0.9rem;
+}
+
+.slide.active {
+    display: block;
+    animation: fadeIn 0.5s;
+}
+
+.slide-nav {
+    text-align: center;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.slide-nav button {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.step {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #f9f9ff;
+    border-radius: 10px;
+    align-items: flex-start;
+}
+
+.step-number {
+    background-color: var(--secondary);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-content strong {
+    font-size: 0.95rem;
+}
+
+.step-content p {
+    margin: 5px 0 0;
+    font-size: 0.9rem;
+}
+
+.quiz-question {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.quiz-question p {
+    margin: 0 0 10px;
+    font-size: 0.95rem;
+}
+
+.quiz-options {
+    margin-top: 10px;
+}
+
+.quiz-option {
+    display: block;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    background-color: #f5f5ff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
+
+.quiz-option:hover {
+    background-color: #e0e0ff;
+}
+
+.quiz-option.selected {
+    background-color: var(--primary);
+    color: white;
+}
+
+.quiz-option.correct {
+    background-color: var(--success);
+    color: white;
+}
+
+.quiz-option.incorrect {
+    background-color: #FF7E7E;
+    color: white;
+}
+
+.quiz-feedback {
+    margin-top: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    display: none;
+    font-size: 0.85rem;
+}
+
+.quiz-feedback.correct {
+    background-color: #e6f7ed;
+    color: #0a5c36;
+    display: block;
+}
+
+.quiz-feedback.incorrect {
+    background-color: #fde8e8;
+    color: #9b1c1c;
+    display: block;
+}
+
+.party-popper-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 101;
+    display: none;
+}
+
+.party-popper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    animation: partyPopperAnimation 2s ease-out forwards;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.party-popper span {
+    margin: 10px;
+}
+
+@keyframes partyPopperAnimation {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 0; }
+}
+
+.quiz-feedback.result-message {
+    margin: 20px 0;
+    background-color: #ecf8ff;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.submit-btn {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.progress-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    margin: 20px 0;
+    height: 8px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 10px;
+    width: 20%;
+    transition: width 0.5s;
+}
+
+.edit-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.export-btn {
+    position: absolute;
+    top: 15px;
+    right: 55px;
+    background-color: var(--success);
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.close-modal {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.edit-form {
+    margin-top: 20px;
+}
+
+.edit-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.edit-form input[type="text"],
+.edit-form textarea,
+.edit-form select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.edit-form button {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.color-picker {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.color-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #ddd;
+}
+
+.color-option.selected {
+    border: 2px solid #000;
+    transform: scale(1.1);
+}
+
+.font-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.font-option {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.font-option.selected {
+    background-color: var(--primary);
+    color: white;
+}
+
+.size-selector {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.size-option {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.size-option.selected {
+    background-color: var(--primary);
+    color: white;
+}
+
+@media (min-width: 768px) {
+    .project-header {
+        flex-direction: row;
+        text-align: left;
+        align-items: center;
+    }
+    
+    .project-header img {
+        width: 150px;
+    }
+    
+    .project-title {
+        font-size: 1.8rem;
+    }
+    
+    .tab {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+    
+    .step {
+        align-items: center;
+    }
+    
+    .step-number {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .project-header {
+        padding: 10px;
+    }
+    
+    .tab-content {
+        padding: 15px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="project-header">
+            <button class="edit-btn" onclick="openEditModal()">✏️</button>
+            <button class="export-btn" onclick="exportHTML()">⬇️</button>
+            <img src="https://www.elecfreaks.com/wp-content/uploads/2022/12/2-1.png" alt="Beating Heart Project" id="projectImage">
+            <div>
+                <h1 class="project-title" id="projectTitle">Beating Heart Project</h1>
+                <p id="projectSubtitle">Make your Micro:bit display a beating heart animation!</p>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="openTab('overview')">Overview</div>
+            <div class="tab" onclick="openTab('video')">Video Lesson</div>
+            <div class="tab" onclick="openTab('slides')">Step-by-Step</div>
+            <div class="tab" onclick="openTab('challenges')">Challenges</div>
+            <div class="tab" onclick="openTab('quiz')">Quiz</div>
+        </div>
+        
+        <div id="overview" class="tab-content active">
+            <h2>About This Project</h2>
+            <p id="overviewText">In this project, you'll learn how to create a beating heart animation on your Micro:bit's LED display. This is a great first project to understand how the Micro:bit works!</p>
+            
+            <h3>What You'll Learn</h3>
+            <div class="step" id="learnStep1">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <strong id="learnTitle1">Hardware Concepts</strong>
+                    <p id="learnDesc1">How to download & flash code to your Micro:bit and how the LED matrix works</p>
+                </div>
+            </div>
+            <div class="step" id="learnStep2">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <strong id="learnTitle2">Programming Concepts</strong>
+                    <p id="learnDesc2">The difference between 'on start' and 'forever' blocks, and how to create simple animations</p>
+                </div>
+            </div>
+            <div class="step" id="learnStep3">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <strong id="learnTitle3">Computational Thinking</strong>
+                    <p id="learnDesc3">How to break down problems into smaller steps (decomposition) and recognize patterns</p>
+                </div>
+            </div>
+            <div class="step" id="learnStep4">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <strong id="learnTitle4">STEM Learning</strong>
+                    <p id="learnDesc4">Integrating Science, Technology, Engineering, and Math concepts through hands-on activities</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="video" class="tab-content">
+            <h2>Video Lesson</h2>
+            <p id="videoIntroText">Watch this video to learn how to create the beating heart animation:</p>
+            
+            <h3 id="videoTitle">Programming the Beating Heart</h3>
+            <div class="video-container">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/2yzT7_QGLLc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen id="mainVideo"></iframe>
+            </div>
+            
+            <h3>Key Points from the Video</h3>
+            <ul id="videoKeyPoints" style="font-size: 0.9rem; padding-left: 20px;">
+                <li>The LED matrix has 25 lights (5 rows x 5 columns)</li>
+                <li>'on start' runs once when the Micro:bit turns on</li>
+                <li>'forever' keeps repeating the code inside it</li>
+                <li>We use 'show icon' and 'pause' blocks to create animation</li>
+            </ul>
+        </div>
+        
+        <div id="slides" class="tab-content">
+            <h2>Step-by-Step Guide</h2>
+            
+            <div class="slideshow" id="slideshowContainer">
+                <!-- Slides will be dynamically inserted here -->
+            </div>
+            
+            <div class="slide-nav">
+                <button onclick="prevSlide()">Previous</button>
+                <button onclick="nextSlide()">Next</button>
+            </div>
+        </div>
+        
+        <div id="challenges" class="tab-content">
+            <h2>Project Challenges</h2>
+            <p>Try these challenges to extend your learning:</p>
+            
+            <div id="challengesContainer">
+                <!-- Challenges will be dynamically inserted here -->
+            </div>
+        </div>
+        
+        <div id="quiz" class="tab-content">
+            <h2>Project Quiz</h2>
+            <p>Test what you've learned about the Beating Heart project!</p>
+            
+            <div class="party-popper-container" id="partyPopperContainer">
+                <div class="party-popper">🎉</div>
+            </div>
+
+            <div id="quizContainer">
+                <!-- Quiz questions will be dynamically inserted here -->
+            </div>
+
+            <button class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+            <div class="quiz-feedback result-message" id="quizResultMessage" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeEditModal()">×</span>
+            <h2>Edit Content</h2>
+            <div class="edit-form">
+                <label for="editSection">Select Section to Edit:</label>
+                <select id="editSection" onchange="showEditSection()">
+                    <option value="title">Project Title & Image</option>
+                    <option value="overview">Overview Text</option>
+                    <option value="learn">What You'll Learn</option>
+                    <option value="video">Video Lesson</option>
+                    <option value="slides">Step-by-Step Slides</option>
+                    <option value="challenges">Challenges</option>
+                    <option value="quiz">Quiz Questions</option>
+                    <option value="style">Style & Colors</option>
+                </select>
+                
+                <div id="titleEdit" class="edit-section">
+                    <label for="projectTitle">Project Title:</label>
+                    <input type="text" id="editProjectTitle" value="Beating Heart Project">
+                    
+                    <label for="projectSubtitle">Subtitle:</label>
+                    <input type="text" id="editProjectSubtitle" value="Make your Micro:bit display a beating heart animation!">
+                    
+                    <label for="projectImageUrl">Project Image URL:</label>
+                    <input type="text" id="projectImageUrl" value="https://www.elecfreaks.com/wp-content/uploads/2022/12/2-1.png">
+                    <p style="font-size: 0.8rem; color: #666;">Recommended size: 300x300px or similar aspect ratio</p>
+                </div>
+                
+                <div id="overviewEdit" class="edit-section" style="display:none;">
+                    <label for="overviewText">Overview Text:</label>
+                    <textarea id="editOverviewText" rows="5">In this project, you'll learn how to create a beating heart animation on your Micro:bit's LED display. This is a great first project to understand how the Micro:bit works!</textarea>
+                </div>
+                
+                <div id="learnEdit" class="edit-section" style="display:none;">
+                    <h3>What You'll Learn Items</h3>
+                    
+                    <label>Item 1 Title:</label>
+                    <input type="text" id="learnTitle1Input" value="Hardware Concepts">
+                    
+                    <label>Item 1 Description:</label>
+                    <textarea id="learnDesc1Input" rows="2">How to download & flash code to your Micro:bit and how the LED matrix works</textarea>
+                    
+                    <label>Item 2 Title:</label>
+                    <input type="text" id="learnTitle2Input" value="Programming Concepts">
+                    
+                    <label>Item 2 Description:</label>
+                    <textarea id="learnDesc2Input" rows="2">The difference between 'on start' and 'forever' blocks, and how to create simple animations</textarea>
+                    
+                    <label>Item 3 Title:</label>
+                    <input type="text" id="learnTitle3Input" value="Computational Thinking">
+                    
+                    <label>Item 3 Description:</label>
+                    <textarea id="learnDesc3Input" rows="2">How to break down problems into smaller steps (decomposition) and recognize patterns</textarea>
+                    
+                    <label>Item 4 Title:</label>
+                    <input type="text" id="learnTitle4Input" value="STEM Learning">
+                    
+                    <label>Item 4 Description:</label>
+                    <textarea id="learnDesc4Input" rows="2">Integrating Science, Technology, Engineering, and Math concepts through hands-on activities</textarea>
+                </div>
+                
+                <div id="videoEdit" class="edit-section" style="display:none;">
+                    <label for="videoIntroText">Introduction Text:</label>
+                    <input type="text" id="editVideoIntroText" value="Watch this video to learn how to create the beating heart animation:">
+                    
+                    <label for="videoTitle">Video Title:</label>
+                    <input type="text" id="editVideoTitle" value="Programming the Beating Heart">
+                    
+                    <label for="mainVideoUrl">Video URL:</label>
+                    <input type="text" id="editMainVideoUrl" value="https://www.youtube.com/embed/2yzT7_QGLLc">
+                    
+                    <label for="videoKeyPoints">Key Points (one per line):</label>
+                    <textarea id="editVideoKeyPoints" rows="5">The LED matrix has 25 lights (5 rows x 5 columns)
+'on start' runs once when the Micro:bit turns on
+'forever' keeps repeating the code inside it
+We use 'show icon' and 'pause' blocks to create animation</textarea>
+                </div>
+                
+                <div id="slidesEdit" class="edit-section" style="display:none;">
+                    <h3>Step-by-Step Slides</h3>
+                    <p>Add up to 10 slides with multimedia content (image, video, or presentation URL)</p>
+                    
+                    <div id="slidesEditContainer">
+                        <!-- Slides edit fields will be added here dynamically -->
+                    </div>
+                    <button type="button" onclick="addSlideEditField()">Add Another Slide</button>
+                </div>
+                
+                <div id="challengesEdit" class="edit-section" style="display:none;">
+                    <h3>Project Challenges</h3>
+                    <p>Add up to 10 challenges (empty ones won't be displayed)</p>
+                    
+                    <div id="challengesEditContainer">
+                        <!-- Challenges edit fields will be added here dynamically -->
+                    </div>
+                    <button type="button" onclick="addChallengeEditField()">Add Another Challenge</button>
+                </div>
+                
+                <div id="quizEdit" class="edit-section" style="display:none;">
+                    <h3>Quiz Questions</h3>
+                    <p>Add up to 5 quiz questions (empty ones won't be displayed)</p>
+                    
+                    <div id="quizEditContainer">
+                        <!-- Quiz edit fields will be added here dynamically -->
+                    </div>
+                    <button type="button" onclick="addQuizQuestionField()">Add Another Question</button>
+                </div>
+                
+                <div id="styleEdit" class="edit-section" style="display:none;">
+                    <label>Primary Color:</label>
+                    <div class="color-picker">
+                        <div class="color-option selected" style="background-color: #5E81F4;" onclick="selectColor('primary', '#5E81F4')"></div>
+                        <div class="color-option" style="background-color: #FF7AC6;" onclick="selectColor('primary', '#FF7AC6')"></div>
+                        <div class="color-option" style="background-color: #7CE7AC;" onclick="selectColor('primary', '#7CE7AC')"></div>
+                        <div class="color-option" style="background-color: #FFB800;" onclick="selectColor('primary', '#FFB800')"></div>
+                        <div class="color-option" style="background-color: #9B51E0;" onclick="selectColor('primary', '#9B51E0')"></div>
+                        <input type="color" id="primaryColorPicker" onchange="customColorSelected('primary', this.value)" style="width: 40px; height: 40px;">
+                    </div>
+                    
+                    <label>Secondary Color:</label>
+                    <div class="color-picker">
+                        <div class="color-option" style="background-color: #5E81F4;" onclick="selectColor('secondary', '#5E81F4')"></div>
+                        <div class="color-option selected" style="background-color: #FF7AC6;" onclick="selectColor('secondary', '#FF7AC6')"></div>
+                        <div class="color-option" style="background-color: #7CE7AC;" onclick="selectColor('secondary', '#7CE7AC')"></div>
+                        <div class="color-option" style="background-color: #FFB800;" onclick="selectColor('secondary', '#FFB800')"></div>
+                        <div class="color-option" style="background-color: #9B51E0;" onclick="selectColor('secondary', '#9B51E0')"></div>
+                        <input type="color" id="secondaryColorPicker" onchange="customColorSelected('secondary', this.value)" style="width: 40px; height: 40px;">
+                    </div>
+                    
+                    <label>Accent Color:</label>
+                    <div class="color-picker">
+                        <div class="color-option" style="background-color: #5E81F4;" onclick="selectColor('accent', '#5E81F4')"></div>
+                        <div class="color-option" style="background-color: #FF7AC6;" onclick="selectColor('accent', '#FF7AC6')"></div>
+                        <div class="color-option" style="background-color: #7CE7AC;" onclick="selectColor('accent', '#7CE7AC')"></div>
+                        <div class="color-option selected" style="background-color: #FFB800;" onclick="selectColor('accent', '#FFB800')"></div>
+                        <div class="color-option" style="background-color: #9B51E0;" onclick="selectColor('accent', '#9B51E0')"></div>
+                        <input type="color" id="accentColorPicker" onchange="customColorSelected('accent', this.value)" style="width: 40px; height: 40px;">
+                    </div>
+                    
+                    <label>Font Family:</label>
+                    <div class="font-selector">
+                        <div class="font-option selected" onclick="selectFont('Comic Sans MS, sans-serif')" style="font-family: 'Comic Sans MS', sans-serif;">Comic Sans</div>
+                        <div class="font-option" onclick="selectFont('Arial, sans-serif')" style="font-family: Arial, sans-serif;">Arial</div>
+                        <div class="font-option" onclick="selectFont('Georgia, serif')" style="font-family: Georgia, serif;">Georgia</div>
+                        <div class="font-option" onclick="selectFont('Courier New, monospace')" style="font-family: Courier New, serif;">Courier New</div>
+                        <div class="font-option" onclick="selectFont('Verdana, sans-serif')" style="font-family: Verdana, sans-serif;">Verdana</div>
+                    </div>
+                    
+                    <label>Text Size:</label>
+                    <div class="size-selector">
+                        <div class="size-option" onclick="selectSize('small')">Small</div>
+                        <div class="size-option selected" onclick="selectSize('medium')">Medium</div>
+                        <div class="size-option" onclick="selectSize('large')">Large</div>
+                    </div>
+                </div>
+                
+                <button type="button" onclick="saveChanges()">Save Changes</button>
+                <button type="button" onclick="closeEditModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+        <script>
+// Global variables
+let currentSlideIndex = 0;
+let currentQuizIndex = 0;
+let slidesData = [
+    { url: "https://view.genially.com/67de49ded67908621a726b03", description: "1. Introduction to the Beating Heart project", type: "iframe" },
+    { url: "https://view.genially.com/67de49e4ab31ac746b27c48b", description: "2. Setting up your Micro:bit environment", type: "iframe" },
+    { url: "https://clearinghouse.starnetlibraries.org/images/525/microbit-heart.jpg", description: "3. Programming the Beating Heart animation", type: "image" },
+    { url: "", description: "", type: "iframe" },
+    { url: "", description: "", type: "iframe" },
+    { url: "", description: "", type: "iframe" },
+    { url: "", description: "", type: "iframe" },
+    { url: "", description: "", type: "iframe" },
+    { url: "", description: "", type: "iframe" },
+    { url: "", description: "", type: "iframe" }
+];
+
+let challengesData = [
+    { title: "Make it faster or slower", description: "Change the pause times to make the heart beat faster or slower" },
+    { title: "Create a blinking smiley", description: "Use the same technique but with smiley faces instead of hearts" },
+    { title: "Add a button control", description: "Make the heart only beat when you press button A" },
+    { title: "Add sound effects", description: "Use the Micro:bit's speaker to add heartbeat sounds" },
+    { title: "Create a heartbeat monitor", description: "Use the accelerometer to detect movement and sync the heart to it" },
+    { title: "", description: "" },
+    { title: "", description: "" },
+    { title: "", description: "" },
+    { title: "", description: "" },
+    { title: "", description: "" }
+];
+
+let quizData = [
+    {
+        question: "What is the correct order of blocks to make a heart beat animation?",
+        correctAnswer: "show icon → pause → show smaller icon → pause",
+        incorrectAnswers: [
+            "pause → show icon → pause → show smaller icon",
+            "show icon → show smaller icon → pause → pause"
+        ]
+    },
+    {
+        question: "How many LEDs are there on the Micro:bit's display?",
+        correctAnswer: "25 (5x5)",
+        incorrectAnswers: [
+            "15 (3x5)",
+            "30 (5x6)"
+        ]
+    },
+    {
+        question: "What does the 'forever' block do?",
+        correctAnswer: "Keeps repeating the code inside it over and over",
+        incorrectAnswers: [
+            "Runs the code inside it once when the Micro:bit starts",
+            "Makes the Micro:bit run forever without stopping"
+        ]
+    },
+    {
+        question: "",
+        correctAnswer: "",
+        incorrectAnswers: ["", ""]
+    },
+    {
+        question: "",
+        correctAnswer: "",
+        incorrectAnswers: ["", ""]
+    }
+];
+
+// Tab functionality
+function openTab(tabName, event) {
+    // Prevent default if event exists
+    if (event) event.preventDefault();
+    
+    const tabs = document.getElementsByClassName('tab-content');
+    for (let i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+    }
+    
+    const tabButtons = document.getElementsByClassName('tab');
+    for (let i = 0; i < tabButtons.length; i++) {
+        tabButtons[i].classList.remove('active');
+    }
+    
+    document.getElementById(tabName).classList.add('active');
+    
+    // Add active class to clicked tab button
+    if (event) {
+        event.currentTarget.classList.add('active');
+    } else {
+        // Find the corresponding tab button and activate it
+        for (let i = 0; i < tabButtons.length; i++) {
+            if (tabButtons[i].getAttribute('onclick').includes(tabName)) {
+                tabButtons[i].classList.add('active');
+                break;
+            }
+        }
+    }
+    
+    updateProgressBar(tabName);
+    
+    if (tabName === 'video') {
+        pauseVideoOnTabSwitch();
+    }
+    
+    if (tabName !== 'quiz') {
+        resetQuiz();
+    }
+}
+
+function pauseVideoOnTabSwitch() {
+    const videoIframe = document.getElementById('mainVideo');
+    if (videoIframe) {
+        videoIframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+    }
+}
+
+function resetQuiz() {
+    const allFeedbacks = document.querySelectorAll('.quiz-feedback');
+    allFeedbacks.forEach(feedback => {
+        feedback.style.display = 'none';
+        feedback.classList.remove('correct', 'incorrect');
+    });
+    
+    const quizOptions = document.querySelectorAll('.quiz-option');
+    quizOptions.forEach(option => option.classList.remove('selected', 'correct', 'incorrect'));
+    
+    const resultMessage = document.getElementById('quizResultMessage');
+    if (resultMessage) resultMessage.style.display = 'none';
+    
+    const partyPopperContainer = document.getElementById('partyPopperContainer');
+    if (partyPopperContainer) partyPopperContainer.style.display = 'none';
+}
+
+// Slideshow functionality
+function showSlide(n) {
+    const slides = document.querySelectorAll('#slideshowContainer .slide');
+    if (slides.length === 0) return;
+    
+    for (let i = 0; i < slides.length; i++) {
+        slides[i].classList.remove('active');
+    }
+    
+    currentSlideIndex = (n + slides.length) % slides.length;
+    slides[currentSlideIndex].classList.add('active');
+}
+
+function nextSlide() {
+    showSlide(currentSlideIndex + 1);
+}
+
+function prevSlide() {
+    showSlide(currentSlideIndex - 1);
+}
+
+// Quiz functionality
+function selectOption(option) {
+    const quizQuestion = option.closest('.quiz-question');
+    if (!quizQuestion) return;
+
+    const options = quizQuestion.getElementsByClassName('quiz-option');
+    for (let i = 0; i < options.length; i++) {
+        options[i].classList.remove('selected');
+    }
+    option.classList.add('selected');
+    
+    const feedback = quizQuestion.querySelector('.quiz-feedback');
+    if (feedback) {
+        feedback.style.display = 'none';
+    }
+}
+
+function updateQuiz() {
+    const container = document.getElementById('quizContainer');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    quizData.forEach((quiz, index) => {
+        if(!quiz.question) return;
+        
+        const quizDiv = document.createElement('div');
+        quizDiv.className = 'quiz-question';
+        
+        // Combine all answers and shuffle them
+        const allAnswers = [
+            quiz.correctAnswer,
+            ...quiz.incorrectAnswers
+        ].sort(() => Math.random() - 0.5);
+        
+        // Generate options with A, B, C labels
+        const optionsHtml = allAnswers.map((answer, i) => {
+            const label = String.fromCharCode(65 + i); // A, B, C
+            return `<div class="quiz-option" onclick="selectOption(this)">${label}) ${answer}</div>`;
+        }).join('');
+        
+        quizDiv.innerHTML = `
+            <p>${index + 1}. ${quiz.question}</p>
+            <div class="quiz-options">
+                ${optionsHtml}
+            </div>
+            <div class="quiz-feedback correct">
+                Correct!
+            </div>
+            <div class="quiz-feedback incorrect">
+                The correct answer is: ${quiz.correctAnswer}
+            </div>
+        `;
+        
+        container.appendChild(quizDiv);
+    });
+}
+
+function submitQuiz() {
+    const quizQuestions = document.querySelectorAll('.quiz-question');
+    let score = 0;
+    let totalQuestions = 0;
+    
+    quizData.forEach((quiz, index) => {
+        if (!quiz.question) return;
+        totalQuestions++;
+        
+        const questionDiv = quizQuestions[index];
+        if (!questionDiv) return;
+        
+        const selectedOption = questionDiv.querySelector('.quiz-option.selected');
+        const feedback = questionDiv.querySelector('.quiz-feedback');
+        
+        if (selectedOption && feedback) {
+            // Get the actual answer text without the A/B/C label
+            const selectedAnswerText = selectedOption.textContent.replace(/^[A-Z]\)\s*/, '');
+            const isCorrect = selectedAnswerText === quiz.correctAnswer;
+            
+            if (isCorrect) {
+                score++;
+                feedback.classList.add('correct');
+                feedback.classList.remove('incorrect');
+                feedback.textContent = 'Correct!';
+            } else {
+                feedback.classList.add('incorrect');
+                feedback.classList.remove('correct');
+                feedback.textContent = `Incorrect! The correct answer is: ${quiz.correctAnswer}`;
+            }
+            feedback.style.display = 'block';
+        }
+    });
+    
+    const resultMessage = document.getElementById('quizResultMessage');
+    const partyPopperContainer = document.getElementById('partyPopperContainer');
+    
+    if (resultMessage) {
+        if (score === totalQuestions) {
+            resultMessage.textContent = `🎉 Perfect! You got ${score} out of ${totalQuestions} correct!`;
+            if (partyPopperContainer) {
+                partyPopperContainer.style.display = 'flex';
+                setTimeout(() => {
+                    if (partyPopperContainer) partyPopperContainer.style.display = 'none';
+                }, 3000);
+            }
+        } else {
+            resultMessage.textContent = `You got ${score} out of ${totalQuestions} correct. Keep trying!`;
+        }
+        resultMessage.style.display = 'block';
+        resultMessage.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// Progress bar
+function updateProgressBar(tab) {
+    const progressBar = document.getElementById('progressBar');
+    if (!progressBar) return;
+    
+    let progress = 20;
+    if (tab === 'video') progress = 40;
+    else if (tab === 'slides') progress = 60;
+    else if (tab === 'challenges') progress = 80;
+    else if (tab === 'quiz') progress = 100;
+    
+    progressBar.style.width = progress + '%';
+}
+
+// Edit modal functionality
+function openEditModal() {
+    document.getElementById('editProjectTitle').value = document.getElementById('projectTitle').textContent;
+    document.getElementById('editProjectSubtitle').value = document.getElementById('projectSubtitle').textContent;
+    document.getElementById('projectImageUrl').value = document.getElementById('projectImage').src;
+    document.getElementById('editOverviewText').value = document.getElementById('overviewText').textContent;
+    
+    document.getElementById('learnTitle1Input').value = document.getElementById('learnTitle1').textContent;
+    document.getElementById('learnDesc1Input').value = document.getElementById('learnDesc1').textContent;
+    document.getElementById('learnTitle2Input').value = document.getElementById('learnTitle2').textContent;
+    document.getElementById('learnDesc2Input').value = document.getElementById('learnDesc2').textContent;
+    document.getElementById('learnTitle3Input').value = document.getElementById('learnTitle3').textContent;
+    document.getElementById('learnDesc3Input').value = document.getElementById('learnDesc3').textContent;
+    document.getElementById('learnTitle4Input').value = document.getElementById('learnTitle4').textContent;
+    document.getElementById('learnDesc4Input').value = document.getElementById('learnDesc4').textContent;
+    
+    document.getElementById('editVideoIntroText').value = document.getElementById('videoIntroText').textContent;
+    document.getElementById('editVideoTitle').value = document.getElementById('videoTitle').textContent;
+    document.getElementById('editMainVideoUrl').value = document.getElementById('mainVideo').src;
+    
+    const keyPointsItems = document.querySelectorAll('#videoKeyPoints li');
+    const keyPointsText = Array.from(keyPointsItems).map(li => li.textContent).join('\n');
+    document.getElementById('editVideoKeyPoints').value = keyPointsText;
+    
+    loadSlidesEditFields();
+    loadChallengesEditFields();
+    loadQuizEditFields();
+    
+    document.getElementById('editModal').style.display = 'block';
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+}
+
+function showEditSection() {
+    const sections = document.querySelectorAll('.edit-section');
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    const selectedSection = document.getElementById('editSection').value + 'Edit';
+    document.getElementById(selectedSection).style.display = 'block';
+}
+
+function selectColor(type, color) {
+    const colorOptions = document.querySelectorAll(`#styleEdit .color-option`);
+    colorOptions.forEach(option => {
+        option.classList.remove('selected');
+        if (option.style.backgroundColor === color) {
+            option.classList.add('selected');
+        }
+    });
+    
+    if (type === 'primary') {
+        document.getElementById('primaryColorPicker').value = color;
+    } else if (type === 'secondary') {
+        document.getElementById('secondaryColorPicker').value = color;
+    } else if (type === 'accent') {
+        document.getElementById('accentColorPicker').value = color;
+    }
+    
+    document.documentElement.style.setProperty(`--${type}`, color);
+}
+
+function customColorSelected(type, color) {
+    selectColor(type, color);
+}
+
+function selectFont(font) {
+    const fontOptions = document.querySelectorAll('.font-option');
+    fontOptions.forEach(option => {
+        option.classList.remove('selected');
+        if (option.style.fontFamily === font) {
+            option.classList.add('selected');
+        }
+    });
+    
+    document.body.style.fontFamily = font;
+}
+
+function selectSize(size) {
+    const sizeOptions = document.querySelectorAll('.size-option');
+    sizeOptions.forEach(option => {
+        option.classList.remove('selected');
+        if (option.textContent.toLowerCase() === size) {
+            option.classList.add('selected');
+        }
+    });
+    
+    let fontSize;
+    if (size === 'small') {
+        fontSize = '14px';
+    } else if (size === 'medium') {
+        fontSize = '16px';
+    } else if (size === 'large') {
+        fontSize = '18px';
+    }
+    
+    document.body.style.fontSize = fontSize;
+}
+
+function loadSlidesEditFields() {
+    const container = document.getElementById('slidesEditContainer');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    slidesData.forEach((slide, index) => {
+        if (index >= 10) return;
+        
+        const slideDiv = document.createElement('div');
+        slideDiv.style.marginBottom = '20px';
+        slideDiv.style.padding = '10px';
+        slideDiv.style.border = '1px solid #ddd';
+        slideDiv.style.borderRadius = '5px';
+        
+        slideDiv.innerHTML = `
+            <label>Slide ${index + 1} URL:</label>
+            <input type="text" class="slide-url" value="${slide.url}" data-index="${index}">
+            
+            <label>Slide ${index + 1} Description:</label>
+            <input type="text" class="slide-desc" value="${slide.description}" data-index="${index}">
+            
+            <label>Slide ${index + 1} Type:</label>
+            <select class="slide-type" data-index="${index}">
+                <option value="iframe" ${slide.type === 'iframe' ? 'selected' : ''}>Presentation/Video</option>
+                <option value="image" ${slide.type === 'image' ? 'selected' : ''}>Image</option>
+            </select>
+            
+            <button type="button" onclick="removeSlideEditField(${index})" style="margin-top: 5px;">Remove</button>
+        `;
+        
+        container.appendChild(slideDiv);
+    });
+}
+
+function addSlideEditField() {
+    if (slidesData.length >= 10) {
+        alert("Maximum of 10 slides allowed");
+        return;
+    }
+    
+    const newIndex = slidesData.length;
+    slidesData.push({ url: "", description: `New Slide ${newIndex + 1}`, type: "iframe" });
+    loadSlidesEditFields();
+}
+
+function removeSlideEditField(index) {
+    if (slidesData.length <= 1) {
+        alert("You must have at least one slide");
+        return;
+    }
+    
+    slidesData.splice(index, 1);
+    loadSlidesEditFields();
+}
+
+function loadChallengesEditFields() {
+    const container = document.getElementById('challengesEditContainer');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    challengesData.forEach((challenge, index) => {
+        if (index >= 10) return;
+        
+        const challengeDiv = document.createElement('div');
+        challengeDiv.style.marginBottom = '20px';
+        challengeDiv.style.padding = '10px';
+        challengeDiv.style.border = '1px solid #ddd';
+        challengeDiv.style.borderRadius = '5px';
+        
+        challengeDiv.innerHTML = `
+            <label>Challenge ${index + 1} Title:</label>
+            <input type="text" class="challenge-title" value="${challenge.title}" data-index="${index}">
+            
+            <label>Challenge ${index + 1} Description:</label>
+            <textarea class="challenge-desc" rows="2" data-index="${index}">${challenge.description}</textarea>
+            
+            <button type="button" onclick="removeChallengeEditField(${index})" style="margin-top: 5px;">Remove</button>
+        `;
+        
+        container.appendChild(challengeDiv);
+    });
+}
+
+function addChallengeEditField() {
+    if (challengesData.length >= 10) {
+        alert("Maximum of 10 challenges allowed");
+        return;
+    }
+    
+    const newIndex = challengesData.length;
+    challengesData.push({ title: `New Challenge ${newIndex + 1}`, description: "" });
+    loadChallengesEditFields();
+}
+
+function removeChallengeEditField(index) {
+    if (challengesData.length <= 1) {
+        alert("You must have at least one challenge");
+        return;
+    }
+    
+    challengesData.splice(index, 1);
+    loadChallengesEditFields();
+}
+
+function loadQuizEditFields() {
+    const container = document.getElementById('quizEditContainer');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    quizData.forEach((quiz, index) => {
+        if (index >= 5) return;
+        
+        const quizDiv = document.createElement('div');
+        quizDiv.style.marginBottom = '20px';
+        quizDiv.style.padding = '10px';
+        quizDiv.style.border = '1px solid #ddd';
+        quizDiv.style.borderRadius = '5px';
+        
+        quizDiv.innerHTML = `
+            <label>Question ${index + 1}:</label>
+            <input type="text" class="quiz-question-input" value="${quiz.question || ''}" data-index="${index}">
+            
+            <label>Correct Answer:</label>
+            <input type="text" class="quiz-correct-answer-input" value="${quiz.correctAnswer || ''}" data-index="${index}">
+            
+            <label>Incorrect Answers (One per line):</label>
+            <textarea class="quiz-incorrect-answer-input" rows="2" data-index="${index}">${quiz.incorrectAnswers.join('\n')}</textarea>
+            
+            <button type="button" onclick="removeQuizQuestionField(${index})" style="margin-top: 5px;">Remove</button>
+        `;
+        
+        container.appendChild(quizDiv);
+    });
+}
+
+function addQuizQuestionField() {
+    if (quizData.length >= 5) {
+        alert("Maximum of 5 quiz questions allowed");
+        return;
+    }
+    
+    const newIndex = quizData.length;
+    quizData.push({ question: "", correctAnswer: "", incorrectAnswers: ["", ""] });
+    loadQuizEditFields();
+}
+
+function removeQuizQuestionField(index) {
+    if (quizData.length <= 1) {
+        alert("You must have at least one quiz question");
+        return;
+    }
+    
+    quizData.splice(index, 1);
+    loadQuizEditFields();
+}
+
+function saveChanges() {
+    document.getElementById('projectTitle').textContent = document.getElementById('editProjectTitle').value;
+    document.getElementById('projectSubtitle').textContent = document.getElementById('editProjectSubtitle').value;
+    document.getElementById('projectImage').src = document.getElementById('projectImageUrl').value;
+    
+    document.getElementById('overviewText').textContent = document.getElementById('editOverviewText').value;
+    
+    document.getElementById('learnTitle1').textContent = document.getElementById('learnTitle1Input').value;
+    document.getElementById('learnDesc1').textContent = document.getElementById('learnDesc1Input').value;
+    document.getElementById('learnTitle2').textContent = document.getElementById('learnTitle2Input').value;
+    document.getElementById('learnDesc2').textContent = document.getElementById('learnDesc2Input').value;
+    document.getElementById('learnTitle3').textContent = document.getElementById('learnTitle3Input').value;
+    document.getElementById('learnDesc3').textContent = document.getElementById('learnDesc3Input').value;
+    document.getElementById('learnTitle4').textContent = document.getElementById('learnTitle4Input').value;
+    document.getElementById('learnDesc4').textContent = document.getElementById('learnDesc4Input').value;
+    
+    document.getElementById('videoIntroText').textContent = document.getElementById('editVideoIntroText').value;
+    document.getElementById('videoTitle').textContent = document.getElementById('editVideoTitle').value;
+    document.getElementById('mainVideo').src = document.getElementById('editMainVideoUrl').value;
+    
+    const keyPointsText = document.getElementById('editVideoKeyPoints').value;
+    const keyPointsList = keyPointsText.split('\n').filter(point => point.trim() !== '');
+    const keyPointsContainer = document.getElementById('videoKeyPoints');
+    keyPointsContainer.innerHTML = '';
+    keyPointsList.forEach(point => {
+        const li = document.createElement('li');
+        li.textContent = point;
+        keyPointsContainer.appendChild(li);
+    });
+    
+    const slideUrlInputs = document.querySelectorAll('.slide-url');
+    const slideDescInputs = document.querySelectorAll('.slide-desc');
+    const slideTypeSelects = document.querySelectorAll('.slide-type');
+    
+    slidesData = [];
+    slideUrlInputs.forEach((input, index) => {
+        slidesData.push({
+            url: input.value,
+            description: slideDescInputs[index].value,
+            type: slideTypeSelects[index].value
+        });
+    });
+    
+    const challengeTitleInputs = document.querySelectorAll('.challenge-title');
+    const challengeDescInputs = document.querySelectorAll('.challenge-desc');
+    
+    challengesData = [];
+    challengeTitleInputs.forEach((input, index) => {
+        challengesData.push({
+            title: input.value,
+            description: challengeDescInputs[index].value
+        });
+    });
+    
+    const quizQuestionInputs = document.querySelectorAll('.quiz-question-input');
+    const quizCorrectAnswerInputs = document.querySelectorAll('.quiz-correct-answer-input');
+    const quizIncorrectAnswerInputs = document.querySelectorAll('.quiz-incorrect-answer-input');
+    
+    quizData = [];
+    quizQuestionInputs.forEach((input, index) => {
+        quizData.push({
+            question: input.value,
+            correctAnswer: quizCorrectAnswerInputs[index].value,
+            incorrectAnswers: quizIncorrectAnswerInputs[index].value.split('\n').filter(answer => answer.trim() !== '')
+        });
+    });
+    
+    updateSlideshow();
+    updateChallenges();
+    updateQuiz();
+    
+    alert('Changes saved successfully!');
+    closeEditModal();
+}
+
+function updateSlideshow() {
+    const container = document.getElementById('slideshowContainer');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    slidesData.forEach((slide, index) => {
+        if (!slide.url) return;
+        
+        const slideDiv = document.createElement('div');
+        slideDiv.className = 'slide';
+        if (index === 0) slideDiv.classList.add('active');
+        
+        const slideContentWrapper = document.createElement('div');
+        slideContentWrapper.className = 'slide-content-wrapper';
+
+        if (slide.type === 'iframe') {
+            slideContentWrapper.innerHTML = `<iframe src="${slide.url}" frameborder="0" allowfullscreen></iframe>`;
+        } else if (slide.type === 'image') {
+            slideContentWrapper.innerHTML = `<img src="${slide.url}" alt="${slide.description}">`;
+        }
+        
+        slideDiv.appendChild(slideContentWrapper);
+        slideDiv.innerHTML += `<p>${slide.description}</p>`;
+        container.appendChild(slideDiv);
+    });
+    
+    currentSlideIndex = 0;
+}
+
+function updateChallenges() {
+    const container = document.getElementById('challengesContainer');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    challengesData.forEach((challenge, index) => {
+        if (!challenge.title && !challenge.description) return;
+        
+        const challengeDiv = document.createElement('div');
+        challengeDiv.className = 'step';
+        
+        challengeDiv.innerHTML = `
+            <div class="step-number">★</div>
+            <div class="step-content">
+                <strong>${challenge.title || 'Challenge ' + (index + 1)}</strong>
+                <p>${challenge.description || ''}</p>
+            </div>
+        `;
+        
+        container.appendChild(challengeDiv);
+    });
+}
+
+function exportHTML() {
+    // Create a clone of the document to modify for export
+    const exportDoc = document.cloneNode(true);
+    
+    // Remove edit and export buttons from the exported version
+    const exportEditBtn = exportDoc.querySelector('.edit-btn');
+    if (exportEditBtn) exportEditBtn.remove();
+    const exportExportBtn = exportDoc.querySelector('.export-btn');
+    if (exportExportBtn) exportExportBtn.remove();
+    
+    // Remove the edit modal completely
+    const exportModal = exportDoc.getElementById('editModal');
+    if (exportModal) exportModal.remove();
+    
+    // Remove all script elements (keeping only basic functionality)
+    const scripts = exportDoc.querySelectorAll('script');
+    scripts.forEach(script => script.remove());
+    
+    // Prepare quiz data for the exported version
+    const exportQuizData = JSON.stringify(quizData.filter(q => q.question).map(q => {
+        return {
+            question: q.question,
+            correctAnswer: q.correctAnswer,
+            incorrectAnswers: q.incorrectAnswers
+        };
+    }));
+    
+    // Add minimal script for basic functionality
+    const newScript = exportDoc.createElement('script');
+    newScript.textContent = `
+        // Global variable for exported quiz data
+        const exportedQuizData = ${exportQuizData};
+        
+        // Tab functionality
+        function openTab(tabName, event) {
+            if (event) event.preventDefault();
+            
+            const tabs = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            const tabButtons = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('active');
+            }
+            
+            const tabContent = document.getElementById(tabName);
+            if (tabContent) tabContent.classList.add('active');
+            
+            if (event) {
+                event.currentTarget.classList.add('active');
+            } else {
+                for (let i = 0; i < tabButtons.length; i++) {
+                    if (tabButtons[i].getAttribute('onclick') && 
+                        tabButtons[i].getAttribute('onclick').includes(tabName)) {
+                        tabButtons[i].classList.add('active');
+                        break;
+                    }
+                }
+            }
+            
+            // Update progress bar
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) {
+                let progress = 20;
+                if (tabName === 'video') progress = 40;
+                else if (tabName === 'slides') progress = 60;
+                else if (tabName === 'challenges') progress = 80;
+                else if (tabName === 'quiz') progress = 100;
+                progressBar.style.width = progress + '%';
+            }
+        }
+        
+        // Slideshow functionality
+        let currentSlideIndex = 0;
+        function showSlide(n) {
+            const slides = document.querySelectorAll('#slideshowContainer .slide');
+            if (slides.length === 0) return;
+            
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove('active');
+            }
+            
+            currentSlideIndex = (n + slides.length) % slides.length;
+            slides[currentSlideIndex].classList.add('active');
+        }
+        
+        function nextSlide() {
+            showSlide(currentSlideIndex + 1);
+        }
+        
+        function prevSlide() {
+            showSlide(currentSlideIndex - 1);
+        }
+        
+        // Quiz functionality
+        function selectOption(option) {
+            const quizQuestion = option.closest('.quiz-question');
+            if (!quizQuestion) return;
+
+            const options = quizQuestion.getElementsByClassName('quiz-option');
+            for (let i = 0; i < options.length; i++) {
+                options[i].classList.remove('selected');
+            }
+            option.classList.add('selected');
+            
+            const feedback = quizQuestion.querySelector('.quiz-feedback');
+            if (feedback) {
+                feedback.style.display = 'none';
+            }
+        }
+        
+        function submitQuiz() {
+            const quizQuestions = document.querySelectorAll('.quiz-question');
+            let score = 0;
+            let totalQuestions = 0;
+            
+            quizQuestions.forEach((questionDiv, index) => {
+                if (!exportedQuizData[index]) return;
+                totalQuestions++;
+                
+                const selectedOption = questionDiv.querySelector('.quiz-option.selected');
+                const feedback = questionDiv.querySelector('.quiz-feedback');
+                
+                if (selectedOption && feedback) {
+                    // Get the actual answer text without the A/B/C label
+                    const selectedAnswerText = selectedOption.textContent.replace(/^[A-Z]\)\s*/, '');
+                    const isCorrect = selectedAnswerText === exportedQuizData[index].correctAnswer;
+                    
+                    if (isCorrect) {
+                        score++;
+                        feedback.classList.add('correct');
+                        feedback.classList.remove('incorrect');
+                        feedback.textContent = 'Correct!';
+                    } else {
+                        feedback.classList.add('incorrect');
+                        feedback.classList.remove('correct');
+                        feedback.textContent = 'Incorrect! The correct answer is: ' + exportedQuizData[index].correctAnswer;
+                    }
+                    feedback.style.display = 'block';
+                }
+            });
+            
+            const resultMessage = document.getElementById('quizResultMessage');
+            const partyPopperContainer = document.getElementById('partyPopperContainer');
+            
+            if (resultMessage) {
+                if (score === totalQuestions) {
+                    resultMessage.textContent = '🎉 Perfect! You got ' + score + ' out of ' + totalQuestions + ' correct!';
+                    if (partyPopperContainer) {
+                        partyPopperContainer.style.display = 'flex';
+                        setTimeout(() => {
+                            if (partyPopperContainer) partyPopperContainer.style.display = 'none';
+                        }, 3000);
+                    }
+                } else {
+                    resultMessage.textContent = 'You got ' + score + ' out of ' + totalQuestions + ' correct. Try again!';
+                }
+                resultMessage.style.display = 'block';
+                resultMessage.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up tab click handlers
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function(event) {
+                    const tabName = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    openTab(tabName, event);
+                });
+            });
+            
+            // Activate first tab and first slide by default
+            if (tabs.length > 0) {
+                const firstTabName = tabs[0].getAttribute('onclick').match(/'([^']+)'/)[1];
+                openTab(firstTabName);
+            }
+            
+            // Initialize first slide if exists
+            const firstSlide = document.querySelector('#slideshowContainer .slide');
+            if (firstSlide) {
+                firstSlide.classList.add('active');
+            }
+        });
+    `;
+    
+    exportDoc.body.appendChild(newScript);
+    
+    // Create HTML string
+    const htmlContent = '<!DOCTYPE html>\n' + exportDoc.documentElement.outerHTML;
+    
+    // Create download link
+    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'microbit-project.html';
+    a.style.display = 'none';
+    
+    document.body.appendChild(a);
+    a.click();
+    
+    // Clean up
+    setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }, 100);
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all components
+    updateProgressBar('overview');
+    updateSlideshow();
+    updateChallenges();
+    updateQuiz();
+    
+    // Set up tab click handlers
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function(event) {
+            const tabName = this.getAttribute('onclick').match(/'(.*?)'/)[1];
+            openTab(tabName, event);
+        });
+    });
+    
+    // Activate first tab by default
+    if (tabs.length > 0) {
+        const firstTabName = tabs[0].getAttribute('onclick').match(/'(.*?)'/)[1];
+        openTab(firstTabName);
+    }
+});
+  </script>
+      
+</body>
+</html>
