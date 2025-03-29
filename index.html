@@ -305,6 +305,8 @@ h3 {
     font-size: 0.9rem;
     position: relative; /* Needed for pseudo-elements if added later */
     text-align: left; /* Ensure text aligns left */
+    /* Default state - before submit */
+    opacity: 1;
 }
 
 .quiz-option:hover {
@@ -314,24 +316,49 @@ h3 {
 
 /* Styles applied *after* submit */
 .quiz-option.selected {
-    background-color: var(--primary);
-    color: white;
-    border-color: var(--primary);
+    /* Style for the option the user actually picked */
+    /* background-color: var(--primary); */ /* Base selection color might be confusing after submit */
+    /* color: white; */
+    /* border-color: var(--primary); */
 }
 
-.quiz-option.correct.selected { /* Correct AND selected */
+.quiz-option.correct {
+    /* Style applied to the CORRECT option after submit, regardless of selection */
     background-color: var(--success);
     color: white;
-    border-color: #63c899; /* Slightly darker success border */
+    border-color: #63c899;
     font-weight: bold;
+}
+.quiz-option.correct.selected {
+     /* If the user SELECTED the correct one, ensure correct style dominates */
+    background-color: var(--success);
+    color: white;
+    border-color: #63c899;
 }
 
-.quiz-option.incorrect.selected { /* Incorrect AND selected */
+
+.quiz-option.incorrect.selected {
+    /* Style applied ONLY if the user SELECTED an INCORRECT option */
     background-color: var(--danger);
     color: white;
-    border-color: #e66a6a; /* Slightly darker danger border */
-    font-weight: bold;
+    border-color: #e66a6a;
+    font-weight: bold; /* Optionally bold their wrong choice */
+     text-decoration: line-through; /* Strike through wrong selection */
+     text-decoration-thickness: 2px;
 }
+
+/* Dim unselected options after submit */
+.quiz-question.answered .quiz-option:not(.selected):not(.correct) {
+    opacity: 0.6;
+    cursor: default;
+    background-color: #f5f7fa; /* Reset background */
+    border-color: #d8dde6; /* Reset border */
+}
+/* Ensure the correct unselected option isn't dimmed */
+.quiz-question.answered .quiz-option.correct:not(.selected) {
+     opacity: 1;
+}
+
 
 .quiz-feedback {
     margin-top: 12px;
@@ -347,7 +374,7 @@ h3 {
     background-color: #e6f7ed;
     color: #1d6c45; /* Darker green */
     border-color: #c3e6cb;
-    /* display: block;  <- Handled by JS on submit */
+    /* display: block; <- Handled by JS on submit */
 }
 
 .quiz-feedback.incorrect {
@@ -357,21 +384,21 @@ h3 {
      /* display: block; <- Handled by JS on submit */
 }
 
-#quizResult { /* Style for overall result message */
-    margin: 25px 0 15px;
+/* Final result div styling (added by export script) */
+.final-quiz-result {
+    margin-top: 20px;
     padding: 15px;
     border-radius: 8px;
     text-align: center;
-    font-size: 1.1rem;
     font-weight: bold;
-    display: none; /* Hidden initially */
+    font-size: 1.1rem;
 }
-#quizResult.success {
+.final-quiz-result.success {
     background-color: #e6f7ed;
     color: #1d6c45;
     border: 1px solid #c3e6cb;
 }
-#quizResult.fail {
+.final-quiz-result.fail {
     background-color: #fde8e8;
     color: #9b1c1c;
     border: 1px solid #f5c6cb;
@@ -396,7 +423,7 @@ h3 {
     margin-right: auto;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-.submit-btn:hover {
+.submit-btn:hover:not(:disabled) {
     background-color: #ffc833; /* Lighter accent on hover */
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     transform: translateY(-1px);
@@ -407,6 +434,7 @@ h3 {
      cursor: not-allowed;
      box-shadow: none;
      transform: none;
+     opacity: 0.7;
 }
 
 
@@ -443,6 +471,7 @@ h3 {
     font-size: 18px; /* Larger icon */
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     transition: background-color 0.3s, transform 0.2s;
+    z-index: 10; /* Ensure they are above other header content */
 }
 .edit-btn:hover, .export-btn:hover {
     background-color: rgba(255, 255, 255, 0.4);
@@ -490,6 +519,7 @@ h3 {
     color: #aaa;
     cursor: pointer;
     line-height: 1;
+    z-index: 1001; /* Above modal content */
 }
 .close-modal:hover {
     color: #333;
@@ -511,16 +541,17 @@ h3 {
 .edit-form input[type="url"],
 .edit-form textarea,
 .edit-form select {
-    width: calc(100% - 18px); /* Account for padding */
+    width: 100%; /* Use 100% and box-sizing */
     padding: 10px; /* Increased padding */
     margin-bottom: 15px;
     border: 1px solid #ccc; /* Slightly darker border */
     border-radius: 5px;
     font-size: 0.9rem; /* Consistent font size */
-    box-sizing: border-box; /* Include padding in width */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 .edit-form textarea {
     resize: vertical; /* Allow vertical resize */
+    min-height: 60px; /* Minimum height */
 }
 
 .edit-form button, button.remove-item-btn, button.add-item-btn { /* Style all buttons in form */
@@ -542,6 +573,9 @@ h3 {
 button.remove-item-btn {
     background-color: var(--danger);
     margin-left: 10px; /* Space it out */
+    font-weight: bold;
+    line-height: 1; /* Adjust line height for '×' */
+    padding: 6px 10px; /* Fine-tune padding */
 }
 button.remove-item-btn:hover {
     background-color: #e66a6a;
@@ -551,7 +585,9 @@ button.add-item-btn {
      background-color: var(--success);
      display: block; /* Make it block level */
      margin-top: 15px; /* Space above add button */
+     margin-left: 0; /* Align left */
      margin-right: 0;
+     width: fit-content; /* Size to content */
 }
 button.add-item-btn:hover {
      background-color: #63c899;
@@ -576,16 +612,17 @@ button.add-item-btn:hover {
     position: absolute;
     top: 10px;
     right: 10px;
-    padding: 5px 8px; /* Smaller remove button */
-    font-size: 0.8rem;
+    font-size: 1.2rem; /* Make '×' bigger */
 }
 
 .edit-item-group label {
     font-weight: normal; /* Normal weight for sub-labels */
     color: #555;
+    font-size: 0.85rem; /* Smaller sub-labels */
 }
 
 .edit-item-group input[type="text"],
+.edit-item-group input[type="url"],
 .edit-item-group textarea,
 .edit-item-group select {
     margin-bottom: 10px; /* Reduced margin inside groups */
@@ -620,6 +657,7 @@ input[type="color"] { /* Style the native color picker */
      border-radius: 50%;
      overflow: hidden;
      cursor: pointer;
+     vertical-align: middle; /* Align with options */
 }
 
 
@@ -670,6 +708,7 @@ input[type="color"] { /* Style the native color picker */
     font-size: 0.85rem;
     color: #777;
     margin-top: 8px;
+    font-weight: normal; /* Override bold label */
 }
 
 @media (min-width: 768px) {
@@ -707,14 +746,15 @@ input[type="color"] { /* Style the native color picker */
         font-size: 1rem;
     }
 
-    .quiz-options {
-        flex-direction: row; /* Options side-by-side on larger screens */
-        flex-wrap: wrap;    /* Allow wrapping if needed */
+    /* Optional: Quiz options side-by-side on larger screens */
+    /* .quiz-options {
+        flex-direction: row;
+        flex-wrap: wrap;
     }
     .quiz-option {
-        flex-basis: calc(50% - 10px); /* Two columns layout */
-        margin-bottom: 10px; /* Add back margin for row layout */
-    }
+        flex-basis: calc(50% - 10px);
+        margin-bottom: 10px;
+    } */
 
 }
 
@@ -786,7 +826,6 @@ input[type="color"] { /* Style the native color picker */
 
         <h3>What You'll Learn</h3>
         <div id="learnContainer">
-            <!-- "What You'll Learn" items will be dynamically inserted here -->
              <p>Loading learning objectives...</p>
         </div>
     </div>
@@ -802,7 +841,6 @@ input[type="color"] { /* Style the native color picker */
 
         <h3>Key Points from the Video</h3>
         <ul id="videoKeyPoints" style="font-size: 0.9rem; padding-left: 20px; list-style: disc;">
-            <!-- Key points will be dynamically inserted here -->
              <li>Loading key points...</li>
         </ul>
     </div>
@@ -810,7 +848,6 @@ input[type="color"] { /* Style the native color picker */
     <div id="slides" class="tab-content">
         <h2>Step-by-Step Guide</h2>
         <div class="slideshow" id="slideshowContainer">
-            <!-- Slides will be dynamically inserted here -->
              <p>Loading slides...</p>
         </div>
         <div class="slide-nav">
@@ -823,7 +860,6 @@ input[type="color"] { /* Style the native color picker */
         <h2>Project Challenges</h2>
         <p>Try these challenges to extend your learning:</p>
         <div id="challengesContainer">
-            <!-- Challenges will be dynamically inserted here -->
              <p>Loading challenges...</p>
         </div>
     </div>
@@ -832,10 +868,9 @@ input[type="color"] { /* Style the native color picker */
         <h2>Project Quiz</h2>
         <p>Test what you've learned about the Beating Heart project!</p>
         <div id="quizContainer">
-            <!-- Quiz questions will be dynamically inserted here -->
              <p>Loading quiz...</p>
         </div>
-        <div id="quizResult"></div> <!-- For showing final score -->
+        <!-- Final result area will be added by script if needed -->
         <button class="submit-btn" id="submitQuizBtn" onclick="submitQuiz()">Submit Quiz</button>
     </div>
 </div>
@@ -1043,6 +1078,31 @@ input[type="color"] { /* Style the native color picker */
      const MAX_QUIZ_QUESTIONS = 10;
      const MAX_INCORRECT_ANSWERS = 3; // Max incorrect options per question in editor
 
+    // --- Project Data Store (for non-array content) ---
+    let projectData = {
+         title: "Beating Heart Project",
+         subtitle: "Make your Micro:bit display a beating heart animation!",
+         imageUrl: "https://www.elecfreaks.com/wp-content/uploads/2022/12/2-1.png",
+         overviewText: "In this project, you'll learn how to create a beating heart animation on your Micro:bit's LED display. This is a great first project to understand how the Micro:bit works!",
+         videoIntroText: "Watch this video to learn how to create the beating heart animation:",
+         videoTitle: "Programming the Beating Heart",
+         videoUrl: "https://www.youtube.com/embed/2yzT7_QGLLc",
+         videoKeyPoints: [
+            "The LED matrix has 25 lights (5 rows x 5 columns)",
+            "'on start' runs once when the Micro:bit turns on",
+            "'forever' keeps repeating the code inside it",
+            "We use 'show icon'/'show leds' and 'pause' blocks to create animation"
+         ],
+         style: { // Store style preferences
+            primaryColor: '#5E81F4',
+            secondaryColor: '#FF7AC6',
+            accentColor: '#FFB800',
+            fontFamily: 'Comic Sans MS, Segoe UI, sans-serif',
+            baseSize: 'medium'
+         }
+    };
+
+
     // --- Tab Functionality ---
     function openTab(tabName, element) {
         const tabs = document.querySelectorAll('.tab-content');
@@ -1051,7 +1111,9 @@ input[type="color"] { /* Style the native color picker */
         const tabButtons = document.querySelectorAll('.tab');
         tabButtons.forEach(btn => btn.classList.remove('active'));
 
-        document.getElementById(tabName).classList.add('active');
+        const targetTab = document.getElementById(tabName);
+        if (targetTab) targetTab.classList.add('active');
+
         if (element) {
             element.classList.add('active');
         } else {
@@ -1073,42 +1135,46 @@ input[type="color"] { /* Style the native color picker */
             progress = ((tabIndex + 1) / tabOrder.length) * 100;
         }
 
-        document.getElementById('progressBar').style.width = progress + '%';
+        const progressBar = document.getElementById('progressBar');
+        if(progressBar) progressBar.style.width = progress + '%';
     }
 
     // --- Slideshow Functionality ---
     function renderSlideshow() {
         const container = document.getElementById('slideshowContainer');
+        const nav = document.querySelector('.slide-nav');
+        if (!container || !nav) return;
+
         container.innerHTML = ''; // Clear existing
         const validSlides = slidesData.filter(slide => slide.url && slide.url.trim() !== '');
 
         if (validSlides.length === 0) {
              container.innerHTML = '<p>No slides have been added yet.</p>';
-             document.querySelector('.slide-nav').style.display = 'none'; // Hide nav if no slides
+             nav.style.display = 'none'; // Hide nav if no slides
              return;
         }
-         document.querySelector('.slide-nav').style.display = 'flex'; // Show nav if slides exist
+        nav.style.display = 'flex'; // Show nav if slides exist
 
         validSlides.forEach((slide, index) => {
             const slideDiv = document.createElement('div');
             slideDiv.className = 'slide';
-            if (index === 0) slideDiv.classList.add('active'); // Activate first valid slide
+            // Note: Active class is added by showSlide
 
             const slideContentWrapper = document.createElement('div');
             slideContentWrapper.className = 'slide-content-wrapper';
 
             if (slide.type === 'iframe') {
-                // Basic check for common video/presentation platforms
                 let iframeSrc = slide.url;
-                // Add modest sandbox attributes for security if it's an iframe
-                slideContentWrapper.innerHTML = `<iframe src="${iframeSrc}" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation"></iframe>`;
+                slideContentWrapper.innerHTML = `<iframe src="${iframeSrc}" frameborder="0" loading="lazy" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation" title="${slide.description || `Slide ${index + 1}`}"></iframe>`;
             } else if (slide.type === 'image') {
-                slideContentWrapper.innerHTML = `<img src="${slide.url}" alt="${slide.description || `Slide ${index + 1}`}">`;
+                slideContentWrapper.innerHTML = `<img src="${slide.url}" loading="lazy" alt="${slide.description || `Slide ${index + 1}`}">`;
             }
 
             slideDiv.appendChild(slideContentWrapper);
             if (slide.description) {
-                 slideDiv.innerHTML += `<p>${slide.description}</p>`;
+                 const descP = document.createElement('p');
+                 descP.textContent = slide.description;
+                 slideDiv.appendChild(descP);
             }
             container.appendChild(slideDiv);
         });
@@ -1124,7 +1190,9 @@ input[type="color"] { /* Style the native color picker */
 
         slides.forEach(slide => slide.classList.remove('active'));
 
-        currentSlideIndex = (n + validSlidesCount) % validSlidesCount; // Cycle through valid slides
+        // Ensure index wraps around correctly
+        currentSlideIndex = (n % validSlidesCount + validSlidesCount) % validSlidesCount;
+
         if (slides[currentSlideIndex]) {
              slides[currentSlideIndex].classList.add('active');
         }
@@ -1141,6 +1209,7 @@ input[type="color"] { /* Style the native color picker */
     // --- "What You'll Learn" Rendering ---
     function renderLearnItems() {
          const container = document.getElementById('learnContainer');
+         if (!container) return;
          container.innerHTML = ''; // Clear existing
          const validItems = learnData.filter(item => item.title && item.title.trim() !== '');
 
@@ -1155,10 +1224,13 @@ input[type="color"] { /* Style the native color picker */
             learnDiv.innerHTML = `
                 <div class="step-number">${index + 1}</div>
                 <div class="step-content">
-                    <strong>${item.title}</strong>
-                    <p>${item.description || ''}</p>
+                    <strong></strong>
+                    <p></p>
                 </div>
             `;
+            // Set text content safely
+            learnDiv.querySelector('strong').textContent = item.title;
+            learnDiv.querySelector('p').textContent = item.description || '';
             container.appendChild(learnDiv);
          });
     }
@@ -1166,6 +1238,7 @@ input[type="color"] { /* Style the native color picker */
     // --- Challenges Rendering ---
     function renderChallenges() {
         const container = document.getElementById('challengesContainer');
+         if (!container) return;
         container.innerHTML = ''; // Clear existing
         const validChallenges = challengesData.filter(challenge => challenge.title && challenge.title.trim() !== '');
 
@@ -1181,10 +1254,13 @@ input[type="color"] { /* Style the native color picker */
             challengeDiv.innerHTML = `
                 <div class="step-number">★</div>
                 <div class="step-content">
-                    <strong>${challenge.title}</strong>
-                    <p>${challenge.description || ''}</p>
+                     <strong></strong>
+                     <p></p>
                 </div>
             `;
+            // Set text content safely
+            challengeDiv.querySelector('strong').textContent = challenge.title;
+            challengeDiv.querySelector('p').textContent = challenge.description || '';
             container.appendChild(challengeDiv);
         });
     }
@@ -1193,31 +1269,39 @@ input[type="color"] { /* Style the native color picker */
     // --- Quiz Rendering & Functionality ---
     function renderQuiz() {
         const container = document.getElementById('quizContainer');
-        const resultDiv = document.getElementById('quizResult');
         const submitBtn = document.getElementById('submitQuizBtn');
-        container.innerHTML = ''; // Clear previous quiz
-        resultDiv.style.display = 'none'; // Hide result area
-        resultDiv.textContent = '';
-        submitBtn.disabled = false; // Re-enable submit button
-        submitBtn.style.display = 'block'; // Ensure submit button is visible
+         if (!container || !submitBtn) return;
 
-        if (quizData.length === 0) {
+        container.innerHTML = ''; // Clear previous quiz
+        // Remove any previous final result div
+        container.querySelector('.final-quiz-result')?.remove();
+
+        submitBtn.disabled = false; // Re-enable submit button
+        submitBtn.style.display = 'none'; // Hide initially
+
+        const validQuestions = quizData.filter(q => q.questionText && q.questionText.trim() && q.correctAnswer && q.correctAnswer.trim());
+
+        if (validQuestions.length === 0) {
             container.innerHTML = '<p>No quiz questions added yet.</p>';
-            submitBtn.style.display = 'none'; // Hide submit if no questions
-            return;
+            return; // Keep button hidden
         }
 
-        quizData.forEach((q, index) => {
+        submitBtn.style.display = 'block'; // Show button if questions exist
+
+        validQuestions.forEach((q, index) => {
             const questionDiv = document.createElement('div');
             questionDiv.className = 'quiz-question';
-            questionDiv.setAttribute('data-question-index', index);
+            questionDiv.setAttribute('data-question-index', index); // Store original index if needed? Or just sequential index? Using sequential for now.
 
-            questionDiv.innerHTML = `<p class="question-text">${index + 1}. ${q.questionText}</p>`;
+            const questionTextP = document.createElement('p');
+            questionTextP.className = 'question-text';
+            questionTextP.textContent = `${index + 1}. ${q.questionText}`;
+            questionDiv.appendChild(questionTextP);
 
             const optionsDiv = document.createElement('div');
             optionsDiv.className = 'quiz-options';
 
-            // Combine correct and incorrect answers, then shuffle
+            // Combine correct and valid incorrect answers, then shuffle
             let options = [q.correctAnswer, ...q.incorrectAnswers.filter(ans => ans && ans.trim() !== '')];
             shuffleArray(options); // Shuffle options for display
 
@@ -1226,7 +1310,10 @@ input[type="color"] { /* Style the native color picker */
                 const optionEl = document.createElement('div');
                 optionEl.className = 'quiz-option';
                 optionEl.textContent = optionText;
-                optionEl.setAttribute('onclick', `selectQuizOption(this)`);
+                optionEl.setAttribute('role', 'button'); // Accessibility
+                optionEl.setAttribute('tabindex', '0');   // Accessibility
+                optionEl.onclick = () => selectQuizOption(optionEl);
+                optionEl.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') selectQuizOption(optionEl); }; // Accessibility
                 // Store correctness info for checking on submit
                 optionEl.setAttribute('data-is-correct', isCorrect.toString());
                 optionsDiv.appendChild(optionEl);
@@ -1234,15 +1321,15 @@ input[type="color"] { /* Style the native color picker */
 
             questionDiv.appendChild(optionsDiv);
 
-            // Add feedback divs (initially hidden)
+            // Add feedback divs (initially hidden and empty)
             const feedbackCorrect = document.createElement('div');
             feedbackCorrect.className = 'quiz-feedback correct';
-            feedbackCorrect.textContent = 'Correct!'; // Default feedback, can be customized later
+            feedbackCorrect.style.display = 'none'; // Ensure hidden
             questionDiv.appendChild(feedbackCorrect);
 
             const feedbackIncorrect = document.createElement('div');
             feedbackIncorrect.className = 'quiz-feedback incorrect';
-            feedbackIncorrect.textContent = 'Not quite. The correct answer is highlighted.'; // Default feedback
+            feedbackIncorrect.style.display = 'none'; // Ensure hidden
             questionDiv.appendChild(feedbackIncorrect);
 
 
@@ -1252,25 +1339,24 @@ input[type="color"] { /* Style the native color picker */
 
     function selectQuizOption(optionElement) {
         const questionDiv = optionElement.closest('.quiz-question');
-        if (!questionDiv || questionDiv.classList.contains('answered')) return; // Don't allow changing after submit
+        // Only allow selection if the quiz hasn't been submitted for this question
+        if (!questionDiv || questionDiv.classList.contains('answered')) return;
 
         const allOptions = questionDiv.querySelectorAll('.quiz-option');
         allOptions.forEach(opt => opt.classList.remove('selected'));
 
         optionElement.classList.add('selected');
-
-        // Hide feedback if user changes answer before submitting (or after revealing)
-        // const feedbacks = questionDiv.querySelectorAll('.quiz-feedback');
-        // feedbacks.forEach(fb => fb.style.display = 'none');
     }
 
     function submitQuiz() {
         const questions = document.querySelectorAll('#quizContainer .quiz-question');
         let answeredCount = 0;
         let score = 0;
-        const totalQuestions = questions.length;
+        const totalQuestions = questions.length; // Count actual rendered questions
 
         if (totalQuestions === 0) return; // No questions to submit
+
+        let firstUnanswered = null;
 
         questions.forEach((qDiv, index) => {
             const selectedOption = qDiv.querySelector('.quiz-option.selected');
@@ -1278,58 +1364,112 @@ input[type="color"] { /* Style the native color picker */
             const feedbackIncorrect = qDiv.querySelector('.quiz-feedback.incorrect');
             const allOptions = qDiv.querySelectorAll('.quiz-option');
 
+            // Reset feedback display first
+             if(feedbackCorrect) feedbackCorrect.style.display = 'none';
+             if(feedbackIncorrect) feedbackIncorrect.style.display = 'none';
+             qDiv.classList.remove('answered'); // Temporarily remove while checking
+             allOptions.forEach(opt => {
+                 opt.classList.remove('correct', 'incorrect'); // Clear result styles
+                 opt.style.opacity = '1'; // Reset opacity
+                 opt.style.cursor = 'pointer'; // Reset cursor
+                  opt.onclick = () => selectQuizOption(opt); // Re-enable click (will be disabled below if answered)
+                  opt.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') selectQuizOption(opt); };
+             });
+
+
             if (selectedOption) {
                 answeredCount++;
-                qDiv.classList.add('answered'); // Mark question as answered
+                qDiv.classList.add('answered'); // Mark question as answered FOR DISPLAY
 
                 const isCorrect = selectedOption.getAttribute('data-is-correct') === 'true';
 
-                // Style all options to show the correct answer
+                // Style all options to show the result
                 allOptions.forEach(opt => {
                      const optIsCorrect = opt.getAttribute('data-is-correct') === 'true';
+
+                     // Always highlight the correct answer green
                      if (optIsCorrect) {
-                         opt.classList.add('correct'); // Always highlight correct one
+                         opt.classList.add('correct');
                      }
-                     // Keep selected style only on the one they picked
-                     if (!opt.classList.contains('selected')) {
-                          opt.style.opacity = "0.7"; // Dim unselected options
-                          opt.style.cursor = "default";
-                     } else {
-                          // Add correct/incorrect style *to the selected option*
-                          opt.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+                     // If this option was the one selected:
+                     if (opt.classList.contains('selected')) {
+                          // Add 'incorrect' style ONLY if it's the selected one AND it's wrong
+                          if (!isCorrect) {
+                              opt.classList.add('incorrect');
+                          }
+                     } else if (!optIsCorrect) {
+                         // Dim options that were NOT selected and are NOT the correct answer
+                         opt.style.opacity = "0.6";
                      }
-                     opt.onclick = null; // Disable further clicks on options
+
+                     // Disable further interaction on all options for this question
+                     opt.style.cursor = "default";
+                     opt.onclick = null;
+                     opt.onkeydown = null;
                 });
 
 
                 if (isCorrect) {
                     score++;
-                    if(feedbackCorrect) feedbackCorrect.style.display = 'block';
-                    if(feedbackIncorrect) feedbackIncorrect.style.display = 'none';
+                    if(feedbackCorrect) {
+                         feedbackCorrect.textContent = 'Correct!'; // Set feedback text
+                         feedbackCorrect.style.display = 'block';
+                    }
                 } else {
-                    if(feedbackCorrect) feedbackCorrect.style.display = 'none';
-                    if(feedbackIncorrect) feedbackIncorrect.style.display = 'block';
-                    // You could customize the incorrect feedback here if needed
-                    // feedbackIncorrect.textContent = `Not quite. The correct answer was: ${quizData[index].correctAnswer}`;
+                     if(feedbackIncorrect) {
+                         const correctOptionElement = qDiv.querySelector('.quiz-option.correct');
+                         const correctAnswerText = correctOptionElement ? correctOptionElement.textContent : "the highlighted option";
+                         feedbackIncorrect.textContent = `Not quite. The correct answer was: "${correctAnswerText}".`; // Provide more specific feedback
+                         feedbackIncorrect.style.display = 'block';
+                     }
                 }
+            } else if (!firstUnanswered) {
+                 // Store the first question that wasn't answered
+                 firstUnanswered = qDiv;
             }
         });
 
+        // Check if all questions were answered
         if (answeredCount < totalQuestions) {
             alert(`Please answer all ${totalQuestions} questions before submitting!`);
-            // Reset answered status if not all answered
-            questions.forEach(qDiv => qDiv.classList.remove('answered'));
+            // Optionally scroll to the first unanswered question
+            if (firstUnanswered) {
+                 firstUnanswered.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                 // Maybe add a temporary highlight to the unanswered question?
+                 firstUnanswered.style.outline = '2px solid red';
+                 setTimeout(() => { firstUnanswered.style.outline = 'none'; }, 2000);
+            }
+             // IMPORTANT: Reset styles if not all answered, so user can try again
+             questions.forEach(qDiv => {
+                  qDiv.classList.remove('answered');
+                  qDiv.querySelectorAll('.quiz-feedback').forEach(fb => fb.style.display = 'none');
+                  qDiv.querySelectorAll('.quiz-option').forEach(opt => {
+                       opt.classList.remove('selected', 'correct', 'incorrect');
+                       opt.style.opacity = '1';
+                       opt.style.cursor = 'pointer';
+                       opt.onclick = () => selectQuizOption(opt); // Ensure clicks are re-enabled
+                       opt.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') selectQuizOption(opt); };
+                  });
+             });
             return;
         }
 
         // All answered, disable button and show result
         const submitBtn = document.getElementById('submitQuizBtn');
-        submitBtn.disabled = true;
-        // submitBtn.style.display = 'none'; // Hide button after submit
+        if(submitBtn) submitBtn.disabled = true;
 
-        const resultDiv = document.getElementById('quizResult');
-        resultDiv.textContent = `You scored ${score} out of ${totalQuestions}!`;
-        resultDiv.className = (score / totalQuestions) >= 0.7 ? 'success' : 'fail'; // Basic pass/fail styling
+        // Add or update final result div
+        const resultContainer = document.getElementById('quizContainer');
+        let resultDiv = resultContainer.querySelector('.final-quiz-result');
+         if (!resultDiv) {
+             resultDiv = document.createElement('div');
+             resultDiv.className = 'final-quiz-result'; // Assign class for styling
+             resultContainer.appendChild(resultDiv); // Append at the end
+         }
+
+        resultDiv.textContent = `Quiz Complete! You scored ${score} out of ${totalQuestions}!`;
+        resultDiv.className = 'final-quiz-result ' + ((score / totalQuestions) >= 0.7 ? 'success' : 'fail'); // Add result class
         resultDiv.style.display = 'block';
 
         // Scroll to result
@@ -1338,6 +1478,9 @@ input[type="color"] { /* Style the native color picker */
 
     // --- Edit Modal Functionality ---
     function openEditModal() {
+        const modal = document.getElementById('editModal');
+        if (!modal) return;
+
         // Load current data into edit form
         document.getElementById('editProjectTitle').value = projectData.title;
         document.getElementById('editProjectSubtitle').value = projectData.subtitle;
@@ -1356,22 +1499,27 @@ input[type="color"] { /* Style the native color picker */
         loadChallengesEditFields();
         loadQuizEditFields();
 
-         // Load Style selections
-         loadStyleSelections();
+        // Load Style selections
+        loadStyleSelections();
 
-        document.getElementById('editModal').style.display = 'block';
-        showEditSection(); // Show the default selected section
+        modal.style.display = 'block';
+        // Ensure the correct initial edit section is shown based on dropdown
+        showEditSection();
     }
 
     function closeEditModal() {
-        document.getElementById('editModal').style.display = 'none';
+         const modal = document.getElementById('editModal');
+         if(modal) modal.style.display = 'none';
     }
 
     function showEditSection() {
         const sections = document.querySelectorAll('.edit-section');
         sections.forEach(section => section.style.display = 'none');
 
-        const selectedSectionId = document.getElementById('editSection').value + 'Edit';
+        const selectElement = document.getElementById('editSection');
+        if (!selectElement) return;
+
+        const selectedSectionId = selectElement.value + 'Edit';
         const selectedSection = document.getElementById(selectedSectionId);
          if(selectedSection) {
              selectedSection.style.display = 'block';
@@ -1383,15 +1531,16 @@ input[type="color"] { /* Style the native color picker */
     function createEditItemGroup(index, type, contentGenerator, removeFunction) {
          const itemGroup = document.createElement('div');
          itemGroup.className = 'edit-item-group';
-         itemGroup.setAttribute(`data-${type}-index`, index);
-         itemGroup.innerHTML = contentGenerator(index);
+         itemGroup.setAttribute(`data-${type}-index`, index); // Keep index if needed internally
+         itemGroup.innerHTML = contentGenerator(index); // Generate specific inputs
 
          const removeBtn = document.createElement('button');
          removeBtn.type = 'button';
          removeBtn.className = 'remove-item-btn';
-         removeBtn.textContent = '×'; // Use '×' for remove
+         removeBtn.innerHTML = '×'; // Use HTML entity for '×'
          removeBtn.title = `Remove ${type.charAt(0).toUpperCase() + type.slice(1)} ${index + 1}`;
-         removeBtn.onclick = () => removeFunction(index);
+         // Pass the *specific group element* to the remove function
+         removeBtn.onclick = () => removeFunction(itemGroup);
          itemGroup.appendChild(removeBtn);
 
          return itemGroup;
@@ -1400,76 +1549,118 @@ input[type="color"] { /* Style the native color picker */
 
     function loadLearnEditFields() {
         const container = document.getElementById('learnEditContainer');
+        if (!container) return;
         container.innerHTML = ''; // Clear existing
         learnData.forEach((item, index) => {
              const content = (i) => `
-                 <label>Item ${i + 1} Title:</label>
-                 <input type="text" class="learn-title" value="${item.title || ''}" data-index="${i}">
-                 <label>Item ${i + 1} Description:</label>
-                 <textarea class="learn-desc" rows="2" data-index="${i}">${item.description || ''}</textarea>
+                 <label for="learn-title-${i}">Item ${i + 1} Title:</label>
+                 <input type="text" id="learn-title-${i}" class="learn-title" value="${item.title || ''}">
+                 <label for="learn-desc-${i}">Item ${i + 1} Description:</label>
+                 <textarea id="learn-desc-${i}" class="learn-desc" rows="2">${item.description || ''}</textarea>
              `;
-             container.appendChild(createEditItemGroup(index, 'learn', content, removeLearnEditField));
+             // Pass the remove *handler* function, not calling it yet
+             container.appendChild(createEditItemGroup(index, 'learn', content, handleRemoveLearnItem));
         });
     }
 
     function loadSlidesEditFields() {
         const container = document.getElementById('slidesEditContainer');
+         if (!container) return;
         container.innerHTML = '';
         slidesData.forEach((slide, index) => {
              const content = (i) => `
-                <label>Slide ${i + 1} URL (Image or Embed Link):</label>
-                <input type="url" class="slide-url" value="${slide.url || ''}" data-index="${i}">
-                <label>Slide ${i + 1} Description (Optional):</label>
-                <input type="text" class="slide-desc" value="${slide.description || ''}" data-index="${i}">
-                <label>Slide ${i + 1} Type:</label>
-                <select class="slide-type" data-index="${i}">
+                <label for="slide-url-${i}">Slide ${i + 1} URL (Image or Embed Link):</label>
+                <input type="url" id="slide-url-${i}" class="slide-url" value="${slide.url || ''}">
+                <label for="slide-desc-${i}">Slide ${i + 1} Description (Optional):</label>
+                <input type="text" id="slide-desc-${i}" class="slide-desc" value="${slide.description || ''}">
+                <label for="slide-type-${i}">Slide ${i + 1} Type:</label>
+                <select id="slide-type-${i}" class="slide-type">
                     <option value="iframe" ${slide.type === 'iframe' ? 'selected' : ''}>Presentation/Video Embed</option>
                     <option value="image" ${slide.type === 'image' ? 'selected' : ''}>Image</option>
                 </select>
              `;
-             container.appendChild(createEditItemGroup(index, 'slide', content, removeSlideEditField));
+             container.appendChild(createEditItemGroup(index, 'slide', content, handleRemoveSlideItem));
         });
     }
 
      function loadChallengesEditFields() {
         const container = document.getElementById('challengesEditContainer');
+         if (!container) return;
         container.innerHTML = '';
         challengesData.forEach((challenge, index) => {
             const content = (i) => `
-                 <label>Challenge ${i + 1} Title:</label>
-                 <input type="text" class="challenge-title" value="${challenge.title || ''}" data-index="${i}">
-                 <label>Challenge ${i + 1} Description (Optional):</label>
-                 <textarea class="challenge-desc" rows="2" data-index="${i}">${challenge.description || ''}</textarea>
+                 <label for="challenge-title-${i}">Challenge ${i + 1} Title:</label>
+                 <input type="text" id="challenge-title-${i}" class="challenge-title" value="${challenge.title || ''}">
+                 <label for="challenge-desc-${i}">Challenge ${i + 1} Description (Optional):</label>
+                 <textarea id="challenge-desc-${i}" class="challenge-desc" rows="2">${challenge.description || ''}</textarea>
              `;
-             container.appendChild(createEditItemGroup(index, 'challenge', content, removeChallengeEditField));
+             container.appendChild(createEditItemGroup(index, 'challenge', content, handleRemoveChallengeItem));
         });
     }
 
     function loadQuizEditFields() {
          const container = document.getElementById('quizEditContainer');
+         if (!container) return;
          container.innerHTML = '';
          quizData.forEach((q, index) => {
               let incorrectInputsHTML = '';
               for (let i = 0; i < MAX_INCORRECT_ANSWERS; i++) {
                    const val = q.incorrectAnswers[i] || '';
+                   // Add unique IDs for labels/inputs
                    incorrectInputsHTML += `
-                        <label class="incorrect-answer-label">Incorrect Answer ${i + 1}:</label>
-                        <input type="text" class="quiz-incorrect" value="${val}" data-index="${index}" data-option-index="${i}">
+                        <label for="quiz-incorrect-${index}-${i}" class="incorrect-answer-label">Incorrect Answer ${i + 1}:</label>
+                        <input type="text" id="quiz-incorrect-${index}-${i}" class="quiz-incorrect" value="${val}">
                    `;
               }
 
               const content = (i) => `
-                 <label>Question ${i + 1}:</label>
-                 <textarea class="quiz-question" rows="2" data-index="${i}">${q.questionText || ''}</textarea>
-                 <label>Correct Answer:</label>
-                 <input type="text" class="quiz-correct" value="${q.correctAnswer || ''}" data-index="${i}">
+                 <label for="quiz-question-${i}">Question ${i + 1}:</label>
+                 <textarea id="quiz-question-${i}" class="quiz-question" rows="2">${q.questionText || ''}</textarea>
+                 <label for="quiz-correct-${i}">Correct Answer:</label>
+                 <input type="text" id="quiz-correct-${i}" class="quiz-correct" value="${q.correctAnswer || ''}">
                  ${incorrectInputsHTML}
               `;
-              container.appendChild(createEditItemGroup(index, 'quiz', content, removeQuizEditField));
+              container.appendChild(createEditItemGroup(index, 'quiz', content, handleRemoveQuizItem));
          });
     }
 
-    // --- Editor Add/Remove Functions ---
+    // --- Editor Add/Remove Handlers ---
+    // These functions find the element in the DOM and update the corresponding data array
+
+    function findIndexAndRemove(element, dataArray, reloadFunction) {
+        const container = element.parentNode;
+        const items = Array.from(container.children).filter(child => child.classList.contains('edit-item-group'));
+        const index = items.indexOf(element);
+
+        if (index > -1) {
+             if (dataArray.length <= 1) {
+                  // Optional: Clear the fields instead of removing the last item?
+                  // For now, just prevent removal if it's the only one.
+                  alert("Cannot remove the last item. Edit it or add another first.");
+                  return; // Or clear dataArray[0] fields
+             }
+             dataArray.splice(index, 1);
+             reloadFunction(); // Reload the fields to reflect the change and update indices
+        } else {
+             console.error("Could not find item index to remove.");
+        }
+    }
+
+    function handleRemoveLearnItem(elementToRemove) {
+        findIndexAndRemove(elementToRemove, learnData, loadLearnEditFields);
+    }
+    function handleRemoveSlideItem(elementToRemove) {
+        findIndexAndRemove(elementToRemove, slidesData, loadSlidesEditFields);
+    }
+     function handleRemoveChallengeItem(elementToRemove) {
+        findIndexAndRemove(elementToRemove, challengesData, loadChallengesEditFields);
+    }
+     function handleRemoveQuizItem(elementToRemove) {
+        findIndexAndRemove(elementToRemove, quizData, loadQuizEditFields);
+    }
+
+
+    // --- Editor Add Button Functions ---
 
     function addLearnEditField() {
         if (learnData.length >= MAX_LEARN_ITEMS) {
@@ -1477,20 +1668,10 @@ input[type="color"] { /* Style the native color picker */
             return;
         }
         learnData.push({ title: "", description: "" });
-        loadLearnEditFields();
-        // Scroll to the new item maybe?
+        loadLearnEditFields(); // Reload to add the new empty field
+        // Scroll to the new item
         const container = document.getElementById('learnEditContainer');
-        container.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest'});
-    }
-
-    function removeLearnEditField(index) {
-        if (learnData.length <= 1 && index === 0) {
-             // Prevent removing if only one is left, maybe clear it instead?
-             learnData[0] = { title: "", description: "" };
-        } else {
-             learnData.splice(index, 1);
-        }
-        loadLearnEditFields();
+        container?.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest'});
     }
 
      function addSlideEditField() {
@@ -1500,16 +1681,7 @@ input[type="color"] { /* Style the native color picker */
         }
         slidesData.push({ url: "", description: "", type: "iframe" });
         loadSlidesEditFields();
-         document.getElementById('slidesEditContainer').lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest'});
-    }
-
-    function removeSlideEditField(index) {
-         if (slidesData.length <= 1 && index === 0) {
-              slidesData[0] = { url: "", description: "", type: "iframe" };
-         } else {
-              slidesData.splice(index, 1);
-         }
-        loadSlidesEditFields();
+        document.getElementById('slidesEditContainer')?.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest'});
     }
 
     function addChallengeEditField() {
@@ -1519,16 +1691,7 @@ input[type="color"] { /* Style the native color picker */
         }
         challengesData.push({ title: "", description: "" });
         loadChallengesEditFields();
-        document.getElementById('challengesEditContainer').lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest'});
-    }
-
-    function removeChallengeEditField(index) {
-        if (challengesData.length <= 1 && index === 0) {
-             challengesData[0] = { title: "", description: "" };
-        } else {
-             challengesData.splice(index, 1);
-        }
-        loadChallengesEditFields();
+        document.getElementById('challengesEditContainer')?.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest'});
     }
 
      function addQuizEditField() {
@@ -1536,18 +1699,10 @@ input[type="color"] { /* Style the native color picker */
             alert(`Maximum of ${MAX_QUIZ_QUESTIONS} questions allowed.`);
             return;
         }
-        quizData.push({ questionText: "", correctAnswer: "", incorrectAnswers: ["", "", ""] });
+        // Add empty structure matching quizData items
+        quizData.push({ questionText: "", correctAnswer: "", incorrectAnswers: Array(MAX_INCORRECT_ANSWERS).fill("") });
         loadQuizEditFields();
-        document.getElementById('quizEditContainer').lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest'});
-    }
-
-    function removeQuizEditField(index) {
-        if (quizData.length <= 1 && index === 0) {
-            quizData[0] = { questionText: "", correctAnswer: "", incorrectAnswers: ["", "", ""] };
-        } else {
-            quizData.splice(index, 1);
-        }
-        loadQuizEditFields();
+        document.getElementById('quizEditContainer')?.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest'});
     }
 
     // --- Style Editor Functions ---
@@ -1560,24 +1715,21 @@ input[type="color"] { /* Style the native color picker */
 
         const colorOptions = pickerContainer.querySelectorAll('.color-option');
         colorOptions.forEach(option => {
-            // Compare colors carefully (hex vs rgb)
             const optionColor = option.style.backgroundColor;
-            // Basic comparison - might need improvement for different formats (e.g. hex vs rgb)
-            if (areColorsEqual(optionColor, color)) {
-                option.classList.add('selected');
-            } else {
-                option.classList.remove('selected');
-            }
+            // Use helper for comparison
+            option.classList.toggle('selected', areColorsEqual(optionColor, color));
         });
          // Update the input type=color value as well
          const colorInput = document.getElementById(`${type}ColorPicker`);
          if(colorInput) colorInput.value = color;
 
+         // Store the preference
+         projectData.style[type + 'Color'] = color;
     }
 
     function customColorSelected(type, color) {
-        selectColor(type, color); // Directly update the CSS variable
-        // Deselect preset options when custom color is chosen
+        selectColor(type, color); // Directly update the CSS variable and store preference
+        // Deselect preset options visually when custom color is chosen/input
         const pickerContainer = document.querySelector(`#${type}ColorPicker`)?.closest('.color-picker');
         if (!pickerContainer) return;
          const colorOptions = pickerContainer.querySelectorAll('.color-option');
@@ -1589,8 +1741,7 @@ input[type="color"] { /* Style the native color picker */
         // Update font option selections
         const fontOptions = document.querySelectorAll('.font-option');
         fontOptions.forEach(option => {
-             // Be careful with font string comparison
-             const optionFont = option.getAttribute('onclick').match(/selectFont\('(.*?)'\)/)[1];
+             const optionFont = option.getAttribute('onclick').match(/selectFont\('(.*?)'\)/)?.[1];
              option.classList.toggle('selected', optionFont === font);
         });
         projectData.style.fontFamily = font; // Store preference
@@ -1614,169 +1765,166 @@ input[type="color"] { /* Style the native color picker */
     }
 
      function loadStyleSelections() {
-        // Set initial colors based on projectData or defaults
+        // Set initial colors based on projectData or defaults from CSS variables
         selectColor('primary', projectData.style.primaryColor || getComputedStyle(document.documentElement).getPropertyValue('--primary').trim());
         selectColor('secondary', projectData.style.secondaryColor || getComputedStyle(document.documentElement).getPropertyValue('--secondary').trim());
         selectColor('accent', projectData.style.accentColor || getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
 
         // Set initial font
-        selectFont(projectData.style.fontFamily || 'Comic Sans MS, Segoe UI, sans-serif');
+        selectFont(projectData.style.fontFamily || getComputedStyle(document.body).fontFamily);
 
         // Set initial size
-        selectSize(projectData.style.baseSize || 'medium');
+        selectSize(projectData.style.baseSize || 'medium'); // Assume medium default
      }
 
     // --- Save Changes ---
     function saveChanges() {
         // Save title changes
-        projectData.title = document.getElementById('editProjectTitle').value;
-        projectData.subtitle = document.getElementById('editProjectSubtitle').value;
-        projectData.imageUrl = document.getElementById('projectImageUrl').value;
+        projectData.title = document.getElementById('editProjectTitle')?.value.trim() || projectData.title;
+        projectData.subtitle = document.getElementById('editProjectSubtitle')?.value.trim() || projectData.subtitle;
+        projectData.imageUrl = document.getElementById('projectImageUrl')?.value.trim() || projectData.imageUrl;
 
         // Save overview text
-        projectData.overviewText = document.getElementById('editOverviewText').value;
+        projectData.overviewText = document.getElementById('editOverviewText')?.value.trim() || projectData.overviewText;
 
         // Save "What You'll Learn" items
-        learnData = []; // Reset and rebuild from form
+        const newLearnData = [];
         const learnItems = document.querySelectorAll('#learnEditContainer .edit-item-group');
         learnItems.forEach(item => {
             const titleInput = item.querySelector('.learn-title');
             const descInput = item.querySelector('.learn-desc');
-            if (titleInput && descInput) {
-                learnData.push({
-                    title: titleInput.value.trim(),
-                    description: descInput.value.trim()
+            const title = titleInput?.value.trim();
+            // Only add if title is present
+            if (title) {
+                newLearnData.push({
+                    title: title,
+                    description: descInput?.value.trim() || ""
                 });
             }
         });
+        learnData = newLearnData; // Replace the old array
+
 
         // Save video tab data
-        projectData.videoIntroText = document.getElementById('editVideoIntroText').value;
-        projectData.videoTitle = document.getElementById('editVideoTitle').value;
-        projectData.videoUrl = document.getElementById('editMainVideoUrl').value;
-        projectData.videoKeyPoints = document.getElementById('editVideoKeyPoints').value.split('\n').map(s => s.trim()).filter(s => s !== '');
+        projectData.videoIntroText = document.getElementById('editVideoIntroText')?.value.trim() || projectData.videoIntroText;
+        projectData.videoTitle = document.getElementById('editVideoTitle')?.value.trim() || projectData.videoTitle;
+        projectData.videoUrl = document.getElementById('editMainVideoUrl')?.value.trim() || projectData.videoUrl;
+        projectData.videoKeyPoints = document.getElementById('editVideoKeyPoints')?.value.split('\n').map(s => s.trim()).filter(s => s !== '') || [];
 
 
         // Save slides data from edit form
-        slidesData = []; // Reset and rebuild
+        const newSlidesData = [];
         const slideItems = document.querySelectorAll('#slidesEditContainer .edit-item-group');
         slideItems.forEach(item => {
             const urlInput = item.querySelector('.slide-url');
             const descInput = item.querySelector('.slide-desc');
             const typeSelect = item.querySelector('.slide-type');
-            if (urlInput && descInput && typeSelect) {
-                slidesData.push({
-                    url: urlInput.value.trim(),
-                    description: descInput.value.trim(),
-                    type: typeSelect.value
+            const url = urlInput?.value.trim();
+            // Only add if URL is present
+            if (url) {
+                newSlidesData.push({
+                    url: url,
+                    description: descInput?.value.trim() || "",
+                    type: typeSelect?.value || "iframe"
                 });
             }
         });
+         slidesData = newSlidesData;
 
         // Save challenges data from edit form
-        challengesData = []; // Reset and rebuild
+        const newChallengesData = [];
         const challengeItems = document.querySelectorAll('#challengesEditContainer .edit-item-group');
         challengeItems.forEach(item => {
              const titleInput = item.querySelector('.challenge-title');
              const descInput = item.querySelector('.challenge-desc');
-             if(titleInput && descInput) {
-                  challengesData.push({
-                      title: titleInput.value.trim(),
-                      description: descInput.value.trim()
+             const title = titleInput?.value.trim();
+             // Only add if title is present
+             if(title) {
+                  newChallengesData.push({
+                      title: title,
+                      description: descInput?.value.trim() || ""
                   });
              }
         });
+        challengesData = newChallengesData;
 
         // Save Quiz Data
-         quizData = []; // Reset and rebuild
+         const newQuizData = [];
          const quizItems = document.querySelectorAll('#quizEditContainer .edit-item-group');
          quizItems.forEach(item => {
               const questionInput = item.querySelector('.quiz-question');
               const correctInput = item.querySelector('.quiz-correct');
-              const incorrectInputs = item.querySelectorAll('.quiz-incorrect');
-              if (questionInput && correctInput) {
+              const incorrectInputs = item.querySelectorAll('.quiz-incorrect'); // NodeList
+
+              const questionText = questionInput?.value.trim();
+              const correctAnswer = correctInput?.value.trim();
+
+              // Only add if question and correct answer are present
+              if (questionText && correctAnswer) {
                    let incorrectAnswers = [];
                    incorrectInputs.forEach(input => {
-                        if (input.value.trim() !== '') {
-                             incorrectAnswers.push(input.value.trim());
+                        const incorrectVal = input?.value.trim();
+                        if (incorrectVal !== '') {
+                             incorrectAnswers.push(incorrectVal);
                         }
                    });
-                   // Only add if question and correct answer exist
-                   if (questionInput.value.trim() && correctInput.value.trim()) {
-                        quizData.push({
-                             questionText: questionInput.value.trim(),
-                             correctAnswer: correctInput.value.trim(),
-                             incorrectAnswers: incorrectAnswers
-                        });
-                   }
+                   // Ensure we have at least one incorrect answer for a valid quiz question? Maybe not strict.
+                   newQuizData.push({
+                        questionText: questionText,
+                        correctAnswer: correctAnswer,
+                        incorrectAnswers: incorrectAnswers
+                   });
               }
          });
+         quizData = newQuizData;
 
-         // Save Style Choices
-        projectData.style.primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
-        projectData.style.secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary').trim();
-        projectData.style.accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-        // Font family and base size are saved directly in their select functions
+         // Styles are saved directly via selectColor/Font/Size functions storing in projectData.style
 
-        // Update the display
+        // Update the entire page display with new data
         updatePageContent();
 
-        // Show success message
         alert('Changes saved successfully!');
         closeEditModal();
     }
 
     // --- Update Page Display (Called on Load and after Save) ---
-    let projectData = { // Store non-array data here
-         title: "Beating Heart Project",
-         subtitle: "Make your Micro:bit display a beating heart animation!",
-         imageUrl: "https://www.elecfreaks.com/wp-content/uploads/2022/12/2-1.png",
-         overviewText: "In this project, you'll learn how to create a beating heart animation on your Micro:bit's LED display. This is a great first project to understand how the Micro:bit works!",
-         videoIntroText: "Watch this video to learn how to create the beating heart animation:",
-         videoTitle: "Programming the Beating Heart",
-         videoUrl: "https://www.youtube.com/embed/2yzT7_QGLLc",
-         videoKeyPoints: [
-            "The LED matrix has 25 lights (5 rows x 5 columns)",
-            "'on start' runs once when the Micro:bit turns on",
-            "'forever' keeps repeating the code inside it",
-            "We use 'show icon'/'show leds' and 'pause' blocks to create animation"
-         ],
-         style: { // Store style preferences
-            primaryColor: '#5E81F4',
-            secondaryColor: '#FF7AC6',
-            accentColor: '#FFB800',
-            fontFamily: 'Comic Sans MS, Segoe UI, sans-serif',
-            baseSize: 'medium'
-         }
-    };
-
     function updatePageContent() {
          // Update Header
          document.getElementById('projectTitle').textContent = projectData.title;
          document.getElementById('projectSubtitle').textContent = projectData.subtitle;
-         document.getElementById('projectImage').src = projectData.imageUrl;
-         document.getElementById('projectImage').alt = projectData.title + " Image"; // Update alt text
+         const projectImage = document.getElementById('projectImage');
+         if(projectImage) {
+             projectImage.src = projectData.imageUrl;
+             projectImage.alt = projectData.title + " Image"; // Update alt text
+         }
 
          // Update Overview
-         document.getElementById('overviewText').textContent = projectData.overviewText;
+         const overviewP = document.getElementById('overviewText');
+         if(overviewP) overviewP.textContent = projectData.overviewText;
 
          // Update Learn Items
          renderLearnItems();
 
          // Update Video Section
-         document.getElementById('videoIntroText').textContent = projectData.videoIntroText;
-         document.getElementById('videoTitle').textContent = projectData.videoTitle;
-         document.getElementById('mainVideo').src = projectData.videoUrl;
+         const videoIntro = document.getElementById('videoIntroText');
+         const videoTitleH3 = document.getElementById('videoTitle');
+         const videoIframe = document.getElementById('mainVideo');
+         if(videoIntro) videoIntro.textContent = projectData.videoIntroText;
+         if(videoTitleH3) videoTitleH3.textContent = projectData.videoTitle;
+         if(videoIframe) videoIframe.src = projectData.videoUrl;
+
          const keyPointsContainer = document.getElementById('videoKeyPoints');
-         keyPointsContainer.innerHTML = ''; // Clear existing
-         if (projectData.videoKeyPoints && projectData.videoKeyPoints.length > 0) {
-             projectData.videoKeyPoints.forEach(point => {
-                 const li = document.createElement('li');
-                 li.textContent = point;
-                 keyPointsContainer.appendChild(li);
-             });
-         } else {
-             keyPointsContainer.innerHTML = '<li>Key points will appear here.</li>';
+         if(keyPointsContainer) {
+             keyPointsContainer.innerHTML = ''; // Clear existing
+             if (projectData.videoKeyPoints && projectData.videoKeyPoints.length > 0) {
+                 projectData.videoKeyPoints.forEach(point => {
+                     const li = document.createElement('li');
+                     li.textContent = point;
+                     keyPointsContainer.appendChild(li);
+                 });
+             } else {
+                 keyPointsContainer.innerHTML = '<li>Key points will appear here.</li>';
+             }
          }
 
          // Update Slideshow
@@ -1785,192 +1933,253 @@ input[type="color"] { /* Style the native color picker */
          // Update Challenges
          renderChallenges();
 
-         // Update Quiz
+         // Update Quiz - this rerenders the whole quiz section
          renderQuiz();
 
-         // Apply Styles
-         selectColor('primary', projectData.style.primaryColor);
-         selectColor('secondary', projectData.style.secondaryColor);
-         selectColor('accent', projectData.style.accentColor);
-         selectFont(projectData.style.fontFamily);
-         selectSize(projectData.style.baseSize);
+         // Apply Styles (redundant if saved correctly, but safe to call)
+         loadStyleSelections();
     }
 
 
     // --- Export Functionality ---
     function exportHTML() {
-        // Create a clone of the document to modify for export
-        const exportDoc = document.documentElement.cloneNode(true);
-
-        // Remove editor-specific elements
-        exportDoc.querySelector('.edit-btn')?.remove();
-        exportDoc.querySelector('.export-btn')?.remove();
-        exportDoc.querySelector('#editModal')?.remove();
-
-        // Ensure quiz answers/feedback are hidden initially in the export
-        exportDoc.querySelectorAll('.quiz-feedback').forEach(fb => fb.style.display = 'none');
-        exportDoc.querySelectorAll('.quiz-option').forEach(opt => {
-            opt.classList.remove('selected', 'correct', 'incorrect'); // Clear runtime styles
-            opt.style.opacity = '1'; // Reset opacity
-             opt.style.cursor = 'pointer'; // Ensure clickable
-        });
-        exportDoc.querySelector('#quizResult')?.remove(); // Remove result area
-        const exportSubmitBtn = exportDoc.querySelector('#submitQuizBtn');
-        if(exportSubmitBtn) {
-            exportSubmitBtn.disabled = false; // Ensure button is enabled
-            exportSubmitBtn.style.display = 'block'; // Ensure button is visible
-        }
+        console.log("Starting export...");
+        try {
+            // 1. Create a deep clone of the entire HTML document
+            const exportDocElement = document.documentElement.cloneNode(true);
+            const exportDoc = document.implementation.createHTMLDocument(projectData.title || "Export");
+            exportDoc.replaceChild(exportDocElement, exportDoc.documentElement);
 
 
-        // Find and remove the main script block (the one containing exportHTML itself)
-        const scripts = exportDoc.querySelectorAll('script');
-        scripts.forEach(script => {
-             if (script.textContent.includes('function exportHTML()')) {
-                  script.remove();
-             }
-         });
+            // 2. Remove editor-specific elements from the clone
+            exportDoc.querySelector('.edit-btn')?.remove();
+            exportDoc.querySelector('.export-btn')?.remove();
+            exportDoc.querySelector('#editModal')?.remove();
+            console.log("Editor UI elements removed.");
 
-        // Add minimal script for exported functionality (Tabs, Slideshow, Quiz Interaction)
-        const minimalScript = exportDoc.createElement('script');
-        minimalScript.textContent = `
-            let currentSlideIndex = 0;
-            let quizDataForExport = ${JSON.stringify(quizData)}; // Embed current quiz data
-
-            function openTab(tabName, element) {
-                const tabs = document.querySelectorAll('.tab-content');
-                tabs.forEach(tab => tab.classList.remove('active'));
-                const tabButtons = document.querySelectorAll('.tab');
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                document.getElementById(tabName)?.classList.add('active');
-                element?.classList.add('active');
-                updateProgressBar(tabName);
+            // 3. Clean up quiz state in the clone for initial view
+            exportDoc.querySelectorAll('.quiz-question').forEach(qDiv => {
+                qDiv.classList.remove('answered');
+                qDiv.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('selected', 'correct', 'incorrect');
+                    opt.style.opacity = '1';
+                    opt.style.cursor = 'pointer';
+                    // Keep the onclick attribute pointing to selectQuizOption
+                });
+                qDiv.querySelectorAll('.quiz-feedback').forEach(fb => {
+                    fb.style.display = 'none'; // Ensure feedback is hidden
+                });
+            });
+            exportDoc.querySelector('#quizContainer .final-quiz-result')?.remove(); // Remove final result area
+            const exportSubmitBtn = exportDoc.querySelector('#submitQuizBtn');
+            if(exportSubmitBtn) {
+                exportSubmitBtn.disabled = false; // Ensure button is enabled
+                exportSubmitBtn.style.display = 'block'; // Ensure button is visible (will be hidden by render if no questions)
             }
+            console.log("Quiz state cleaned.");
 
-            function updateProgressBar(tab) {
-                let progress = 0;
-                const tabOrder = ['overview', 'video', 'slides', 'challenges', 'quiz'];
-                const tabIndex = tabOrder.indexOf(tab);
-                if (tabIndex >= 0) progress = ((tabIndex + 1) / tabOrder.length) * 100;
-                document.getElementById('progressBar').style.width = progress + '%';
-            }
 
-            function showSlide(n) {
-                const slides = document.querySelectorAll('#slideshowContainer .slide');
-                const validSlidesCount = slides.length;
-                if (validSlidesCount === 0) return;
-                slides.forEach(slide => slide.classList.remove('active'));
-                currentSlideIndex = (n + validSlidesCount) % validSlidesCount;
-                if(slides[currentSlideIndex]) slides[currentSlideIndex].classList.add('active');
-            }
-            function nextSlide() { showSlide(currentSlideIndex + 1); }
-            function prevSlide() { showSlide(currentSlideIndex - 1); }
+            // 4. Remove ALL script tags from the clone's body and head
+            exportDoc.body.querySelectorAll('script').forEach(script => script.remove());
+            exportDoc.head.querySelectorAll('script').forEach(script => script.remove());
+            console.log("All original scripts removed.");
 
-            function selectQuizOption(optionElement) {
-                const questionDiv = optionElement.closest('.quiz-question');
-                if (!questionDiv || questionDiv.classList.contains('answered')) return;
-                const allOptions = questionDiv.querySelectorAll('.quiz-option');
-                allOptions.forEach(opt => opt.classList.remove('selected'));
-                optionElement.classList.add('selected');
-            }
+            // 5. Prepare and add the minimal interaction script
+            const minimalScript = exportDoc.createElement('script');
+            // Use template literals for easier multi-line string
+            minimalScript.textContent = `
+                // --- Minimal Exported Script ---
+                let currentSlideIndex = 0;
+                // Embed the *current* data directly into the script
+                const quizDataForExport = ${JSON.stringify(quizData)};
 
-            function submitQuiz() {
-                const questions = document.querySelectorAll('#quizContainer .quiz-question');
-                let answeredCount = 0;
-                let score = 0;
-                const totalQuestions = questions.length;
-                if (totalQuestions === 0) return;
+                // --- Utility: Shuffle Array (Fisher-Yates) ---
+                function shuffleArray(array) {
+                    for (let i = array.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [array[i], array[j]] = [array[j], array[i]];
+                    }
+                }
 
-                questions.forEach((qDiv, index) => {
-                    const selectedOption = qDiv.querySelector('.quiz-option.selected');
-                    const feedbackCorrect = qDiv.querySelector('.quiz-feedback.correct');
-                    const feedbackIncorrect = qDiv.querySelector('.quiz-feedback.incorrect');
-                    const allOptions = qDiv.querySelectorAll('.quiz-option');
+                // --- Tab Functionality ---
+                function openTab(tabName, element) {
+                    const tabs = document.querySelectorAll('.tab-content');
+                    tabs.forEach(tab => tab.classList.remove('active'));
+                    const tabButtons = document.querySelectorAll('.tab');
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    const targetTab = document.getElementById(tabName);
+                    if (targetTab) targetTab.classList.add('active');
+                    element?.classList.add('active');
+                    updateProgressBar(tabName);
+                }
 
-                    if (selectedOption) {
-                        answeredCount++;
-                        qDiv.classList.add('answered');
-                        const isCorrect = selectedOption.getAttribute('data-is-correct') === 'true';
+                // --- Progress Bar ---
+                function updateProgressBar(tab) {
+                    let progress = 0;
+                    const tabOrder = ['overview', 'video', 'slides', 'challenges', 'quiz'];
+                    const tabIndex = tabOrder.indexOf(tab);
+                    if (tabIndex >= 0) progress = ((tabIndex + 1) / tabOrder.length) * 100;
+                    const progressBar = document.getElementById('progressBar');
+                     if(progressBar) progressBar.style.width = progress + '%';
+                }
+
+                // --- Slideshow Functionality ---
+                function showSlide(n) {
+                    const slides = document.querySelectorAll('#slideshowContainer .slide');
+                    const validSlidesCount = slides.length;
+                    if (validSlidesCount === 0) return;
+                    slides.forEach(slide => slide.classList.remove('active'));
+                    currentSlideIndex = (n % validSlidesCount + validSlidesCount) % validSlidesCount; // Correct wrap-around
+                    if(slides[currentSlideIndex]) slides[currentSlideIndex].classList.add('active');
+                }
+                function nextSlide() { showSlide(currentSlideIndex + 1); }
+                function prevSlide() { showSlide(currentSlideIndex - 1); }
+
+                // --- Quiz Interaction ---
+                function selectQuizOption(optionElement) {
+                    const questionDiv = optionElement.closest('.quiz-question');
+                    if (!questionDiv || questionDiv.classList.contains('answered')) return;
+                    const allOptions = questionDiv.querySelectorAll('.quiz-option');
+                    allOptions.forEach(opt => opt.classList.remove('selected'));
+                    optionElement.classList.add('selected');
+                }
+
+                function submitQuiz() {
+                    const questions = document.querySelectorAll('#quizContainer .quiz-question');
+                    let answeredCount = 0;
+                    let score = 0;
+                    const totalQuestions = questions.length;
+                    if (totalQuestions === 0) return;
+                    let firstUnanswered = null;
+
+                    questions.forEach((qDiv) => {
+                         const selectedOption = qDiv.querySelector('.quiz-option.selected');
+                         const feedbackCorrect = qDiv.querySelector('.quiz-feedback.correct');
+                         const feedbackIncorrect = qDiv.querySelector('.quiz-feedback.incorrect');
+                         const allOptions = qDiv.querySelectorAll('.quiz-option');
+
+                         // Reset feedback display first
+                         if(feedbackCorrect) feedbackCorrect.style.display = 'none';
+                         if(feedbackIncorrect) feedbackIncorrect.style.display = 'none';
+                         qDiv.classList.remove('answered');
+
+                         allOptions.forEach(opt => {
+                             opt.classList.remove('correct', 'incorrect'); // Clear result styles before check
+                             // Ensure interaction is possible if check fails
+                             opt.style.opacity = '1';
+                             opt.style.cursor = 'pointer';
+                             opt.onclick = () => selectQuizOption(opt);
+                             opt.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') selectQuizOption(opt); };
+                         });
+
+                         if (selectedOption) {
+                             answeredCount++;
+                         } else if (!firstUnanswered) {
+                              firstUnanswered = qDiv;
+                         }
+                    });
+
+
+                    if (answeredCount < totalQuestions) {
+                         alert('Please answer all ' + totalQuestions + ' questions!');
+                         if(firstUnanswered) {
+                             firstUnanswered.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                             firstUnanswered.style.outline = '2px solid red';
+                              setTimeout(() => { firstUnanswered.style.outline = 'none'; }, 2000);
+                         }
+                         return; // Stop submission
+                    }
+
+                     // If all answered, proceed to show results
+                    questions.forEach((qDiv) => {
+                         const selectedOption = qDiv.querySelector('.quiz-option.selected'); // Re-select needed data
+                         const feedbackCorrect = qDiv.querySelector('.quiz-feedback.correct');
+                         const feedbackIncorrect = qDiv.querySelector('.quiz-feedback.incorrect');
+                         const allOptions = qDiv.querySelectorAll('.quiz-option');
+
+                         qDiv.classList.add('answered'); // Mark as answered now for display
+                         const isCorrect = selectedOption.getAttribute('data-is-correct') === 'true';
 
                          allOptions.forEach(opt => {
                              const optIsCorrect = opt.getAttribute('data-is-correct') === 'true';
                              if (optIsCorrect) opt.classList.add('correct');
-                             if (!opt.classList.contains('selected')) {
-                                 opt.style.opacity = "0.7";
-                                 opt.style.cursor = "default";
-                             } else {
-                                 opt.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+                             if (opt.classList.contains('selected')) {
+                                 if (!isCorrect) opt.classList.add('incorrect');
+                             } else if (!optIsCorrect) {
+                                 opt.style.opacity = "0.6"; // Dim if not selected AND not correct
                              }
-                             opt.onclick = null; // Disable clicks after submit
+                             // Disable interaction after submit
+                             opt.style.cursor = "default";
+                             opt.onclick = null;
+                             opt.onkeydown = null;
                         });
 
-                        if (isCorrect) {
-                            score++;
-                            if(feedbackCorrect) feedbackCorrect.style.display = 'block';
-                            if(feedbackIncorrect) feedbackIncorrect.style.display = 'none';
-                        } else {
-                             if(feedbackCorrect) feedbackCorrect.style.display = 'none';
-                             if(feedbackIncorrect) feedbackIncorrect.style.display = 'block';
-                        }
-                    }
-                });
+                         if (isCorrect) {
+                             score++;
+                             if(feedbackCorrect) {
+                                  feedbackCorrect.textContent = 'Correct!';
+                                  feedbackCorrect.style.display = 'block';
+                             }
+                         } else {
+                              if(feedbackIncorrect) {
+                                   const correctOpt = qDiv.querySelector('.quiz-option.correct');
+                                   feedbackIncorrect.textContent = 'Not quite. The correct answer was: "' + (correctOpt ? correctOpt.textContent : 'Error') + '".';
+                                   feedbackIncorrect.style.display = 'block';
+                              }
+                         }
+                    });
 
-                if (answeredCount < totalQuestions) {
-                    alert('Please answer all ' + totalQuestions + ' questions!');
-                    questions.forEach(qDiv => qDiv.classList.remove('answered')); // Reset if not all answered
-                    return;
+
+                    const submitBtn = document.getElementById('submitQuizBtn');
+                    if(submitBtn) submitBtn.disabled = true;
+
+                    const resultContainer = document.getElementById('quizContainer');
+                    let resultDiv = resultContainer.querySelector('.final-quiz-result');
+                     if (!resultDiv && resultContainer) { // Create if doesn't exist
+                         resultDiv = document.createElement('div');
+                         resultDiv.className = 'final-quiz-result';
+                         resultContainer.appendChild(resultDiv);
+                     }
+                     if (resultDiv) {
+                        resultDiv.textContent = 'Quiz Complete! You scored ' + score + ' out of ' + totalQuestions + '.';
+                        resultDiv.className = 'final-quiz-result ' + ((score / totalQuestions) >= 0.7 ? 'success' : 'fail');
+                        resultDiv.style.display = 'block';
+                        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                     }
                 }
 
-                const submitBtn = document.getElementById('submitQuizBtn');
-                if(submitBtn) submitBtn.disabled = true;
-
-                // Optional: Add a simple result display div if needed, or just rely on inline feedback
-                 const resultContainer = document.getElementById('quizContainer'); // Add to bottom of quiz
-                 let resultDiv = resultContainer.querySelector('.final-quiz-result');
-                 if (!resultDiv) {
-                     resultDiv = document.createElement('div');
-                     resultDiv.className = 'final-quiz-result'; // Add styling for this class if needed
-                     resultDiv.style.marginTop = '20px';
-                     resultDiv.style.padding = '15px';
-                     resultDiv.style.borderRadius = '8px';
-                     resultDiv.style.textAlign = 'center';
-                     resultDiv.style.fontWeight = 'bold';
-                     resultContainer.appendChild(resultDiv);
-                 }
-                 resultDiv.textContent = 'Quiz Complete! You scored ' + score + ' out of ' + totalQuestions + '.';
-                 resultDiv.style.backgroundColor = (score / totalQuestions) >= 0.7 ? '#e6f7ed' : '#fde8e8';
-                 resultDiv.style.color = (score / totalQuestions) >= 0.7 ? '#1d6c45' : '#9b1c1c';
-                 resultDiv.style.border = '1px solid ' + ((score / totalQuestions) >= 0.7 ? '#c3e6cb' : '#f5c6cb');
-
-                 resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-
-             // Utility: Shuffle array (Fisher-Yates)
-            function shuffleArray(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
-            }
-
-             // Utility: Render quiz from embedded data
+             // --- Render Quiz From Embedded Data ---
              function renderExportedQuiz() {
                   const container = document.getElementById('quizContainer');
                   const submitBtn = document.getElementById('submitQuizBtn');
-                  if (!container || !quizDataForExport) return;
+                  if (!container || !quizDataForExport) {
+                        console.error("Quiz container or data missing for export render.");
+                        return;
+                  }
                   container.innerHTML = ''; // Clear placeholder
+                   container.querySelector('.final-quiz-result')?.remove(); // Clear old results
                   submitBtn.style.display = 'none'; // Hide initially
 
-                  if (quizDataForExport.length === 0) {
+                  const validQuestions = quizDataForExport.filter(q => q.questionText && q.questionText.trim() && q.correctAnswer && q.correctAnswer.trim());
+
+                  if (validQuestions.length === 0) {
                       container.innerHTML = '<p>No quiz questions included.</p>';
-                      return;
+                      return; // Keep button hidden
                   }
                   submitBtn.style.display = 'block'; // Show button if questions exist
+                   submitBtn.disabled = false; // Ensure enabled
 
-                  quizDataForExport.forEach((q, index) => {
+                  validQuestions.forEach((q, index) => {
                       const questionDiv = document.createElement('div');
                       questionDiv.className = 'quiz-question';
-                      questionDiv.setAttribute('data-question-index', index);
-                      questionDiv.innerHTML = \`<p class="question-text">\${index + 1}. \${q.questionText}</p>\`;
+                      // questionDiv.setAttribute('data-question-index', index); // Not strictly needed in export?
+
+                      const questionTextP = document.createElement('p');
+                      questionTextP.className = 'question-text';
+                      questionTextP.textContent = \`\${index + 1}. \${q.questionText}\`;
+                      questionDiv.appendChild(questionTextP);
+
                       const optionsDiv = document.createElement('div');
                       optionsDiv.className = 'quiz-options';
 
@@ -1982,7 +2191,10 @@ input[type="color"] { /* Style the native color picker */
                           const optionEl = document.createElement('div');
                           optionEl.className = 'quiz-option';
                           optionEl.textContent = optionText;
-                          optionEl.setAttribute('onclick', 'selectQuizOption(this)');
+                           optionEl.setAttribute('role', 'button');
+                           optionEl.setAttribute('tabindex', '0');
+                          optionEl.onclick = () => selectQuizOption(optionEl); // Assign interaction
+                          optionEl.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') selectQuizOption(optionEl); };
                           optionEl.setAttribute('data-is-correct', isCorrect.toString());
                           optionsDiv.appendChild(optionEl);
                       });
@@ -1991,13 +2203,11 @@ input[type="color"] { /* Style the native color picker */
                       // Add feedback divs (hidden)
                       const feedbackCorrect = document.createElement('div');
                       feedbackCorrect.className = 'quiz-feedback correct';
-                      feedbackCorrect.textContent = 'Correct!';
-                       feedbackCorrect.style.display = 'none'; // Ensure hidden
+                      feedbackCorrect.style.display = 'none';
                       questionDiv.appendChild(feedbackCorrect);
                       const feedbackIncorrect = document.createElement('div');
                       feedbackIncorrect.className = 'quiz-feedback incorrect';
-                      feedbackIncorrect.textContent = 'Not quite. The correct answer is highlighted.';
-                      feedbackIncorrect.style.display = 'none'; // Ensure hidden
+                      feedbackIncorrect.style.display = 'none';
                       questionDiv.appendChild(feedbackIncorrect);
 
                       container.appendChild(questionDiv);
@@ -2005,41 +2215,60 @@ input[type="color"] { /* Style the native color picker */
              }
 
 
+            // --- Initial Load Logic for Exported File ---
             document.addEventListener('DOMContentLoaded', function() {
-                 // Initial setup for exported version
-                 renderExportedQuiz(); // Render quiz on load
-                 const firstTab = document.querySelector('.tab');
-                 if (firstTab) {
-                     const firstTabName = firstTab.getAttribute('onclick').match(/openTab\\('([^']+)'/)[1];
-                     openTab(firstTabName, firstTab);
+                 console.log("Exported page loaded.");
+                 renderExportedQuiz(); // Render quiz using embedded data
+
+                 const firstTabButton = document.querySelector('.tab');
+                 if (firstTabButton) {
+                     const firstTabName = firstTabButton.getAttribute('onclick')?.match(/openTab\\('([^']+)'/)?.[1];
+                     if(firstTabName) {
+                         openTab(firstTabName, firstTabButton);
+                     }
+                 } else {
+                     // Fallback if no tabs (shouldn't happen with current structure)
+                      const firstContent = document.querySelector('.tab-content');
+                      if(firstContent) firstContent.classList.add('active');
                  }
-                 showSlide(0); // Show first slide
+                 showSlide(0); // Show first slide if slideshow exists
             });
-        `;
-        exportDoc.body.appendChild(minimalScript);
+            `; // End of minimalScript.textContent
 
-        // Create HTML string
-        const htmlContent = '<!DOCTYPE html>\n' + exportDoc.outerHTML;
+            exportDoc.body.appendChild(minimalScript);
+            console.log("Minimal script added.");
 
-        // Create download link
-        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        // Sanitize filename
-        const filename = (projectData.title || "microbit-project").replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.html';
-        a.download = filename;
-        a.style.display = 'none';
+            // 6. Generate the final HTML string for download
+            // Use the outerHTML of the cloned documentElement
+            const htmlContent = '<!DOCTYPE html>\n' + exportDoc.documentElement.outerHTML;
+            console.log("HTML content generated.");
 
-        document.body.appendChild(a);
-        a.click();
+            // 7. Create and trigger the download link
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const filename = (projectData.title || "microbit-project").replace(/[^a-z0-9_.\-]/gi, '_').toLowerCase() + '.html';
+            a.download = filename;
+            a.style.display = 'none';
 
-        // Clean up
-        setTimeout(() => {
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }, 100);
+            document.body.appendChild(a);
+            a.click();
+            console.log("Download triggered for:", filename);
+
+            // 8. Clean up the temporary URL and link
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                console.log("Export cleanup complete.");
+            }, 100);
+
+        } catch (error) {
+             console.error("Error during export:", error);
+             alert("An error occurred during export. Please check the console for details.");
+        }
     }
+
 
     // --- Utility Functions ---
     function shuffleArray(array) {
@@ -2049,30 +2278,41 @@ input[type="color"] { /* Style the native color picker */
         }
     }
 
-     // Basic color comparison (handles hex & rgb) - might need more robust solution
+     // Basic color comparison (handles hex & rgb(a))
      function areColorsEqual(color1, color2) {
-         const ctx = document.createElement('canvas').getContext('2d');
-         if (!ctx) return false; // Canvas not supported
-
-         ctx.fillStyle = color1;
-         const c1 = ctx.fillStyle; // Browser converts to standard format (often hex)
-         ctx.fillStyle = color2;
-         const c2 = ctx.fillStyle;
-
-         return c1 === c2;
+         try {
+             // Use a temporary element to normalize colors via the browser's CSS engine
+             const tempEl = document.createElement('div');
+             tempEl.style.color = color1;
+             const normalizedColor1 = tempEl.style.color; // Gets computed style (often rgb/rgba)
+             tempEl.style.color = color2;
+             const normalizedColor2 = tempEl.style.color;
+             return normalizedColor1 === normalizedColor2;
+         } catch (e) {
+             // Fallback for invalid colors or browser issues
+             return String(color1).trim().toLowerCase() === String(color2).trim().toLowerCase();
+         }
      }
 
 
     // --- Initial Load ---
     document.addEventListener('DOMContentLoaded', function() {
+        console.log("Editor page loaded.");
         updatePageContent(); // Load all content based on initial data
 
         // Set initial active tab and progress
-        const firstTab = document.querySelector('.tab');
-        if (firstTab) {
-             const firstTabName = firstTab.getAttribute('onclick').match(/openTab\('([^']+)'/)[1];
-             openTab(firstTabName, firstTab); // Activate first tab
-        }
+        const firstTabButton = document.querySelector('.tab');
+         if (firstTabButton) {
+             const firstTabName = firstTabButton.getAttribute('onclick')?.match(/openTab\('([^']+)'/)?.[1];
+             if(firstTabName) {
+                 openTab(firstTabName, firstTabButton); // Activate first tab
+             }
+         } else {
+              // Activate first content div if no tabs found
+              const firstContent = document.querySelector('.tab-content');
+              if (firstContent) firstContent.classList.add('active');
+              updateProgressBar(''); // Set progress to 0 or default
+         }
     });
 
 </script>
