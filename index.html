@@ -221,30 +221,6 @@
         box-shadow: 0 3px 8px rgba(0,0,0,.1);
     }
 
-/* Existing .step-number rule (Leave this as is for default alignment) */
-.step-number {
-    background-color: var(--secondary);
-    color: #fff;
-    min-width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center; /* Default: center alignment */
-    justify-content: center;
-    font-weight: 700;
-    flex-shrink: 0;
-    font-size: 1rem;
-    margin-top: 4px;
-    transition: background-color var(--transition-speed) var(--transition-ease);
-}
-
-/* --- ADD THIS RULE --- */
-/* Target step numbers specifically within the challenges container */
-#challengesContainer .step .step-number {
-    align-items: flex-start; /* Override: Align content (the star) to the top */
-    padding-top: 5px; /* Optional: Add a little padding from the very top edge */
-}
-    
     /* Aspect ratio for video/presentation if needed */
     #course-multimedia-content .media-wrapper-16-9 {
         position: relative;
