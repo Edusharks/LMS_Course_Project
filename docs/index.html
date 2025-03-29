@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" style="--primary: #42d719; --secondary: #e11919; --accent: #1a20db;"><head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Micro:bit Adventure | Beating Heart Project</title>
     <style>
+        /* CSS styles as provided, with adjustments for aspect ratio, party popper animation, and other fixes */
         :root {
             --primary: #5E81F4;
             --secondary: #FF7AC6;
@@ -143,13 +145,16 @@
             text-align: center;
         }
         
+        /* Adjusted aspect ratio for images/iframes */
         .slide iframe, .slide img {
             width: 100%;
-            height: 400px;
+            height: auto; /* Adjust height automatically */
+            max-height: 400px; /* Max height to control */
             object-fit: contain;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             background-color: #f5f5f5;
+            
         }
         
         .slide p {
@@ -284,6 +289,52 @@
             display: block;
         }
         
+         /* Party popper animation styles */
+        .party-popper-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 101;
+            display: none; /* Hidden by default */
+        }
+
+        .party-popper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            animation: partyPopperAnimation 2s ease-out forwards;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .party-popper span {
+           margin: 10px;
+        }
+
+        @keyframes partyPopperAnimation {
+          0% { transform: scale(0); opacity: 0; }
+          50% { transform: scale(1.2); opacity: 1; }
+          100% { transform: scale(1); opacity: 0; }
+        }
+
+        .quiz-feedback.result-message {
+             margin: 20px 0;
+             background-color: #ecf8ff;
+             padding: 10px;
+             border-radius: 8px;
+             text-align: center;
+             font-size: 1rem;
+         }
+        
         .submit-btn {
             background-color: var(--accent);
             color: white;
@@ -318,15 +369,7 @@
             transition: width 0.5s;
         }
         
-        .character {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            width: 80px;
-            cursor: pointer;
-            transition: all 0.3s;
-            z-index: 100;
-        }
+        /* Removed character */
         
         /* Edit button and modal styles */
         .edit-btn {
@@ -511,10 +554,6 @@
                 height: 40px;
                 font-size: 1rem;
             }
-            
-            .character {
-                width: 100px;
-            }
         }
         
         @media (max-width: 600px) {
@@ -539,17 +578,17 @@
 <body>
     <div class="container">
         <div class="project-header">
-            
-            
-            <img src="https://raw.githubusercontent.com/Edusharks/LMS-test/6ed3119c8f59f4e41db72dd91b8fe9ebed9f3fc2/beating%20Heart%20(1).gif" alt="Beating Heart Project" id="projectImage">
+            <button class="edit-btn" onclick="openEditModal()">✏️</button>
+            <button class="export-btn" onclick="exportHTML()">⬇️</button>
+            <img src="https://www.elecfreaks.com/wp-content/uploads/2022/12/2-1.png" alt="Beating Heart Project" id="projectImage">
             <div>
-                <h1 class="project-title" id="projectTitle">Piano</h1>
-                <p id="projectSubtitle">Make your Piano</p>
+                <h1 class="project-title" id="projectTitle">Beating Heart Project</h1>
+                <p id="projectSubtitle">Make your Micro:bit display a beating heart animation!</p>
             </div>
         </div>
         
         <div class="progress-container">
-            <div class="progress-bar" id="progressBar" style="width: 20%;"></div>
+            <div class="progress-bar" id="progressBar"></div>
         </div>
         
         <div class="tabs">
@@ -569,7 +608,7 @@
                 <div class="step-number">1</div>
                 <div class="step-content">
                     <strong id="learnTitle1">Hardware Concepts</strong>
-                    <p id="learnDesc1">How to download &amp; flash code to your Micro:bit and how the LED matrix works</p>
+                    <p id="learnDesc1">How to download & flash code to your Micro:bit and how the LED matrix works</p>
                 </div>
             </div>
             <div class="step" id="learnStep2">
@@ -601,23 +640,24 @@
             
             <h3 id="videoTitle">Programming the Beating Heart</h3>
             <div class="video-container">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/2yzT7_QGLLc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" id="mainVideo"></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/2yzT7_QGLLc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen id="mainVideo"></iframe>
             </div>
             
             <h3>Key Points from the Video</h3>
-            <ul id="videoKeyPoints" style="font-size: 0.9rem; padding-left: 20px;"><li>The LED matrix has 25 lights (5 rows x 5 columns)</li><li>'on start' runs once when the Micro:bit turns on</li><li>'forever' keeps repeating the code inside it</li><li>We use 'show icon' and 'pause' blocks to create animation</li></ul>
+            <ul id="videoKeyPoints" style="font-size: 0.9rem; padding-left: 20px;">
+                <li>The LED matrix has 25 lights (5 rows x 5 columns)</li>
+                <li>'on start' runs once when the Micro:bit turns on</li>
+                <li>'forever' keeps repeating the code inside it</li>
+                <li>We use 'show icon' and 'pause' blocks to create animation</li>
+            </ul>
         </div>
         
         <div id="slides" class="tab-content">
             <h2>Step-by-Step Guide</h2>
             
-            <div class="slideshow" id="slideshowContainer"><div class="slide active">
-                        <iframe src="https://view.genially.com/67de49ded67908621a726b03" frameborder="0" allowfullscreen=""></iframe>
-                        <p>1. DIY Piano</p>
-                    </div><div class="slide">
-                        <iframe src="https://view.genially.com/67de49ded67908621a726b03" frameborder="0" allowfullscreen=""></iframe>
-                        <p>2. programming Piano</p>
-                    </div></div>
+            <div class="slideshow" id="slideshowContainer">
+                <!-- Slides will be dynamically inserted here -->
+            </div>
             
             <div class="slide-nav">
                 <button onclick="prevSlide()">Previous</button>
@@ -629,101 +669,904 @@
             <h2>Project Challenges</h2>
             <p>Try these challenges to extend your learning:</p>
             
-            <div id="challengesContainer"><div class="step">
-                    <div class="step-number">★</div>
-                    <div class="step-content">
-                        <strong>Make it faster or slower</strong>
-                        <p>Change the pause times to make the heart beat faster or slower</p>
-                    </div>
-                </div><div class="step">
-                    <div class="step-number">★</div>
-                    <div class="step-content">
-                        <strong>Create a blinking smiley</strong>
-                        <p>Use the same technique but with smiley faces instead of hearts</p>
-                    </div>
-                </div><div class="step">
-                    <div class="step-number">★</div>
-                    <div class="step-content">
-                        <strong>Add a button control</strong>
-                        <p>Make the heart only beat when you press button A</p>
-                    </div>
-                </div><div class="step">
-                    <div class="step-number">★</div>
-                    <div class="step-content">
-                        <strong>Add sound effects</strong>
-                        <p>Use the Micro:bit's speaker to add heartbeat sounds</p>
-                    </div>
-                </div><div class="step">
-                    <div class="step-number">★</div>
-                    <div class="step-content">
-                        <strong>Create a heartbeat monitor</strong>
-                        <p>Use the accelerometer to detect movement and sync the heart to it</p>
-                    </div>
-                </div></div>
+            <div id="challengesContainer">
+                <!-- Challenges will be dynamically inserted here -->
+            </div>
         </div>
         
         <div id="quiz" class="tab-content">
-            <h2>Project Quiz</h2>
-            <p>Test what you've learned about the Beating Heart project!</p>
-            
-            <div class="quiz-question">
-                <p>1. What is the correct order of blocks to make a heart beat animation?</p>
-                <div class="quiz-options">
-                    <div class="quiz-option" onclick="selectOption(this)">A) show icon → pause → show smaller icon → pause</div>
-                    <div class="quiz-option" onclick="selectOption(this)">B) pause → show icon → pause → show smaller icon</div>
-                    <div class="quiz-option" onclick="selectOption(this)">C) show icon → show smaller icon → pause → pause</div>
-                </div>
-                <div class="quiz-feedback correct">
-                    Correct! The right order is show icon → pause → show smaller icon → pause.
-                </div>
-                <div class="quiz-feedback incorrect">
-                    Not quite! Remember you need to show an icon, pause, then show a different icon.
-                </div>
+             <h2>Project Quiz</h2>
+             <p>Test what you've learned about the Beating Heart project!</p>
+                
+             <!-- Party popper container -->
+             <div class="party-popper-container" id="partyPopperContainer">
+                <div class="party-popper">🎉</div>
+             </div>
+
+             <div id="quizContainer">
+                <!-- Quiz questions will be dynamically inserted here -->
             </div>
-            
-            <div class="quiz-question">
-                <p>2. How many LEDs are there on the Micro:bit's display?</p>
-                <div class="quiz-options">
-                    <div class="quiz-option" onclick="selectOption(this)">A) 15 (3x5)</div>
-                    <div class="quiz-option" onclick="selectOption(this)">B) 25 (5x5)</div>
-                    <div class="quiz-option" onclick="selectOption(this)">C) 30 (5x6)</div>
-                </div>
-                <div class="quiz-feedback correct">
-                    That's right! There are 25 LEDs arranged in a 5x5 grid.
-                </div>
-                <div class="quiz-feedback incorrect">
-                    Look again! Count the LEDs - it's a square number between 20 and 30.
-                </div>
-            </div>
-            
-            <div class="quiz-question">
-                <p>3. What does the 'forever' block do?</p>
-                <div class="quiz-options">
-                    <div class="quiz-option" onclick="selectOption(this)">A) Runs the code inside it once when the Micro:bit starts</div>
-                    <div class="quiz-option" onclick="selectOption(this)">B) Keeps repeating the code inside it over and over</div>
-                    <div class="quiz-option" onclick="selectOption(this)">C) Makes the Micro:bit run forever without stopping</div>
-                </div>
-                <div class="quiz-feedback correct">
-                    Exactly! The 'forever' block keeps repeating its code continuously.
-                </div>
-                <div class="quiz-feedback incorrect">
-                    Remember - 'forever' means the code inside it keeps repeating.
-                </div>
-            </div>
-            
+
             <button class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+             <div class="quiz-feedback result-message" id="quizResultMessage" style="display: none;"></div>
+          </div>
+    </div>
+   
+    
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeEditModal()">×</span>
+            <h2>Edit Content</h2>
+            <div class="edit-form">
+                <label for="editSection">Select Section to Edit:</label>
+                <select id="editSection" onchange="showEditSection()">
+                    <option value="title">Project Title & Image</option>
+                    <option value="overview">Overview Text</option>
+                    <option value="learn">What You'll Learn</option>
+                    <option value="video">Video Lesson</option>
+                    <option value="slides">Step-by-Step Slides</option>
+                    <option value="challenges">Challenges</option>
+                     <option value="quiz">Quiz Questions</option>
+                    <option value="style">Style & Colors</option>
+                </select>
+                
+                <div id="titleEdit" class="edit-section">
+                    <label for="projectTitle">Project Title:</label>
+                    <input type="text" id="editProjectTitle" value="Beating Heart Project">
+                    
+                    <label for="projectSubtitle">Subtitle:</label>
+                    <input type="text" id="editProjectSubtitle" value="Make your Micro:bit display a beating heart animation!">
+                    
+                    <label for="projectImageUrl">Project Image URL:</label>
+                    <input type="text" id="projectImageUrl" value="https://www.elecfreaks.com/wp-content/uploads/2022/12/2-1.png">
+                    <p style="font-size: 0.8rem; color: #666;">Recommended size: 300x300px or similar aspect ratio</p>
+                </div>
+                
+                <div id="overviewEdit" class="edit-section" style="display:none;">
+                    <label for="overviewText">Overview Text:</label>
+                    <textarea id="editOverviewText" rows="5">In this project, you'll learn how to create a beating heart animation on your Micro:bit's LED display. This is a great first project to understand how the Micro:bit works!</textarea>
+                </div>
+                
+                <div id="learnEdit" class="edit-section" style="display:none;">
+                    <h3>What You'll Learn Items</h3>
+                    
+                    <label>Item 1 Title:</label>
+                    <input type="text" id="learnTitle1Input" value="Hardware Concepts">
+                    
+                    <label>Item 1 Description:</label>
+                    <textarea id="learnDesc1Input" rows="2">How to download & flash code to your Micro:bit and how the LED matrix works</textarea>
+                    
+                    <label>Item 2 Title:</label>
+                    <input type="text" id="learnTitle2Input" value="Programming Concepts">
+                    
+                    <label>Item 2 Description:</label>
+                    <textarea id="learnDesc2Input" rows="2">The difference between 'on start' and 'forever' blocks, and how to create simple animations</textarea>
+                    
+                    <label>Item 3 Title:</label>
+                    <input type="text" id="learnTitle3Input" value="Computational Thinking">
+                    
+                    <label>Item 3 Description:</label>
+                    <textarea id="learnDesc3Input" rows="2">How to break down problems into smaller steps (decomposition) and recognize patterns</textarea>
+                    
+                    <label>Item 4 Title:</label>
+                    <input type="text" id="learnTitle4Input" value="STEM Learning">
+                    
+                    <label>Item 4 Description:</label>
+                    <textarea id="learnDesc4Input" rows="2">Integrating Science, Technology, Engineering, and Math concepts through hands-on activities</textarea>
+                </div>
+                
+                <div id="videoEdit" class="edit-section" style="display:none;">
+                    <label for="videoIntroText">Introduction Text:</label>
+                    <input type="text" id="editVideoIntroText" value="Watch this video to learn how to create the beating heart animation:">
+                    
+                    <label for="videoTitle">Video Title:</label>
+                    <input type="text" id="editVideoTitle" value="Programming the Beating Heart">
+                    
+                    <label for="mainVideoUrl">Video URL:</label>
+                    <input type="text" id="editMainVideoUrl" value="https://www.youtube.com/embed/2yzT7_QGLLc">
+                    
+                    <label for="videoKeyPoints">Key Points (one per line):</label>
+                    <textarea id="editVideoKeyPoints" rows="5">The LED matrix has 25 lights (5 rows x 5 columns)
+'on start' runs once when the Micro:bit turns on
+'forever' keeps repeating the code inside it
+We use 'show icon' and 'pause' blocks to create animation</textarea>
+                </div>
+                
+                <div id="slidesEdit" class="edit-section" style="display:none;">
+                    <h3>Step-by-Step Slides</h3>
+                    <p>Add up to 10 slides with multimedia content (image, video, or presentation URL)</p>
+                    
+                    <div id="slidesEditContainer">
+                        <!-- Slides edit fields will be added here dynamically -->
+                    </div>
+                    <button type="button" onclick="addSlideEditField()">Add Another Slide</button>
+                </div>
+                
+                <div id="challengesEdit" class="edit-section" style="display:none;">
+                    <h3>Project Challenges</h3>
+                    <p>Add up to 10 challenges (empty ones won't be displayed)</p>
+                    
+                    <div id="challengesEditContainer">
+                        <!-- Challenges edit fields will be added here dynamically -->
+                    </div>
+                    <button type="button" onclick="addChallengeEditField()">Add Another Challenge</button>
+                </div>
+                
+                
+                <div id="quizEdit" class="edit-section" style="display:none;">
+                    <h3>Quiz Questions</h3>
+                    <p>Add up to 5 quiz questions (empty ones won't be displayed)</p>
+                    
+                    <div id="quizEditContainer">
+                        <!-- Quiz edit fields will be added here dynamically -->
+                    </div>
+                    <button type="button" onclick="addQuizQuestionField()">Add Another Question</button>
+                </div>
+                
+                
+                <div id="styleEdit" class="edit-section" style="display:none;">
+                    <label>Primary Color:</label>
+                    <div class="color-picker">
+                        <div class="color-option selected" style="background-color: #5E81F4;" onclick="selectColor('primary', '#5E81F4')"></div>
+                        <div class="color-option" style="background-color: #FF7AC6;" onclick="selectColor('primary', '#FF7AC6')"></div>
+                        <div class="color-option" style="background-color: #7CE7AC;" onclick="selectColor('primary', '#7CE7AC')"></div>
+                        <div class="color-option" style="background-color: #FFB800;" onclick="selectColor('primary', '#FFB800')"></div>
+                        <div class="color-option" style="background-color: #9B51E0;" onclick="selectColor('primary', '#9B51E0')"></div>
+                        <input type="color" id="primaryColorPicker" onchange="customColorSelected('primary', this.value)" style="width: 40px; height: 40px;">
+                    </div>
+                    
+                    <label>Secondary Color:</label>
+                    <div class="color-picker">
+                        <div class="color-option" style="background-color: #5E81F4;" onclick="selectColor('secondary', '#5E81F4')"></div>
+                        <div class="color-option selected" style="background-color: #FF7AC6;" onclick="selectColor('secondary', '#FF7AC6')"></div>
+                        <div class="color-option" style="background-color: #7CE7AC;" onclick="selectColor('secondary', '#7CE7AC')"></div>
+                        <div class="color-option" style="background-color: #FFB800;" onclick="selectColor('secondary', '#FFB800')"></div>
+                        <div class="color-option" style="background-color: #9B51E0;" onclick="selectColor('secondary', '#9B51E0')"></div>
+                        <input type="color" id="secondaryColorPicker" onchange="customColorSelected('secondary', this.value)" style="width: 40px; height: 40px;">
+                    </div>
+                    
+                    <label>Accent Color:</label>
+                    <div class="color-picker">
+                        <div class="color-option" style="background-color: #5E81F4;" onclick="selectColor('accent', '#5E81F4')"></div>
+                        <div class="color-option" style="background-color: #FF7AC6;" onclick="selectColor('accent', '#FF7AC6')"></div>
+                        <div class="color-option" style="background-color: #7CE7AC;" onclick="selectColor('accent', '#7CE7AC')"></div>
+                        <div class="color-option selected" style="background-color: #FFB800;" onclick="selectColor('accent', '#FFB800')"></div>
+                        <div class="color-option" style="background-color: #9B51E0;" onclick="selectColor('accent', '#9B51E0')"></div>
+                        <input type="color" id="accentColorPicker" onchange="customColorSelected('accent', this.value)" style="width: 40px; height: 40px;">
+                    </div>
+                    
+                    <label>Font Family:</label>
+                    <div class="font-selector">
+                        <div class="font-option selected" onclick="selectFont('Comic Sans MS, sans-serif')" style="font-family: 'Comic Sans MS', sans-serif;">Comic Sans</div>
+                        <div class="font-option" onclick="selectFont('Arial, sans-serif')" style="font-family: Arial, sans-serif;">Arial</div>
+                        <div class="font-option" onclick="selectFont('Georgia, serif')" style="font-family: Georgia, serif;">Georgia</div>
+                        <div class="font-option" onclick="selectFont('Courier New, monospace')" style="font-family: Courier New, serif;">Courier New</div>
+                        <div class="font-option" onclick="selectFont('Verdana, sans-serif')" style="font-family: Verdana, sans-serif;">Verdana</div>
+                    </div>
+                    
+                    <label>Text Size:</label>
+                    <div class="size-selector">
+                        <div class="size-option" onclick="selectSize('small')">Small</div>
+                        <div class="size-option selected" onclick="selectSize('medium')">Medium</div>
+                        <div class="size-option" onclick="selectSize('large')">Large</div>
+                    </div>
+                </div>
+                
+                <button type="button" onclick="saveChanges()">Save Changes</button>
+                <button type="button" onclick="closeEditModal()">Cancel</button>
+            </div>
         </div>
     </div>
     
-    <img src="https://i.imgur.com/WVZ4JQK.png" alt="Robot Helper" class="character" onclick="speak('Hello! I can help you with your Micro:bit project!')">
-    
-    <!-- Edit Modal -->
-    
-    
-    
+    <script>
+        // Global variables for editing and quiz
+        let currentSlideIndex = 0;
+         let currentQuizIndex = 0;
+        let slidesData = [
+            { url: "https://view.genially.com/67de49ded67908621a726b03", description: "1. Introduction to the Beating Heart project", type: "iframe" },
+            { url: "https://view.genially.com/67de49e4ab31ac746b27c48b", description: "2. Setting up your Micro:bit environment", type: "iframe" },
+            { url: "https://clearinghouse.starnetlibraries.org/images/525/microbit-heart.jpg", description: "3. Programming the Beating Heart animation", type: "image" },
+            { url: "", description: "", type: "iframe" },
+            { url: "", description: "", type: "iframe" },
+            { url: "", description: "", type: "iframe" },
+            { url: "", description: "", type: "iframe" },
+            { url: "", description: "", type: "iframe" },
+            { url: "", description: "", type: "iframe" },
+            { url: "", description: "", type: "iframe" }
+        ];
+        
+        let challengesData = [
+            { title: "Make it faster or slower", description: "Change the pause times to make the heart beat faster or slower" },
+            { title: "Create a blinking smiley", description: "Use the same technique but with smiley faces instead of hearts" },
+            { title: "Add a button control", description: "Make the heart only beat when you press button A" },
+            { title: "Add sound effects", description: "Use the Micro:bit's speaker to add heartbeat sounds" },
+            { title: "Create a heartbeat monitor", description: "Use the accelerometer to detect movement and sync the heart to it" },
+            { title: "", description: "" },
+            { title: "", description: "" },
+            { title: "", description: "" },
+            { title: "", description: "" },
+            { title: "", description: "" }
+        ];
+         
+        let quizData = [
+             {
+                question: "What is the correct order of blocks to make a heart beat animation?",
+                correctAnswer: "A) show icon → pause → show smaller icon → pause",
+                incorrectAnswers: [
+                "B) pause → show icon → pause → show smaller icon",
+                "C) show icon → show smaller icon → pause → pause"
+                ]
+             },
+             {
+                 question: "How many LEDs are there on the Micro:bit's display?",
+                 correctAnswer: "B) 25 (5x5)",
+                 incorrectAnswers: [
+                 "A) 15 (3x5)",
+                 "C) 30 (5x6)"
+                ]
+             },
+            {
+                question: "What does the 'forever' block do?",
+                correctAnswer: "B) Keeps repeating the code inside it over and over",
+                incorrectAnswers: [
+                "A) Runs the code inside it once when the Micro:bit starts",
+                "C) Makes the Micro:bit run forever without stopping"
+                ]
+            },
+                {
+                question: "",
+                correctAnswer: "",
+                incorrectAnswers: [
+                "",
+                ""
+                ]
+             },
+             {
+                question: "",
+                correctAnswer: "",
+                incorrectAnswers: [
+                "",
+                ""
+                ]
+             }
+        ];
+        
+        // Tab functionality
+        function openTab(tabName) {
+            const tabs = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            const tabButtons = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('active');
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            // Update progress bar based on tab
+            updateProgressBar(tabName);
+            
+            // If the video tab is opened, pause the video in another tabs
+            if (tabName === 'video') {
+            pauseVideoOnTabSwitch();
+            }
+            
+            // Reset the quiz feedback if switching tabs
+            if (tabName !== 'quiz') {
+              resetQuiz();
+            }
+        }
+        
+          // Pause video when switching tabs
+         function pauseVideoOnTabSwitch() {
+           const videoIframe = document.getElementById('mainVideo');
+           if (videoIframe) {
+             videoIframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+           }
+         }
+         
+           // Function to reset the quiz
+            function resetQuiz() {
+              const allFeedbacks = document.querySelectorAll('.quiz-feedback');
+              allFeedbacks.forEach(feedback => feedback.style.display = 'none');
+            
+              const quizOptions = document.querySelectorAll('.quiz-option');
+              quizOptions.forEach(option => option.classList.remove('selected'));
+            
+              const resultMessage = document.getElementById('quizResultMessage');
+              resultMessage.style.display = 'none';
+            
+              // Hide party popper animation
+              document.getElementById('partyPopperContainer').style.display = 'none';
+            }
+        
+        // Slideshow functionality
+        function showSlide(n) {
+            const slides = document.querySelectorAll('#slideshowContainer .slide');
+            if (slides.length === 0) return;
+            
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove('active');
+            }
+            
+            currentSlideIndex = (n + slides.length) % slides.length;
+            slides[currentSlideIndex].classList.add('active');
+        }
+        
+        function nextSlide() {
+            showSlide(currentSlideIndex + 1);
+        }
+        
+        function prevSlide() {
+            showSlide(currentSlideIndex - 1);
+        }
+        
+         // Quiz functionality
+        function selectOption(option) {
+             const quizQuestion = option.closest('.quiz-question');
+             if (!quizQuestion) return;
 
-
-<script>
+            const options = quizQuestion.getElementsByClassName('quiz-option');
+            for (let i = 0; i < options.length; i++) {
+                options[i].classList.remove('selected');
+            }
+            option.classList.add('selected');
+             // Remove any existing feedback
+             const feedback = quizQuestion.querySelector('.quiz-feedback');
+              if (feedback) {
+                  feedback.style.display = 'none';
+              }
+            }
+        
+            function submitQuiz() {
+              const quizQuestions = document.querySelectorAll('.quiz-question');
+              let score = 0;
+            
+              let totalQuestions = 0;
+                quizQuestions.forEach(questionDiv => {
+                 const questionData = quizData[totalQuestions];
+                   if (questionData && questionData.question) {
+                    totalQuestions++;
+                 }
+                });
+                
+             if (totalQuestions === 0) {
+                  alert("There are no quiz questions to submit.");
+                  return;
+              }
+          
+            const selectedOptions = document.querySelectorAll('.quiz-option.selected');
+             if (selectedOptions.length < totalQuestions) {
+                 alert("Please answer all questions before submitting!");
+                 return;
+              }
+          
+            quizQuestions.forEach((questionDiv, index) => {
+                 const questionData = quizData[index];
+                 if (questionData && questionData.question) {
+                    const selectedOption = questionDiv.querySelector('.quiz-option.selected');
+                   
+                    if (selectedOption) {
+                      const feedback = questionDiv.querySelector('.quiz-feedback');
+                       
+                       if(selectedOption.textContent.trim() === questionData.correctAnswer)
+                       {
+                          score++;
+                          if (feedback) {
+                                feedback.classList.add('correct');
+                                feedback.style.display = 'block';
+                          }
+                         }
+                       else{
+                         if (feedback) {
+                           feedback.classList.add('incorrect');
+                           feedback.style.display = 'block';
+                            let correctAnswer = questionDiv.querySelector(`.quiz-option[textContent="${questionData.correctAnswer.trim()}"]`)
+                             if (correctAnswer)
+                             {
+                                correctAnswer.classList.add('correct');
+                                correctAnswer.textContent = questionData.correctAnswer;
+                             }
+                         }
+                       }
+                    }
+                    }
+              });
+              
+             // Update results message and animate party popper
+            const resultMessage = document.getElementById('quizResultMessage');
+             const partyPopperContainer = document.getElementById('partyPopperContainer');
+             
+           if (score === totalQuestions) {
+                resultMessage.textContent = `🎉 Congratulations! You got ${score} out of ${totalQuestions} questions correct! You're amazing!`;
+                partyPopperContainer.style.display = 'flex'; // Show party popper animation
+            setTimeout(() => partyPopperContainer.style.display = 'none', 3000); // Hide after animation
+           
+           } else {
+                resultMessage.textContent = `You got ${score} out of ${totalQuestions} questions correct. Keep trying, you're doing great!`;
+            }
+           resultMessage.style.display = 'block';
+           
+           // Scroll to quiz result
+           resultMessage.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Progress bar
+        function updateProgressBar(tab) {
+            let progress = 20;
+            if (tab === 'video') progress = 40;
+            else if (tab === 'slides') progress = 60;
+            else if (tab === 'challenges') progress = 80;
+            else if (tab === 'quiz') progress = 100;
+            
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+        
+       
+        // Edit modal functionality
+        function openEditModal() {
+            // Load current data into edit form
+            document.getElementById('editProjectTitle').value = document.getElementById('projectTitle').textContent;
+            document.getElementById('editProjectSubtitle').value = document.getElementById('projectSubtitle').textContent;
+            document.getElementById('projectImageUrl').value = document.getElementById('projectImage').src;
+            document.getElementById('editOverviewText').value = document.getElementById('overviewText').textContent;
+            
+            // Load "What You'll Learn" items
+            document.getElementById('learnTitle1Input').value = document.getElementById('learnTitle1').textContent;
+            document.getElementById('learnDesc1Input').value = document.getElementById('learnDesc1').textContent;
+            document.getElementById('learnTitle2Input').value = document.getElementById('learnTitle2').textContent;
+            document.getElementById('learnDesc2Input').value = document.getElementById('learnDesc2').textContent;
+            document.getElementById('learnTitle3Input').value = document.getElementById('learnTitle3').textContent;
+            document.getElementById('learnDesc3Input').value = document.getElementById('learnDesc3').textContent;
+            document.getElementById('learnTitle4Input').value = document.getElementById('learnTitle4').textContent;
+            document.getElementById('learnDesc4Input').value = document.getElementById('learnDesc4').textContent;
+            
+            // Load video tab data
+            document.getElementById('editVideoIntroText').value = document.getElementById('videoIntroText').textContent;
+            document.getElementById('editVideoTitle').value = document.getElementById('videoTitle').textContent;
+            document.getElementById('editMainVideoUrl').value = document.getElementById('mainVideo').src;
+            
+            const keyPointsItems = document.querySelectorAll('#videoKeyPoints li');
+            const keyPointsText = Array.from(keyPointsItems).map(li => li.textContent).join('\n');
+            document.getElementById('editVideoKeyPoints').value = keyPointsText;
+            
+            // Load slides data
+            loadSlidesEditFields();
+            
+            // Load challenges data
+            loadChallengesEditFields();
+            
+            //load quiz data
+            loadQuizEditFields();
+            
+            document.getElementById('editModal').style.display = 'block';
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+        
+        function showEditSection() {
+            const sections = document.querySelectorAll('.edit-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            const selectedSection = document.getElementById('editSection').value + 'Edit';
+            document.getElementById(selectedSection).style.display = 'block';
+        }
+        
+        function selectColor(type, color) {
+            // Update color picker selection
+            const colorOptions = document.querySelectorAll(`#styleEdit .color-option`);
+            colorOptions.forEach(option => {
+                option.classList.remove('selected');
+                if (option.style.backgroundColor === color) {
+                    option.classList.add('selected');
+                }
+            });
+            
+            // Update the color picker input
+            if (type === 'primary') {
+                document.getElementById('primaryColorPicker').value = color;
+            } else if (type === 'secondary') {
+                document.getElementById('secondaryColorPicker').value = color;
+            } else if (type === 'accent') {
+                document.getElementById('accentColorPicker').value = color;
+            }
+            
+            // Update CSS variable
+            document.documentElement.style.setProperty(`--${type}`, color);
+        }
+        
+        function customColorSelected(type, color) {
+            selectColor(type, color);
+        }
+        
+        function selectFont(font) {
+            // Update font option selections
+            const fontOptions = document.querySelectorAll('.font-option');
+            fontOptions.forEach(option => {
+                option.classList.remove('selected');
+                if (option.style.fontFamily === font) {
+                    option.classList.add('selected');
+                }
+            });
+            
+            // Update body font
+            document.body.style.fontFamily = font;
+        }
+        
+        function selectSize(size) {
+            // Update size option selections
+            const sizeOptions = document.querySelectorAll('.size-option');
+            sizeOptions.forEach(option => {
+                option.classList.remove('selected');
+                if (option.textContent.toLowerCase() === size) {
+                    option.classList.add('selected');
+                }
+            });
+            
+            // Update text size
+            let fontSize;
+            if (size === 'small') {
+                fontSize = '14px';
+            } else if (size === 'medium') {
+                fontSize = '16px';
+            } else if (size === 'large') {
+                fontSize = '18px';
+            }
+            
+            document.body.style.fontSize = fontSize;
+        }
+        
+        function loadSlidesEditFields() {
+            const container = document.getElementById('slidesEditContainer');
+            container.innerHTML = '';
+            
+            slidesData.forEach((slide, index) => {
+                if (index >= 10) return;
+                
+                const slideDiv = document.createElement('div');
+                slideDiv.style.marginBottom = '20px';
+                slideDiv.style.padding = '10px';
+                slideDiv.style.border = '1px solid #ddd';
+                slideDiv.style.borderRadius = '5px';
+                
+                slideDiv.innerHTML = `
+                    <label>Slide ${index + 1} URL:</label>
+                    <input type="text" class="slide-url" value="${slide.url}" data-index="${index}">
+                    
+                    <label>Slide ${index + 1} Description:</label>
+                    <input type="text" class="slide-desc" value="${slide.description}" data-index="${index}">
+                    
+                    <label>Slide ${index + 1} Type:</label>
+                    <select class="slide-type" data-index="${index}">
+                        <option value="iframe" ${slide.type === 'iframe' ? 'selected' : ''}>Presentation/Video</option>
+                        <option value="image" ${slide.type === 'image' ? 'selected' : ''}>Image</option>
+                    </select>
+                    
+                    <button type="button" onclick="removeSlideEditField(${index})" style="margin-top: 5px;">Remove</button>
+                `;
+                
+                container.appendChild(slideDiv);
+            });
+        }
+        
+        function addSlideEditField() {
+            if (slidesData.length >= 10) {
+                alert("Maximum of 10 slides allowed");
+                return;
+            }
+            
+            const newIndex = slidesData.length;
+            slidesData.push({ url: "", description: `New Slide ${newIndex + 1}`, type: "iframe" });
+            loadSlidesEditFields();
+        }
+        
+        function removeSlideEditField(index) {
+            if (slidesData.length <= 1) {
+                alert("You must have at least one slide");
+                return;
+            }
+            
+            slidesData.splice(index, 1);
+            loadSlidesEditFields();
+        }
+        
+        function loadChallengesEditFields() {
+            const container = document.getElementById('challengesEditContainer');
+            container.innerHTML = '';
+            
+            challengesData.forEach((challenge, index) => {
+                if (index >= 10) return;
+                
+                const challengeDiv = document.createElement('div');
+                challengeDiv.style.marginBottom = '20px';
+                challengeDiv.style.padding = '10px';
+                challengeDiv.style.border = '1px solid #ddd';
+                challengeDiv.style.borderRadius = '5px';
+                
+                challengeDiv.innerHTML = `
+                    <label>Challenge ${index + 1} Title:</label>
+                    <input type="text" class="challenge-title" value="${challenge.title}" data-index="${index}">
+                    
+                    <label>Challenge ${index + 1} Description:</label>
+                    <textarea class="challenge-desc" rows="2" data-index="${index}">${challenge.description}</textarea>
+                    
+                    <button type="button" onclick="removeChallengeEditField(${index})" style="margin-top: 5px;">Remove</button>
+                `;
+                
+                container.appendChild(challengeDiv);
+            });
+        }
+        
+        function addChallengeEditField() {
+            if (challengesData.length >= 10) {
+                alert("Maximum of 10 challenges allowed");
+                return;
+            }
+            
+            const newIndex = challengesData.length;
+            challengesData.push({ title: `New Challenge ${newIndex + 1}`, description: "" });
+            loadChallengesEditFields();
+        }
+        
+        function removeChallengeEditField(index) {
+            if (challengesData.length <= 1) {
+                alert("You must have at least one challenge");
+                return;
+            }
+            
+            challengesData.splice(index, 1);
+            loadChallengesEditFields();
+        }
+        
+         function loadQuizEditFields() {
+              const container = document.getElementById('quizEditContainer');
+              container.innerHTML = '';
+          
+              quizData.forEach((quiz, index) => {
+                  if (index >= 5) return; // Limit to 5 questions
+          
+                  const quizDiv = document.createElement('div');
+                  quizDiv.style.marginBottom = '20px';
+                   quizDiv.style.padding = '10px';
+                quizDiv.style.border = '1px solid #ddd';
+                quizDiv.style.borderRadius = '5px';
+          
+                  quizDiv.innerHTML = `
+                     <label>Question ${index + 1}:</label>
+                     <input type="text" class="quiz-question-input" value="${quiz.question || ''}" data-index="${index}">
+                    
+                      <label>Correct Answer:</label>
+                       <input type="text" class="quiz-correct-answer-input" value="${quiz.correctAnswer || ''}" data-index="${index}">
+          
+                      <label>Incorrect Answers (One per line):</label>
+                      <textarea class="quiz-incorrect-answer-input" rows="2" data-index="${index}">${quiz.incorrectAnswers.join('\n')}</textarea>
+          
+                       <button type="button" onclick="removeQuizQuestionField(${index})" style="margin-top: 5px;">Remove</button>
+                    `;
+          
+                  container.appendChild(quizDiv);
+              });
+          }
+          
+        function addQuizQuestionField() {
+              if (quizData.length >= 5) {
+                  alert("Maximum of 5 quiz questions allowed");
+                  return;
+              }
+              
+               const newIndex = quizData.length;
+            quizData.push({ question: "", correctAnswer: "", incorrectAnswers: ["", ""] });
+            loadQuizEditFields();
+          }
+          
+        function removeQuizQuestionField(index) {
+            if (quizData.length <= 1) {
+                alert("You must have at least one quiz question");
+                return;
+             }
+             quizData.splice(index, 1);
+            loadQuizEditFields();
+        }
+        
+        
+        function saveChanges() {
+            // Save title changes
+            document.getElementById('projectTitle').textContent = document.getElementById('editProjectTitle').value;
+            document.getElementById('projectSubtitle').textContent = document.getElementById('editProjectSubtitle').value;
+            document.getElementById('projectImage').src = document.getElementById('projectImageUrl').value;
+            
+            // Save overview text
+            document.getElementById('overviewText').textContent = document.getElementById('editOverviewText').value;
+            
+            // Save "What You'll Learn" items
+            document.getElementById('learnTitle1').textContent = document.getElementById('learnTitle1Input').value;
+            document.getElementById('learnDesc1').textContent = document.getElementById('learnDesc1Input').value;
+            document.getElementById('learnTitle2').textContent = document.getElementById('learnTitle2Input').value;
+            document.getElementById('learnDesc2').textContent = document.getElementById('learnDesc2Input').value;
+            document.getElementById('learnTitle3').textContent = document.getElementById('learnTitle3Input').value;
+            document.getElementById('learnDesc3').textContent = document.getElementById('learnDesc3Input').value;
+            document.getElementById('learnTitle4').textContent = document.getElementById('learnTitle4Input').value;
+            document.getElementById('learnDesc4').textContent = document.getElementById('learnDesc4Input').value;
+            
+            // Save video tab data
+            document.getElementById('videoIntroText').textContent = document.getElementById('editVideoIntroText').value;
+            document.getElementById('videoTitle').textContent = document.getElementById('editVideoTitle').value;
+            document.getElementById('mainVideo').src = document.getElementById('editMainVideoUrl').value;
+            
+            // Save video key points
+            const keyPointsText = document.getElementById('editVideoKeyPoints').value;
+            const keyPointsList = keyPointsText.split('\n').filter(point => point.trim() !== '');
+            const keyPointsContainer = document.getElementById('videoKeyPoints');
+            keyPointsContainer.innerHTML = '';
+            keyPointsList.forEach(point => {
+                const li = document.createElement('li');
+                li.textContent = point;
+                keyPointsContainer.appendChild(li);
+            });
+            
+            // Save slides data from edit form
+            const slideUrlInputs = document.querySelectorAll('.slide-url');
+            const slideDescInputs = document.querySelectorAll('.slide-desc');
+            const slideTypeSelects = document.querySelectorAll('.slide-type');
+            
+            slidesData = [];
+            slideUrlInputs.forEach((input, index) => {
+                slidesData.push({
+                    url: input.value,
+                    description: slideDescInputs[index].value,
+                    type: slideTypeSelects[index].value
+                });
+            });
+            
+            // Save challenges data from edit form
+            const challengeTitleInputs = document.querySelectorAll('.challenge-title');
+            const challengeDescInputs = document.querySelectorAll('.challenge-desc');
+            
+            challengesData = [];
+            challengeTitleInputs.forEach((input, index) => {
+                challengesData.push({
+                    title: input.value,
+                    description: challengeDescInputs[index].value
+                });
+            });
+            
+             // Save quiz data from edit form
+           const quizQuestionInputs = document.querySelectorAll('.quiz-question-input');
+           const quizCorrectAnswerInputs = document.querySelectorAll('.quiz-correct-answer-input');
+           const quizIncorrectAnswerInputs = document.querySelectorAll('.quiz-incorrect-answer-input');
+          
+           quizData = [];
+           quizQuestionInputs.forEach((input, index) => {
+                quizData.push({
+                    question: input.value,
+                    correctAnswer: quizCorrectAnswerInputs[index].value,
+                    incorrectAnswers: quizIncorrectAnswerInputs[index].value.split('\n').filter(answer => answer.trim() !== '')
+                });
+            });
+           
+            // Update slideshow, challenges and quiz display
+            updateSlideshow();
+            updateChallenges();
+            updateQuiz();
+            
+            // Show success message
+            alert('Changes saved successfully!');
+            closeEditModal();
+        }
+        
+        function updateSlideshow() {
+            const container = document.getElementById('slideshowContainer');
+            container.innerHTML = '';
+            
+            slidesData.forEach((slide, index) => {
+                if (!slide.url) return;
+                
+                const slideDiv = document.createElement('div');
+                slideDiv.className = 'slide';
+                if (index === 0) slideDiv.classList.add('active');
+                
+                if (slide.type === 'iframe') {
+                    slideDiv.innerHTML = `
+                        <iframe src="${slide.url}" frameborder="0" allowfullscreen></iframe>
+                        <p>${slide.description}</p>
+                    `;
+                } else if (slide.type === 'image') {
+                    slideDiv.innerHTML = `
+                        <img src="${slide.url}" alt="${slide.description}">
+                        <p>${slide.description}</p>
+                    `;
+                }
+                
+                container.appendChild(slideDiv);
+            });
+            
+            // Reset slide navigation
+            currentSlideIndex = 0;
+        }
+        
+        function updateChallenges() {
+            const container = document.getElementById('challengesContainer');
+            container.innerHTML = '';
+            
+            challengesData.forEach((challenge, index) => {
+                if (!challenge.title && !challenge.description) return;
+                
+                const challengeDiv = document.createElement('div');
+                challengeDiv.className = 'step';
+                
+                challengeDiv.innerHTML = `
+                    <div class="step-number">★</div>
+                    <div class="step-content">
+                        <strong>${challenge.title || 'Challenge ' + (index + 1)}</strong>
+                        <p>${challenge.description || ''}</p>
+                    </div>
+                `;
+                
+                container.appendChild(challengeDiv);
+            });
+        }
+        
+         function updateQuiz() {
+                const container = document.getElementById('quizContainer');
+                container.innerHTML = '';
+         
+                quizData.forEach((quiz, index) => {
+                  if(!quiz.question) return;
+                 
+                    const quizDiv = document.createElement('div');
+                    quizDiv.className = 'quiz-question';
+                    
+                     const optionsHtml = quiz.incorrectAnswers.concat(quiz.correctAnswer)
+                     .sort(() => Math.random() - 0.5)
+                     .map(answer => `<div class="quiz-option" onclick="selectOption(this)" textContent="${answer.trim()}">${answer}</div>`)
+                     .join('');
+                    
+                     quizDiv.innerHTML = `
+                        <p>${index + 1}. ${quiz.question}</p>
+                        <div class="quiz-options">
+                         ${optionsHtml}
+                        </div>
+                         <div class="quiz-feedback correct">
+                              Correct!
+                         </div>
+                       <div class="quiz-feedback incorrect">
+                              Not quite, try again!
+                        </div>
+                    `;
+         
+                container.appendChild(quizDiv);
+            });
+             }
+        
+        function exportHTML() {
+            // Create a clone of the document to modify for export
+            const exportDoc = document.cloneNode(true);
+            
+            // Remove edit and export buttons from the exported version
+            const exportEditBtn = exportDoc.querySelector('.edit-btn');
+            if (exportEditBtn) exportEditBtn.remove();
+            const exportExportBtn = exportDoc.querySelector('.export-btn');
+            if (exportExportBtn) exportExportBtn.remove();
+            
+            // Remove the edit modal completely
+            const exportModal = exportDoc.getElementById('editModal');
+            if (exportModal) exportModal.remove();
+            
+            // Remove all script elements (keeping only basic functionality)
+            const scripts = exportDoc.querySelectorAll('script');
+            scripts.forEach(script => script.remove());
+            
+            // Add minimal script for basic functionality
+            const newScript = exportDoc.createElement('script');
+            newScript.textContent = `
                 // Basic tab functionality
                 function openTab(tabName) {
                     const tabs = document.getElementsByClassName('tab-content');
@@ -739,9 +1582,8 @@
                     document.getElementById(tabName).classList.add('active');
                     event.currentTarget.classList.add('active');
                 }
-                
-                // Basic slideshow functionality
-                let currentSlideIndex = 0;
+                 // Basic slideshow functionality
+                 let currentSlideIndex = 0;
                 function showSlide(n) {
                     const slides = document.querySelectorAll('#slideshowContainer .slide');
                     if (slides.length === 0) return;
@@ -764,36 +1606,136 @@
                 
                 // Basic quiz functionality
                 function selectOption(option) {
-                    const options = option.parentElement.getElementsByClassName('quiz-option');
+                   const quizQuestion = option.closest('.quiz-question');
+                     if (!quizQuestion) return;
+                    const options = quizQuestion.getElementsByClassName('quiz-option');
                     for (let i = 0; i < options.length; i++) {
                         options[i].classList.remove('selected');
                     }
                     option.classList.add('selected');
-                }
-                
-                function submitQuiz() {
+                  }
+                  function submitQuiz() {
+                    const quizQuestions = document.querySelectorAll('.quiz-question');
+                    let score = 0;
+                    let totalQuestions = 0;
+                  
+                      quizQuestions.forEach(questionDiv => {
+                          const questionData = quizData[totalQuestions];
+                           if (questionData && questionData.question) {
+                              totalQuestions++;
+                           }
+                        });
+                  
+                     if (totalQuestions === 0) {
+                          alert("There are no quiz questions to submit.");
+                          return;
+                      }
                     const selectedOptions = document.querySelectorAll('.quiz-option.selected');
-                    if (selectedOptions.length < 3) {
-                        alert("Please answer all questions before submitting!");
-                        return;
+                     if (selectedOptions.length < totalQuestions) {
+                         alert("Please answer all questions before submitting!");
+                         return;
+                      }
+                  
+                   quizQuestions.forEach((questionDiv, index) => {
+                        const questionData = quizData[index];
+                        if (questionData && questionData.question) {
+                           const selectedOption = questionDiv.querySelector('.quiz-option.selected');
+                          if (selectedOption) {
+                             const feedback = questionDiv.querySelector('.quiz-feedback');
+                             if(selectedOption.textContent.trim() === questionData.correctAnswer)
+                             {
+                                 score++;
+                                if (feedback) {
+                                    feedback.classList.add('correct');
+                                     feedback.style.display = 'block';
+                               }
+                               }
+                            else{
+                              if (feedback) {
+                                    feedback.classList.add('incorrect');
+                                    feedback.style.display = 'block';
+                                    let correctAnswer = questionDiv.querySelector(`.quiz-option[textContent="${questionData.correctAnswer.trim()}"]`)
+                                        if (correctAnswer)
+                                        {
+                                           correctAnswer.classList.add('correct');
+                                            correctAnswer.textContent = questionData.correctAnswer;
+                                         }
+                                }
+                               }
+                           }
+                        }
+                      });
+                       const resultMessage = document.getElementById('quizResultMessage');
+                        if (score === totalQuestions) {
+                            resultMessage.textContent = \`🎉 Congratulations! You got \${score} out of \${totalQuestions} questions correct! You're amazing!\`;
+                        } else {
+                            resultMessage.textContent = \`You got \${score} out of \${totalQuestions} questions correct. Keep trying, you're doing great!\`;
+                         }
+                     resultMessage.style.display = 'block';
                     }
-                    
-                    // Show feedback for each question
-                    document.querySelectorAll('.quiz-feedback').forEach(fb => {
-                        fb.style.display = 'block';
-                    });
-                }
                 
                 // Initialize slideshow
                 document.addEventListener('DOMContentLoaded', function() {
-                    // Set up event listeners for iframe resizing
-                    window.addEventListener('resize', function() {
-                        const iframes = document.querySelectorAll('.slide iframe, .slide img');
-                        iframes.forEach(iframe => {
-                            if (iframe.offsetWidth > 0) {
-                                iframe.style.height = (iframe.offsetWidth * 0.5625) + 'px';
-                            }
-                        });
+                     // Set up event listeners for iframe resizing
+                     window.addEventListener('resize', function() {
+                         const iframes = document.querySelectorAll('.slide iframe, .slide img');
+                         iframes.forEach(iframe => {
+                             if (iframe.offsetWidth > 0) {
+                                 iframe.style.height = (iframe.offsetWidth * 0.5625) + 'px';
+                             }
+                         });
                     });
                 });
-            </script></body></html>
+            `;
+            exportDoc.body.appendChild(newScript);
+            
+            // Get the HTML as a string
+            let htmlContent = `<!DOCTYPE html>\n${exportDoc.documentElement.outerHTML}`;
+            
+            // Create a Blob with the HTML content
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            
+            // Create a download link
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'microbit-project.html';
+            
+            // Trigger the download
+            document.body.appendChild(a);
+            a.click();
+            
+            // Clean up
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgressBar('overview');
+           
+            // Initialize slideshow, challenges and quiz
+            updateSlideshow();
+            updateChallenges();
+             updateQuiz();
+            
+            // Set up event listeners for iframe resizing
+            window.addEventListener('resize', function() {
+                const iframes = document.querySelectorAll('.slide iframe, .slide img');
+                iframes.forEach(iframe => {
+                    if (iframe.offsetWidth > 0) {
+                        iframe.style.height = (iframe.offsetWidth * 0.5625) + 'px';
+                    }
+                });
+            });
+            
+            // Pause video when tab switch occurs
+             document.querySelectorAll('.tab').forEach(tab => {
+                  tab.addEventListener('click', pauseVideoOnTabSwitch);
+                 });
+        });
+    </script>
+</body>
+</html>
