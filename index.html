@@ -1,15 +1,12 @@
-Okay, here is the modified code incorporating all your requested changes. I'll present the final, complete script, explaining the key modifications inline as comments where significant changes were made related to your points.
 
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- CHANGE: Added '- V2' to title just for clarity, you can remove it -->
-<title>Course Editor & Viewer - V2</title>
+<title>Course Editor & Viewer - Combined</title> <!-- Updated Title -->
 <style>
-    /* --- Base Styles (Keep existing) --- */
+    /* --- Base Styles --- */
     :root {
         /* Default Theme Colors (Can be overridden by Course or Project Editor) */
         --primary: #5E81F4;
@@ -20,7 +17,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
         --success: #7CE7AC;
         --danger: #FF7E7E;
         /* Base Font Settings (Can be overridden by Project Editor) */
-        --base-font-family: 'Segoe UI', sans-serif; /* Changed default from Comic Sans */
+        --base-font-family: 'Segoe UI', sans-serif;
         --base-font-size: 16px;
     }
     html { scroll-behavior: smooth; box-sizing: border-box; font-size: var(--base-font-size); }
@@ -32,8 +29,8 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
 
-    /* --- Header Styles (Slightly modified for Course/Project Context) --- */
-    .page-header { /* Generic header for both views */
+    /* --- Header Styles (Generic for Course/Project) --- */
+    .page-header {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -47,8 +44,8 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
         text-align: center;
         position: relative; /* Needed for absolute positioning of buttons */
     }
-    .page-header img.header-image { /* Class for header images */
-        width: 120px; /* Slightly larger default */
+    .page-header img.header-image { /* Common class for header images */
+        width: 120px; /* Default size */
         height: 120px;
         object-fit: cover;
         border-radius: 10px;
@@ -65,7 +62,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
         background-color: rgba(255, 255, 255, 0.2);
         color: white;
         border: 1px solid rgba(255, 255, 255, 0.5);
-        width: 38px; /* Slightly larger */
+        width: 38px;
         height: 38px;
         border-radius: 50%;
         cursor: pointer;
@@ -76,11 +73,15 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
         box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         transition: background-color 0.3s, transform 0.2s;
         z-index: 10;
-        text-decoration: none; /* For back button link */
+        text-decoration: none;
     }
     .edit-btn:hover, .export-btn:hover, .back-btn:hover { background-color: rgba(255, 255, 255, 0.4); transform: scale(1.1); }
-    .edit-btn { right: 15px; } /* Consistent right position */
-    .export-btn { right: 65px; } /* ONLY on course view header */
+    /* Positions */
+    #course-view .page-header .edit-btn { right: 15px; }
+    #course-view .page-header .export-btn { right: 65px; } /* ONLY on course header */
+    #project-view .page-header .edit-btn { right: 15px; }
+    #project-view .page-header .back-btn { right: 65px; font-size: 24px; /* Make arrow slightly bigger */ }
+
 
     /* --- Course View Specific Styles --- */
     #course-view { animation: fadeIn 0.5s; }
@@ -95,7 +96,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
     }
     #projectGrid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsive grid */
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 20px;
         margin-top: 20px;
     }
@@ -110,7 +111,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
         flex-direction: column;
         text-decoration: none;
         color: inherit;
-        position: relative; /* CHANGE 4: Added for positioning the tick mark */
+        position: relative; /* For completion tick */
     }
     .project-tab:hover {
         transform: translateY(-5px);
@@ -118,25 +119,24 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
     }
     .project-tab img {
         width: 100%;
-        height: 200px; /* Fixed height for grid consistency */
+        height: 200px;
         object-fit: cover;
         display: block;
     }
     .project-tab-info {
         padding: 15px;
         text-align: center;
-        background-color: #fdfdff; /* Slightly different bg for info */
-        flex-grow: 1; /* Allow info area to grow */
+        background-color: #fdfdff;
+        flex-grow: 1;
         display: flex;
-        align-items: center; /* Center text vertically */
-        justify-content: center; /* Center text horizontally */
+        align-items: center;
+        justify-content: center;
     }
     .project-tab-info span {
         font-weight: bold;
         color: var(--primary);
         font-size: 1.05rem;
     }
-    /* CHANGE 4: Style for the completion tick mark */
     .completion-tick {
         position: absolute;
         top: 10px;
@@ -153,36 +153,35 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
         font-weight: bold;
         line-height: 1;
         box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        z-index: 5; /* Ensure it's above the image */
+        z-index: 5;
     }
 
-    /* --- Project View Specific Styles (Container) --- */
+    /* --- Project View Specific Styles --- */
     #project-view {
-        /* Project specific font/size will be applied here via JS if needed */
+        /* Project specific font/size applied here via JS */
         animation: fadeIn 0.5s;
     }
-    /* Reuse page-header styles, slightly smaller image for project */
+    /* Slightly smaller image for project header */
     #project-view .page-header .header-image { width: 100px; height: 100px; }
     #project-view .page-header .header-title { font-size: 1.6rem; }
     #project-view .page-header .header-subtitle { font-size: 0.95rem; }
-    /* CHANGE 2: Style for the back button specifically on the project page */
-    #project-view .page-header .back-btn {
-        left: auto; /* Remove left positioning */
-        right: 65px; /* Position near the edit button (Edit is at 15px) */
-        font-size: 24px; /* Keep arrow bigger */
-    }
-
 
     /* --- Styling for project content (Merged from Project Code) --- */
     .progress-container{width:100%;background-color:#e0e0e0;border-radius:10px;margin:20px 0;height:10px;overflow:hidden}
     .progress-bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:10px;width:0%;transition:width .5s ease-in-out}
-    .tabs{display:flex;gap:8px;margin-bottom:15px;overflow-x:auto;padding-bottom:5px;-webkit-overflow-scrolling:touch}
-    .tabs::-webkit-scrollbar{display:none}
-    .tab{padding:8px 15px;background-color:#fff;border-radius:30px;cursor:pointer;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.05);white-space:nowrap;font-size:.9rem;flex-shrink:0;transition:background-color .3s,color .3s,transform .2s}
-    .tab.active{background-color:var(--primary);color:#fff;transform:translateY(-2px)}
-    .tab:hover:not(.active){background-color:#eef2ff;transform:translateY(-1px)}
-    .tab-content{display:none;background-color:#fff;padding:20px;border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,.05);animation:fadeIn .5s ease-out;margin-bottom:20px}
-    .tab-content.active{display:block}
+    #projectTabs { /* Target specifically */
+        display:flex;gap:8px;margin-bottom:15px;overflow-x:auto;padding-bottom:5px;-webkit-overflow-scrolling:touch
+    }
+    #projectTabs::-webkit-scrollbar{display:none}
+    #projectTabs .tab{ /* Target specifically */
+        padding:8px 15px;background-color:#fff;border-radius:30px;cursor:pointer;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.05);white-space:nowrap;font-size:.9rem;flex-shrink:0;transition:background-color .3s,color .3s,transform .2s
+    }
+    #projectTabs .tab.active{background-color:var(--primary);color:#fff;transform:translateY(-2px)}
+    #projectTabs .tab:hover:not(.active){background-color:#eef2ff;transform:translateY(-1px)}
+    #projectTabContentContainer .tab-content{ /* Target specifically */
+        display:none;background-color:#fff;padding:20px;border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,.05);animation:fadeIn .5s ease-out;margin-bottom:20px
+    }
+    #projectTabContentContainer .tab-content.active{display:block}
     .video-container{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin:15px 0;border-radius:10px;box-shadow:0 4px 8px rgba(0,0,0,.1)}
     .video-container iframe{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:10px;border:none}
     .slide{display:none;text-align:center}
@@ -191,12 +190,11 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
     .slide iframe,.slide img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);background-color:transparent}
     .slide p{margin:10px 0 0;font-size:.9rem;color:#555}
     .slide.active{display:block;animation:fadeIn .5s}
-    /* CHANGE 3: Align slide nav buttons */
     .slide-nav {
         text-align: center;
         margin-top: 15px;
         display: flex;
-        justify-content: space-between; /* Changed from 'center' */
+        justify-content: space-between; /* Aligns buttons nicely */
         gap: 10px;
     }
     .slide-nav button{background-color:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:.9rem;transition:background-color .3s,transform .2s}
@@ -231,8 +229,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
     .submit-btn:hover:not(:disabled){background-color:#ffc833;box-shadow:0 4px 8px rgba(0,0,0,.15);transform:translateY(-1px)}
     .submit-btn:disabled{background-color:#ccc;color:#666;cursor:not-allowed;box-shadow:none;transform:none;opacity:.7}
 
-
-    /* --- Modal Styles (Generic - Keep Existing) --- */
+    /* --- Modal Styles (Generic) --- */
     .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,.6);z-index:1000;overflow-y:auto;padding:30px 0}
     .modal-content{background-color:#fff;margin:30px auto;padding:25px 30px;border-radius:10px;width:90%;max-width:800px;box-shadow:0 5px 15px rgba(0,0,0,.3);position:relative}
     .close-modal{position:absolute;top:10px;right:15px;font-size:28px;font-weight:700;color:#aaa;cursor:pointer;line-height:1;z-index:1001;padding:5px}
@@ -241,36 +238,35 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
     .edit-form label{display:block;margin-bottom:5px;font-weight:700;color:var(--primary);font-size:.9rem}
     .edit-form input[type=text],.edit-form input[type=url],.edit-form textarea,.edit-form select{width:100%;padding:10px;margin-bottom:15px;border:1px solid #ccc;border-radius:5px;font-size:.9rem;box-sizing:border-box}
     .edit-form textarea{resize:vertical;min-height:60px}
-    .edit-form button,button.remove-item-btn,button.add-item-btn{background-color:var(--primary);color:#fff;border:none;padding:10px 15px;border-radius:5px;cursor:pointer;margin-right:10px;margin-top:5px;font-size:.9rem;transition:background-color .3s}
-    .edit-form button:hover,button.remove-item-btn:hover,button.add-item-btn:hover{background-color:#4a6cdc}
+    /* General Buttons inside modals */
+    .edit-form button, button.remove-item-btn, button.add-item-btn{
+         background-color: var(--primary); color: #fff; border: none; padding: 10px 15px; border-radius: 5px;
+         cursor: pointer; margin-right: 10px; margin-top: 5px; font-size: .9rem; transition: background-color .3s
+    }
+    .edit-form button:hover, button.remove-item-btn:hover, button.add-item-btn:hover{ background-color: #4a6cdc }
+    /* Save/Cancel specifically */
+    .edit-form button[onclick^="save"], .edit-form button[onclick^="closeModal"] { margin-top: 20px; }
+
     button.remove-item-btn{background-color:var(--danger);margin-left:10px;font-weight:700;line-height:1;padding:6px 10px}
     button.remove-item-btn:hover{background-color:#e66a6a}
-    button.add-item-btn{background-color:var(--success);display:block;margin-top:15px;margin-left:0;margin-right:0;width:-moz-fit-content;width:fit-content}
+    button.add-item-btn{background-color:var(--success);display:block;margin-top:15px;margin-left:0;margin-right:0;width:fit-content}
     button.add-item-btn:hover{background-color:#63c899}
     .edit-section{margin-top:20px;padding-top:15px;border-top:1px solid #eee}
     .edit-item-group{margin-bottom:20px;padding:15px;border:1px solid #ddd;border-radius:8px;background-color:#fdfdff;position:relative}
     .edit-item-group .remove-item-btn{position:absolute;top:10px;right:10px;font-size:1.2rem}
-    .edit-item-group>label{font-weight:700;color:var(--dark);font-size:.95rem;margin-top:5px}
-    .edit-item-group label{font-weight:400;color:#555;font-size:.85rem}
+    .edit-item-group>label{font-weight:700;color:var(--dark);font-size:.95rem;margin-top:5px} /* Bold top-level label */
+    .edit-item-group label{font-weight:400;color:#555;font-size:.85rem} /* Default labels inside group */
     .edit-item-group input[type=text],.edit-item-group input[type=url],.edit-item-group textarea,.edit-item-group select{margin-bottom:10px}
     .media-controls{margin-top:10px;padding-top:10px;border-top:1px dashed #eee}
     .media-controls label{font-weight:400;color:#555;font-size:.85rem}
     .media-url-input-container { margin-top: 5px; } /* Container for URL input */
     .incorrect-answer-label{font-size:.85rem;color:#777;margin-top:8px;font-weight:400}
 
-    /* Style Editor Sections (Color, Font, Size) - Common Structure */
-    .color-picker { /* Used in BOTH course and project modals */
-      display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center;
-    }
-    .color-option { /* Used in BOTH */
-      width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid #ddd; transition: transform .2s, border-color .2s;
-    }
-    .color-option.selected { /* Used in BOTH */
-      border: 3px solid var(--dark); transform: scale(1.1);
-    }
-    input[type=color] { /* Used in BOTH */
-      width: 35px; height: 35px; border: none; padding: 0; border-radius: 50%; overflow: hidden; cursor: pointer; vertical-align: middle;
-    }
+    /* Style Editor Sections (Color, Font, Size) - Common Structure for both Modals */
+    .color-picker { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; }
+    .color-option { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid #ddd; transition: transform .2s, border-color .2s; }
+    .color-option.selected { border: 3px solid var(--dark); transform: scale(1.1); }
+    input[type=color] { width: 35px; height: 35px; border: none; padding: 0; border-radius: 50%; overflow: hidden; cursor: pointer; vertical-align: middle; }
     .font-selector{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap}
     .font-option{padding:5px 12px;border:1px solid #ddd;border-radius:4px;cursor:pointer;transition:background-color .3s,color .3s}
     .font-option.selected{background-color:var(--primary);color:#fff;border-color:var(--primary)}
@@ -278,38 +274,63 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
     .size-option{padding:5px 12px;border:1px solid #ddd;border-radius:4px;cursor:pointer;transition:background-color .3s,color .3s}
     .size-option.selected{background-color:var(--primary);color:#fff;border-color:var(--primary)}
 
-
-     /* --- Course Editor Specific Styles --- */
-     #courseEditModal #projectTabsEditor { margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
-     #projectTabsEditor h4 { margin-bottom: 15px; }
-     #projectTabsList { max-height: 300px; overflow-y: auto; padding-right: 10px;} /* Scrollable list */
-     .project-tab-edit-item {
-         display: grid;
-         grid-template-columns: auto 1fr auto; /* Index, Inputs, Remove Button */
-         gap: 10px;
-         align-items: center;
-         padding: 10px;
-         border: 1px solid #eee;
-         border-radius: 5px;
-         margin-bottom: 10px;
-     }
-      .project-tab-edit-item .index { font-weight: bold; }
-      .project-tab-edit-item .inputs { display: flex; flex-direction: column; gap: 5px;}
-      .project-tab-edit-item label { font-size: 0.8rem; margin-bottom: 2px;}
-      .project-tab-edit-item input { padding: 6px; font-size: 0.85rem;}
+    /* --- Course Editor Specific Styles --- */
+    #courseEditModal #projectTabsEditor { margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
+    #projectTabsEditor h4 { margin-bottom: 15px; color: var(--primary); display: inline-block; border-bottom: 2px solid var(--secondary); padding-bottom: 5px; }
+    #projectTabsList { max-height: 300px; overflow-y: auto; padding-right: 10px;}
+    .project-tab-edit-item { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 10px; border: 1px solid #eee; border-radius: 5px; margin-bottom: 10px; }
+    .project-tab-edit-item .index { font-weight: bold; }
+    .project-tab-edit-item .inputs { display: flex; flex-direction: column; gap: 5px;}
+    .project-tab-edit-item label { font-size: 0.8rem; margin-bottom: 2px; color: #555; font-weight: normal;}
+    .project-tab-edit-item input { padding: 6px; font-size: 0.85rem;}
 
     /* Project Editor Specific Styling */
-    #projectEditModal .edit-section h4 { /* Specific h4 style inside project modal sections */
+    #projectEditModal .edit-section h4, #courseEditModal .edit-section h4{ /* Specific h4 style inside modal sections */
         color: var(--primary);
         margin-bottom: 10px;
         padding-bottom: 5px;
         border-bottom: 2px solid var(--secondary);
         display: inline-block;
     }
+     #projectEditModal .edit-section h5{ /* Specific h5 style inside modal sections */
+        color: var(--dark);
+        margin-top: 20px;
+        margin-bottom: 8px;
+        font-size: 1rem;
+     }
 
-    /* --- Media Queries (Minor tweaks for new button pos) --- */
-    @media (min-width:768px){.page-header{flex-direction:row;text-align:left;align-items:center;padding:25px;gap:25px}.page-header img.header-image{width:150px;height:150px}.page-header .header-title{font-size:2rem}.page-header .header-subtitle{font-size:1.1rem}.step{align-items:center}.step-number{margin-top:0;width:35px;height:35px;font-size:1rem}.step-content .step-media{max-width:70%;margin-left:auto;margin-right:auto}#project-view .page-header img.header-image{width:120px;height:120px}#project-view .page-header .header-title{font-size:2rem}#project-view .page-header .header-subtitle{font-size:1rem}}
-    @media (max-width:600px){.container{padding:10px}.page-header{padding:15px}.tab-content{padding:15px}.edit-btn{right:10px;top:10px}.export-btn{right:55px;top:10px}/* Removed back-btn from here, handled by specific project view style below */ h2{font-size:1.2rem}.page-header .header-title{font-size:1.5rem}.page-header .header-subtitle{font-size:.9rem}.modal-content{padding:20px}.step-content .step-media{max-width:100%}#project-view .page-header .header-title{font-size:1.4rem}#project-view .page-header .header-subtitle{font-size:.9rem} /* CHANGE 2: Ensure back button positioning on small screens */ #project-view .page-header .back-btn { right: 55px; top: 10px; font-size: 22px;} }
+
+    /* --- Media Queries --- */
+    @media (min-width:768px){
+        .page-header{flex-direction:row;text-align:left;align-items:center;padding:25px;gap:25px}
+        #course-view .page-header img.header-image{width:150px;height:150px} /* Course header image */
+        .page-header .header-title{font-size:2rem}
+        .page-header .header-subtitle{font-size:1.1rem}
+        .step{align-items:center}
+        .step-number{margin-top:0;width:35px;height:35px;font-size:1rem}
+        .step-content .step-media{max-width:70%;margin-left:auto;margin-right:auto}
+        #project-view .page-header img.header-image{width:120px;height:120px} /* Project header image */
+        #project-view .page-header .header-title{font-size:2rem}
+        #project-view .page-header .header-subtitle{font-size:1rem}
+        #projectTabs .tab { padding: 10px 20px; font-size: 1rem; } /* Larger project tabs on desktop */
+     }
+    @media (max-width:600px){
+        .container{padding:10px}
+        .page-header{padding:15px}
+        #projectTabContentContainer .tab-content{padding:15px}
+        /* Button positioning on small screens */
+        #course-view .page-header .edit-btn { right: 10px; top: 10px; }
+        #course-view .page-header .export-btn { right: 55px; top: 10px; }
+        #project-view .page-header .edit-btn { right: 10px; top: 10px; }
+        #project-view .page-header .back-btn { right: 55px; top: 10px; font-size: 22px; }
+        h2{font-size:1.2rem}
+        .page-header .header-title{font-size:1.5rem}
+        .page-header .header-subtitle{font-size:.9rem}
+        .modal-content{padding:20px}
+        .step-content .step-media{max-width:100%}
+        #project-view .page-header .header-title{font-size:1.4rem}
+        #project-view .page-header .header-subtitle{font-size:.9rem}
+    }
 
 </style>
 </head>
@@ -346,9 +367,9 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
     <div id="project-view" style="display: none;">
         <!-- Project Header (Populated Dynamically) -->
         <div class="page-header" id="project-header">
-            <!-- CHANGE 2: Moved Back button using CSS. It's still here in the HTML -->
             <button class="back-btn" id="backToCourseBtn" onclick="showCourseView()" aria-label="Back to Course">←</button>
             <button class="edit-btn" onclick="openProjectEditModal()" aria-label="Edit Project">✏️</button>
+            <!-- Project Export Button REMOVED -->
             <img src="" alt="Project Image" class="header-image" id="projectImage">
             <div class="header-title-container">
                 <h1 class="header-title" id="projectTitle">Project Title</h1>
@@ -356,12 +377,13 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
             </div>
         </div>
 
-        <!-- Existing Project Content Structure (from Project Code) -->
+        <!-- Existing Project Content Structure (Merged from Project Code) -->
         <div class="progress-container">
             <div class="progress-bar" id="progressBar"></div>
         </div>
         <div class="tabs" id="projectTabs">
-            <!-- Hardcoded tabs for structure - content loaded dynamically -->
+            <!-- Tabs are dynamically generated or hardcoded if fixed -->
+            <!-- Example structure (content loaded dynamically) -->
             <div class="tab active" onclick="openProjectTab('overview', this)">Overview</div>
             <div class="tab" onclick="openProjectTab('video', this)">Video Lesson</div>
             <div class="tab" onclick="openProjectTab('slides', this)">Step-by-Step</div>
@@ -372,7 +394,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
             <!-- Project Tab Content Templates -->
              <div id="overview" class="tab-content active">
                  <h2>About This Project</h2>
-                 <p id="overviewText"></p>
+                 <p id="overviewText">Loading overview...</p>
                  <h3>What You'll Learn</h3>
                  <div id="learnContainer"><p>Loading learning objectives...</p></div>
              </div>
@@ -389,7 +411,6 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
              <div id="slides" class="tab-content">
                  <h2>Step-by-Step Guide</h2>
                  <div class="slideshow" id="slideshowContainer"><p>Loading slides...</p></div>
-                 <!-- CHANGE 3: CSS change takes care of button placement -->
                  <div class="slide-nav">
                      <button onclick="prevSlide()">Previous</button>
                      <button onclick="nextSlide()">Next</button>
@@ -422,6 +443,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
         <h2>Edit Course Details</h2>
         <div class="edit-form">
             <div class="edit-section">
+                <h4>Course Metadata</h4>
                 <label for="editCourseTitle">Course Title:</label>
                 <input type="text" id="editCourseTitle">
 
@@ -436,7 +458,6 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
             <div id="courseStyleEditor" class="edit-section">
                  <h4>Course Theme Colors</h4>
                  <p style="font-size: 0.8rem; color: #666;">Set the main colors used globally unless overridden by a specific project.</p>
-                 <!-- CHANGE 1: Course color editor remains as before -->
                  <label>Primary Color:</label>
                  <div class="color-picker">
                      <div class="color-option" style="background-color: #5E81F4;" onclick="selectCourseColor('primary', '#5E81F4')"></div>
@@ -446,7 +467,6 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                      <div class="color-option" style="background-color: #9B51E0;" onclick="selectCourseColor('primary', '#9B51E0')"></div>
                      <input type="color" id="coursePrimaryColorPicker" oninput="customCourseColorSelected('primary', this.value)" aria-label="Custom Primary Color">
                  </div>
-
                  <label>Secondary Color:</label>
                  <div class="color-picker">
                      <div class="color-option" style="background-color: #5E81F4;" onclick="selectCourseColor('secondary', '#5E81F4')"></div>
@@ -456,7 +476,6 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                      <div class="color-option" style="background-color: #9B51E0;" onclick="selectCourseColor('secondary', '#9B51E0')"></div>
                      <input type="color" id="courseSecondaryColorPicker" oninput="customCourseColorSelected('secondary', this.value)" aria-label="Custom Secondary Color">
                  </div>
-
                  <label>Accent Color:</label>
                  <div class="color-picker">
                       <div class="color-option" style="background-color: #FFB800;" onclick="selectCourseColor('accent', '#FFB800')"></div>
@@ -468,7 +487,6 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                  </div>
             </div>
 
-
             <!-- Project Tabs Editor -->
             <div id="projectTabsEditor" class="edit-section">
                  <h4>Manage Project Tabs</h4>
@@ -478,16 +496,15 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                  <button type="button" class="add-item-btn" onclick="addProjectTabEditField()">Add New Project Tab</button>
             </div>
 
-
             <hr style="margin: 25px 0;">
-            <button type="button" onclick="saveCourseChanges()" style="background-color: var(--success); margin-right: 15px;">Save Course Changes</button>
+            <button type="button" onclick="saveCourseChanges()" style="background-color: var(--success); margin-right: 15px;">Save Course</button>
             <button type="button" onclick="closeModal('courseEditModal')" style="background-color: #aaa;">Cancel</button>
         </div>
     </div>
 </div>
 
 
-<!-- == PROJECT Editor Modal (Now includes all project sections) == -->
+<!-- == PROJECT Editor Modal (Merged) == -->
 <div id="projectEditModal" class="modal">
     <div class="modal-content">
         <span class="close-modal" onclick="closeModal('projectEditModal')" title="Close Editor" aria-label="Close Project Editor">&times;</span>
@@ -498,72 +515,62 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
 
             <label for="editSectionProject">Select Section to Edit:</label>
             <select id="editSectionProject" onchange="showProjectEditSection()">
-                <option value="projTitle">Project Title/Header</option>
-                <option value="projTab">Course Tab Appearance</option>
-                <option value="overview">Overview Text</option>
-                <option value="learn">"What You'll Learn"</option>
+                <option value="projMeta">Project Header & Course Tab</option>
+                <option value="overview">Overview & Learn</option>
                 <option value="video">Video Lesson</option>
                 <option value="slides">Step-by-Step Slides</option>
                 <option value="challenges">Challenges</option>
                 <option value="quiz">Quiz Questions</option>
-                <!-- CHANGE 1 & 2: Renamed 'style' to 'projStyle' to be less ambiguous, added color option -->
                 <option value="projStyle">Project Styles (Font, Size, Colors)</option>
             </select>
 
-            <!-- === Project Title Edit (Project Modal) === -->
-            <div id="projTitleEdit" class="edit-section">
-                 <h4>Project Header & Metadata</h4>
+            <!-- === Project Metadata Edit (Project Modal: Title, Subtitle, Header Image, Tab Name, Tab Image) === -->
+            <div id="projMetaEdit" class="edit-section">
+                 <h4>Project Header & Course Tab</h4>
                 <label for="editProject_Title">Project Title:</label>
                 <input type="text" id="editProject_Title">
                 <label for="editProject_Subtitle">Subtitle:</label>
                 <input type="text" id="editProject_Subtitle">
                 <label for="editProject_HeaderImage">Project Header Image URL:</label>
                 <input type="url" id="editProject_HeaderImage">
-                <p style="font-size: 0.8rem; color: #666;">Appears in the project page header. Recommended: ~100x100px.</p>
+                <p style="font-size: 0.8rem; color: #666;">Appears on the project page. ~100x100px recommended.</p>
+                 <hr style="margin: 15px 0;">
+                 <label for="editProject_TabName">Tab Name (on Course Page):</label>
+                 <input type="text" id="editProject_TabName">
+                 <label for="editProject_TabImage">Tab Image URL (on Course Page):</label>
+                 <input type="url" id="editProject_TabImage">
+                 <p style="font-size: 0.8rem; color: #666;">Appears on the main course grid. Square image (~300x300px) recommended.</p>
             </div>
 
-             <!-- === Project Tab Appearance Edit (Project Modal) === -->
-             <div id="projTabEdit" class="edit-section" style="display:none;">
-                  <h4>Course Tab Appearance</h4>
-                  <label for="editProject_TabName">Tab Name (on Course Page):</label>
-                  <input type="text" id="editProject_TabName">
-                  <label for="editProject_TabImage">Tab Image URL (on Course Page):</label>
-                  <input type="url" id="editProject_TabImage">
-                  <p style="font-size: 0.8rem; color: #666;">Square image recommended (e.g., 300x300px).</p>
-             </div>
-
-            <!-- === Overview Edit (Project Modal) === -->
+            <!-- === Overview & Learn Edit (Project Modal) === -->
             <div id="overviewEdit" class="edit-section" style="display:none;">
                  <h4>Overview Content</h4>
                 <label for="editProject_OverviewText">Overview Text:</label>
                 <textarea id="editProject_OverviewText" rows="5"></textarea>
-            </div>
-
-            <!-- === Learn Edit (Project Modal) === -->
-            <div id="learnEdit" class="edit-section" style="display:none;">
-                <h4>"What You'll Learn" Items</h4>
-                <p>Add key learning points. Optionally add an image or video URL.</p>
-                <div id="learnEditContainer"> <!-- Populated by loadLearnEditFieldsForProject --> </div>
-                <button type="button" class="add-item-btn" onclick="addLearnEditField()">Add Learning Item</button>
+                 <hr style="margin: 20px 0;">
+                  <h4>"What You'll Learn" Items</h4>
+                  <p style="font-size: 0.8rem; color: #666;">Add key learning objectives. Optionally include media.</p>
+                  <div id="learnEditContainer"> <!-- Populated by loadLearnEditFieldsForProject --> </div>
+                  <button type="button" class="add-item-btn" onclick="addLearnEditField()">Add Learning Item</button>
             </div>
 
             <!-- === Video Edit (Project Modal) === -->
             <div id="videoEdit" class="edit-section" style="display:none;">
                  <h4>Video Lesson Content</h4>
-                 <label for="editProject_VideoIntroText">Introduction Text:</label>
+                 <label for="editProject_VideoIntroText">Introduction Text (Above Video):</label>
                  <input type="text" id="editProject_VideoIntroText">
-                 <label for="editProject_VideoTitle">Video Section Title:</label>
+                 <label for="editProject_VideoTitle">Video Section Title (Above Video):</label>
                  <input type="text" id="editProject_VideoTitle">
                  <label for="editProject_VideoUrl">Video Embed URL:</label>
                  <input type="url" id="editProject_VideoUrl" placeholder="e.g., https://www.youtube.com/embed/VIDEO_ID">
-                 <label for="editProject_VideoKeyPoints">Key Points (one per line):</label>
+                 <label for="editProject_VideoKeyPoints">Key Points (one per line, below video):</label>
                  <textarea id="editProject_VideoKeyPoints" rows="5"></textarea>
             </div>
 
             <!-- === Slides Edit (Project Modal) === -->
             <div id="slidesEdit" class="edit-section" style="display:none;">
                 <h4>Step-by-Step Slides</h4>
-                <p>Add slides with multimedia content (image or embed URL). Max 10 slides.</p>
+                <p style="font-size: 0.8rem; color: #666;">Add slides with multimedia content (image or embed URL). Max 10 slides.</p>
                 <div id="slidesEditContainer"> <!-- Populated by loadSlidesEditFieldsForProject --> </div>
                 <button type="button" class="add-item-btn" onclick="addSlideEditField()">Add Slide</button>
             </div>
@@ -571,7 +578,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
             <!-- === Challenges Edit (Project Modal) === -->
             <div id="challengesEdit" class="edit-section" style="display:none;">
                 <h4>Project Challenges</h4>
-                <p>Add challenges for users, optionally with an image or video. Max 10 challenges.</p>
+                <p style="font-size: 0.8rem; color: #666;">Add challenges for users, optionally with an image or video. Max 10 challenges.</p>
                 <div id="challengesEditContainer"> <!-- Populated by loadChallengesEditFieldsForProject --> </div>
                 <button type="button" class="add-item-btn" onclick="addChallengeEditField()">Add Challenge</button>
             </div>
@@ -579,13 +586,12 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
             <!-- === Quiz Edit (Project Modal) === -->
             <div id="quizEdit" class="edit-section" style="display:none;">
                 <h4>Quiz Questions</h4>
-                <p>Add questions. Mark one answer as correct. Provide 2-3 incorrect options. Max 10 questions.</p>
+                <p style="font-size: 0.8rem; color: #666;">Add questions. Mark one answer as correct. Provide 2-3 incorrect options. Max 10 questions.</p>
                  <div id="quizEditContainer"> <!-- Populated by loadQuizEditFieldsForProject --> </div>
                  <button type="button" class="add-item-btn" onclick="addQuizEditField()">Add Question</button>
             </div>
 
             <!-- === Project Style Edit (Project Modal) === -->
-            <!-- CHANGE 1: Added separate color pickers for project overrides -->
             <div id="projStyleEdit" class="edit-section" style="display:none;">
                  <h4>Project Specific Styles</h4>
                  <p style="font-size: 0.8rem; color: #666;">Optionally override the global course styles just for this project.</p>
@@ -594,7 +600,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                  <p style="font-size: 0.8rem; color: #666;">Select colors below to override the main course theme for this project only. Leave as default (or clear custom) to use course colors.</p>
                   <button type="button" onclick="clearProjectColorOverrides()" style="font-size: 0.8rem; padding: 4px 8px; margin-bottom: 15px; background-color: #bbb;">Use Course Default Colors</button>
 
-                 <label>Project Primary Color:</label>
+                 <label>Project Primary Color Override:</label>
                  <div class="color-picker" id="projectPrimaryColorPickerContainer">
                      <div class="color-option" style="background-color: #5E81F4;" onclick="selectProjectColor('primary', '#5E81F4')"></div>
                      <div class="color-option" style="background-color: #FF7AC6;" onclick="selectProjectColor('primary', '#FF7AC6')"></div>
@@ -603,8 +609,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                      <div class="color-option" style="background-color: #9B51E0;" onclick="selectProjectColor('primary', '#9B51E0')"></div>
                      <input type="color" id="projectPrimaryColorPicker" oninput="customProjectColorSelected('primary', this.value)" aria-label="Custom Project Primary Color">
                  </div>
-
-                 <label>Project Secondary Color:</label>
+                 <label>Project Secondary Color Override:</label>
                  <div class="color-picker" id="projectSecondaryColorPickerContainer">
                      <div class="color-option" style="background-color: #5E81F4;" onclick="selectProjectColor('secondary', '#5E81F4')"></div>
                      <div class="color-option" style="background-color: #FF7AC6;" onclick="selectProjectColor('secondary', '#FF7AC6')"></div>
@@ -613,8 +618,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                      <div class="color-option" style="background-color: #9B51E0;" onclick="selectProjectColor('secondary', '#9B51E0')"></div>
                      <input type="color" id="projectSecondaryColorPicker" oninput="customProjectColorSelected('secondary', this.value)" aria-label="Custom Project Secondary Color">
                  </div>
-
-                 <label>Project Accent Color:</label>
+                 <label>Project Accent Color Override:</label>
                  <div class="color-picker" id="projectAccentColorPickerContainer">
                      <div class="color-option" style="background-color: #FFB800;" onclick="selectProjectColor('accent', '#FFB800')"></div>
                      <div class="color-option" style="background-color: #FF7AC6;" onclick="selectProjectColor('accent', '#FF7AC6')"></div>
@@ -624,23 +628,20 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                      <input type="color" id="projectAccentColorPicker" oninput="customProjectColorSelected('accent', this.value)" aria-label="Custom Project Accent Color">
                  </div>
 
-
                  <h5 style="margin-top: 25px;">Font & Size Override</h5>
-                 <label>Font Family:</label>
+                 <label>Font Family Override:</label>
                  <div class="font-selector" id="projectFontSelector">
-                     <!-- Added option to explicitly use course default -->
                      <div class="font-option" onclick="selectProjectStyle('fontFamily', null)" >Use Course Default</div>
-                     <div class="font-option" onclick="selectProjectStyle('fontFamily', 'Segoe UI, sans-serif')" style="font-family: 'Segoe UI', sans-serif;">Segoe UI</div>
-                     <div class="font-option" onclick="selectProjectStyle('fontFamily', 'Arial, Helvetica, sans-serif')" style="font-family: Arial, sans-serif;">Arial</div>
-                     <div class="font-option" onclick="selectProjectStyle('fontFamily', 'Georgia, Times New Roman, serif')" style="font-family: Georgia, serif;">Georgia</div>
-                     <div class="font-option" onclick="selectProjectStyle('fontFamily', 'Courier New, monospace')" style="font-family: 'Courier New', monospace;">Courier New</div>
-                     <div class="font-option" onclick="selectProjectStyle('fontFamily', 'Verdana, Geneva, sans-serif')" style="font-family: Verdana, sans-serif;">Verdana</div>
-                     <div class="font-option" onclick="selectProjectStyle('fontFamily', 'Comic Sans MS, cursive, sans-serif')" style="font-family: 'Comic Sans MS', cursive;">Comic Sans</div>
+                     <div class="font-option" onclick="selectProjectStyle('fontFamily', `'Segoe UI', sans-serif`)" style="font-family: 'Segoe UI', sans-serif;">Segoe UI</div>
+                     <div class="font-option" onclick="selectProjectStyle('fontFamily', `'Arial', Helvetica, sans-serif`)" style="font-family: Arial, sans-serif;">Arial</div>
+                     <div class="font-option" onclick="selectProjectStyle('fontFamily', `'Georgia', 'Times New Roman', serif`)" style="font-family: Georgia, serif;">Georgia</div>
+                     <div class="font-option" onclick="selectProjectStyle('fontFamily', `'Courier New', monospace`)" style="font-family: 'Courier New', monospace;">Courier New</div>
+                     <div class="font-option" onclick="selectProjectStyle('fontFamily', `'Verdana', Geneva, sans-serif`)" style="font-family: Verdana, sans-serif;">Verdana</div>
+                     <div class="font-option" onclick="selectProjectStyle('fontFamily', `'Comic Sans MS', cursive, sans-serif`)" style="font-family: 'Comic Sans MS', cursive;">Comic Sans</div>
                  </div>
 
-                 <label>Base Text Size:</label>
+                 <label>Base Text Size Override:</label>
                  <div class="size-selector" id="projectSizeSelector">
-                      <!-- Added option to explicitly use course default -->
                       <div class="size-option" onclick="selectProjectStyle('baseSize', null)">Use Course Default</div>
                      <div class="size-option" onclick="selectProjectStyle('baseSize', 'small')">Small (14px)</div>
                      <div class="size-option" onclick="selectProjectStyle('baseSize', 'medium')">Medium (16px)</div>
@@ -649,7 +650,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
             </div>
 
             <hr style="margin: 25px 0;">
-            <button type="button" onclick="saveProjectChanges()" style="background-color: var(--success); margin-right: 15px;">Save Project Changes</button>
+            <button type="button" onclick="saveProjectChanges()" style="background-color: var(--success); margin-right: 15px;">Save Project</button>
             <button type="button" onclick="closeModal('projectEditModal')" style="background-color: #aaa;">Cancel</button>
         </div>
     </div>
@@ -662,14 +663,15 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
         title: "Micro:bit Adventures",
         description: "Explore the exciting world of physical computing with the BBC micro:bit! This course contains several projects to get you started.",
         imageUrl: "https://images.unsplash.com/photo-1619410283995-43d9134e7656?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZ3JhbW1pbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
-        // Store course-level theme colors (can be modified by editor)
+        // Course-level theme colors
         style: {
             primaryColor: '#5E81F4',
             secondaryColor: '#FF7AC6',
             accentColor: '#FFB800',
+            // No course-level font/size needed here, defaults in :root CSS
         },
         projects: [
-            // Project 1 Data
+            // Project 1: Beating Heart (Data merged from project page)
             {
                 id: 'proj_heart',
                 tabName: "Beating Heart",
@@ -687,22 +689,39 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                     "'forever' keeps repeating the code inside it",
                     "We use 'show icon'/'show leds' and 'pause' blocks to create animation"
                 ],
-                learnData: [ /* ... existing data ... */ ],
-                slidesData: [ /* ... existing data ... */ ],
-                challengesData: [ /* ... existing data ... */ ],
-                quizData: [ /* ... existing data ... */ ],
-                // CHANGE 1: Project specific style overrides (null = inherit from course)
+                learnData: [
+                    { title: "Hardware Basics", description: "Understand the Micro:bit LED matrix (5x5 grid) and how to connect & flash code.", mediaType: 'image', mediaUrl: 'https://images.prismic.io/circuito/749f1698-88a8-4e1d-8173-f45b055a214c_microbit+pinout+diagram.png?auto=compress,format' },
+                    { title: "Core Programming Blocks", description: "Learn the difference between 'on start' (runs once) and 'forever' (loops continuously).", mediaType: 'none', mediaUrl: '' },
+                    { title: "Animation Technique", description: "Use 'show leds' or 'show icon' combined with 'pause' blocks to create the illusion of movement.", mediaType: 'none', mediaUrl: '' },
+                    { title: "Computational Thinking: Sequencing", description: "Understand that the order of blocks matters for the animation to work correctly.", mediaType: 'none', mediaUrl: '' }
+                ],
+                slidesData: [
+                    { url: "https://view.genially.com/67de49ded67908621a726b03", description: "1. Introduction to the Beating Heart project", type: "iframe" },
+                    { url: "https://view.genially.com/67de49e4ab31ac746b27c48b", description: "2. Setting up your Micro:bit environment", type: "iframe" },
+                    { url: "https://clearinghouse.starnetlibraries.org/images/525/microbit-heart.jpg", description: "3. Programming the Beating Heart animation", type: "image" },
+                ],
+                challengesData: [
+                    { title: "Faster or Slower?", description: "Change the pause times (milliseconds) in the code to speed up or slow down the heartbeat.", mediaType: 'none', mediaUrl: '' },
+                    { title: "Different Animation", description: "Try creating a different simple animation, like a blinking smiley face or a flashing arrow.", mediaType: 'image', mediaUrl: 'https://lancaster-university.github.io/microbit-docs/assets/images/microbit-smiley.png' },
+                    { title: "Button Control", description: "Modify the code so the animation only plays when Button A is pressed.", mediaType: 'none', mediaUrl: '' },
+                ],
+                quizData: [
+                    { questionText: "What block makes code run repeatedly forever?", correctAnswer: "'forever' loop", incorrectAnswers: ["'on start' block", "'pause (ms)' block", "'show leds' block"] },
+                    { questionText: "How many individual LEDs are on the Micro:bit display?", correctAnswer: "25 (a 5x5 grid)", incorrectAnswers: ["10", "5", "100"] },
+                    { questionText: "To create an animation, you typically show something, then...", correctAnswer: "Pause, then show something different", incorrectAnswers: ["Immediately show something different", "Stop the program", "Shake the Micro:bit"] },
+                    { questionText: "What does the 'pause (ms)' block measure time in?", correctAnswer: "Milliseconds (1/1000th of a second)", incorrectAnswers: ["Seconds", "Minutes", "Microseconds"] }
+                ],
+                // Project specific style overrides (null = inherit from course)
                 style: {
-                    fontFamily: 'Comic Sans MS, cursive, sans-serif',
-                    baseSize: 'medium',
+                    fontFamily: `'Comic Sans MS', cursive, sans-serif`, // Override example
+                    baseSize: null, // Inherit size
                     primaryColor: '#7CE7AC', // Green Primary for this project only
                     secondaryColor: null,     // Inherit Secondary from course
                     accentColor: null         // Inherit Accent from course
                  },
-                 // CHANGE 4: Added completion flag
-                 isCompleted: false
+                 isCompleted: false // Completion flag
             },
-            // Project 2 Data
+            // Project 2: Smiley Buttons (Basic data for structure)
             {
                  id: 'proj_smiley',
                  tabName: "Smiley Buttons",
@@ -711,25 +730,38 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                  projectSubtitle: "Show different faces when buttons are pressed.",
                  projectHeaderImage: "https://lancaster-university.github.io/microbit-docs/assets/images/microbit-smiley.png",
                  overviewText: "Learn how to react to button presses using 'if' conditions and input blocks.",
-                 videoUrl: "", videoIntroText: "", videoTitle: "", videoKeyPoints: [],
-                 learnData: [{title:"Input Events", description:"Using 'on button A pressed'", mediaType:'none', mediaUrl:''}, {title:"Conditional Logic", description:"Using 'if...then...else' blocks", mediaType:'none', mediaUrl:''}],
-                 slidesData: [], challengesData: [], quizData: [],
-                 // CHANGE 1 & 4: Default style (inherits all), added completion flag
+                 videoIntroText: "This section might have a video.",
+                 videoTitle: "Button Input Basics",
+                 videoUrl: "", // No video URL provided
+                 videoKeyPoints: ["Use 'on button A pressed'", "Use 'if...then...else' for choices"],
+                 learnData: [
+                     {title:"Input Events", description:"Using 'on button A pressed'", mediaType:'none', mediaUrl:''},
+                     {title:"Conditional Logic", description:"Using 'if...then...else' blocks", mediaType:'none', mediaUrl:''}
+                  ],
+                 slidesData: [], // No slides for this example
+                 challengesData: [
+                     {title: "Show on Both Buttons", description: "Make it show a surprise face when A+B buttons are pressed together.", mediaType:'none', mediaUrl:''}
+                 ],
+                 quizData: [
+                     {questionText: "Which block detects Button A being clicked?", correctAnswer:"'on button A pressed'", incorrectAnswers:["'forever'", "'show leds'"]}
+                 ],
+                 // Default style (inherits all from course)
                  style: {
-                     fontFamily: null, // Inherit font
-                     baseSize: null,   // Inherit size
-                     primaryColor: null, // Inherit colors
+                     fontFamily: null,
+                     baseSize: null,
+                     primaryColor: null,
                      secondaryColor: null,
                      accentColor: null
                  },
                  isCompleted: false
              }
+            // Add more project objects here...
         ]
     };
 
     // State variables
-    let currentProjectId = null;
-    let currentProjectDataCache = null;
+    let currentProjectId = null; // ID of the project being viewed/edited
+    let currentProjectDataCache = null; // Temporary store for project data during editing
     let currentSlideIndex = 0;
 
     // --- Constants for limits ---
@@ -737,7 +769,6 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
     const MAX_LEARN_ITEMS = 8; const MAX_QUIZ_QUESTIONS = 10; const MAX_INCORRECT_ANSWERS = 3;
 
     // --- THEME APPLICATION ---
-    // Applies the main course theme (called on load and when returning to course view)
     function applyCourseTheme() {
         console.log("Applying COURSE theme");
         const root = document.documentElement;
@@ -746,47 +777,51 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
         root.style.setProperty('--secondary', courseStyle.secondaryColor || '#FF7AC6');
         root.style.setProperty('--accent', courseStyle.accentColor || '#FFB800');
 
-        // Apply global font/size (if not overridden by project later)
-        // NOTE: The CSS rule for 'body' already uses var(--base-font-family), etc.
-        // We set the CSS variables here based on default or course-wide settings.
-        root.style.setProperty('--base-font-family', 'Segoe UI, sans-serif'); // Default font
-        root.style.setProperty('--base-font-size', '16px'); // Default size
+        // Apply global font/size defaults (these vars are used by body style)
+        root.style.setProperty('--base-font-family', `'Segoe UI', sans-serif`); // Course default font
+        root.style.setProperty('--base-font-size', '16px'); // Course default size
+
+        // Ensure project-specific inline styles are cleared when returning to course view
+        const projectViewEl = document.getElementById('project-view');
+         if (projectViewEl) {
+             projectViewEl.style.fontFamily = '';
+             projectViewEl.style.fontSize = '';
+        }
     }
 
-    // CHANGE 1: Applies project-specific style OVERRIDES if they exist
-    // This should be called AFTER applyCourseTheme when a project is viewed.
     function applyProjectSpecificStyles(project) {
+        if (!project) return;
         console.log("Applying PROJECT specific styles (if any) for:", project.id);
-        const root = document.documentElement; // Apply overrides globally for simplicity here
-        const projectStyle = project?.style;
-        const courseStyle = courseData.style || {};
+        const root = document.documentElement; // Apply overrides globally for simplicity
+        const projectStyle = project.style || {};
+        const courseStyle = courseData.style || {}; // Fallback to course style
 
-        // Apply Color Overrides (only if defined in project style)
-        root.style.setProperty('--primary', projectStyle?.primaryColor || courseStyle.primaryColor || '#5E81F4');
-        root.style.setProperty('--secondary', projectStyle?.secondaryColor || courseStyle.secondaryColor || '#FF7AC6');
-        root.style.setProperty('--accent', projectStyle?.accentColor || courseStyle.accentColor || '#FFB800');
+        // Apply Color Overrides (only if defined in project style, otherwise use course)
+        root.style.setProperty('--primary', projectStyle.primaryColor || courseStyle.primaryColor || '#5E81F4');
+        root.style.setProperty('--secondary', projectStyle.secondaryColor || courseStyle.secondaryColor || '#FF7AC6');
+        root.style.setProperty('--accent', projectStyle.accentColor || courseStyle.accentColor || '#FFB800');
 
-        // Apply Font Family Override
-        const projectFont = projectStyle?.fontFamily; // Can be null or ''
-        // Set the actual style on the #project-view element directly
+        // Apply Font Family Override (directly on #project-view element)
         const projectViewEl = document.getElementById('project-view');
-        if(projectViewEl) {
-             projectViewEl.style.fontFamily = projectFont || 'var(--base-font-family)'; // Use CSS var if no project override
+        if (projectViewEl) {
+             const projectFont = projectStyle.fontFamily; // Can be null
+             // Use project font if set, otherwise fall back to the CSS variable (which reflects course default)
+             projectViewEl.style.fontFamily = projectFont ? projectFont : 'var(--base-font-family)';
         }
 
 
-        // Apply Base Size Override
-        const projectSize = projectStyle?.baseSize; // Can be null, 'small', 'medium', 'large'
-        let effectiveFontSize = 'var(--base-font-size)'; // Default CSS var
-        if (projectSize === 'small') effectiveFontSize = '14px';
-        else if (projectSize === 'large') effectiveFontSize = '18px';
-        else if (projectSize === 'medium') effectiveFontSize = '16px'; // Explicit medium
+        // Apply Base Size Override (directly on #project-view element)
+        if (projectViewEl) {
+             const projectSize = projectStyle.baseSize; // Can be null, 'small', 'medium', 'large'
+             let effectiveFontSize = 'var(--base-font-size)'; // Use CSS variable (reflects course default) by default
+             if (projectSize === 'small') effectiveFontSize = '14px';
+             else if (projectSize === 'large') effectiveFontSize = '18px';
+             else if (projectSize === 'medium') effectiveFontSize = '16px'; // Explicit medium override
 
-         if(projectViewEl) {
-             projectViewEl.style.fontSize = effectiveFontSize; // Apply to project view
-         }
-
+             projectViewEl.style.fontSize = effectiveFontSize;
+        }
     }
+
 
     // --- VIEW NAVIGATION ---
     function showCourseView() {
@@ -796,13 +831,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
         currentProjectDataCache = null;
         document.title = courseData.title || "Course Viewer";
         applyCourseTheme(); // Reset theme to course defaults
-        // Reset inline project styles that might linger (just in case)
-        const projectViewEl = document.getElementById('project-view');
-        if (projectViewEl) {
-             projectViewEl.style.fontFamily = '';
-             projectViewEl.style.fontSize = '';
-        }
-        renderCoursePage(); // Re-render to show potential completion ticks updated
+        renderCoursePage(); // Re-render to show updated completion ticks
         window.scrollTo(0, 0);
     }
 
@@ -810,20 +839,21 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
         const project = courseData.projects.find(p => p.id === projectId);
         if (!project) {
             console.error(`Project with ID ${projectId} not found!`);
-            showCourseView();
+            showCourseView(); // Go back if project doesn't exist
             return;
         }
 
         currentProjectId = projectId;
-        currentProjectDataCache = project; // Cache for editing
+        // DO NOT cache here for viewing, only for editing. Render directly from courseData.
+        // currentProjectDataCache = JSON.parse(JSON.stringify(project)); // DEEP CLONE for editing later
 
-        renderProjectPage(project); // Populate the project view template
+        renderProjectPage(project); // Populate the project view template with data
 
         document.getElementById('course-view').style.display = 'none';
         document.getElementById('project-view').style.display = 'block';
         document.title = project.projectTitle || "Project Viewer";
 
-        // CHANGE 1: Apply course theme first, then project-specific overrides
+        // Apply course theme first, then project-specific overrides
         applyCourseTheme();
         applyProjectSpecificStyles(project);
 
@@ -851,7 +881,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
         }
 
         course.projects.forEach(project => {
-            if (!project || !project.id) return;
+            if (!project || !project.id) return; // Skip if project or ID is missing
 
             const tab = document.createElement('a');
             tab.className = 'project-tab';
@@ -873,7 +903,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
             tab.appendChild(img);
             tab.appendChild(infoDiv);
 
-            // CHANGE 4: Add completion tick if project is completed
+            // Add completion tick if project is completed
             if (project.isCompleted) {
                 const tick = document.createElement('span');
                 tick.className = 'completion-tick';
@@ -890,7 +920,10 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
     // --- PROJECT PAGE RENDERING ---
     function renderProjectPage(project) {
         console.log("Rendering Project:", project?.projectTitle);
-        if (!project) { return; } // Handle error if needed
+        if (!project) {
+            console.error("renderProjectPage called with null project");
+            return;
+        }
 
         const projectView = document.getElementById('project-view');
         if (!projectView) return;
@@ -908,93 +941,92 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
         const contentContainer = projectView.querySelector('#projectTabContentContainer');
         if (!contentContainer) return;
 
-        // Reset all content areas (simpler than checking individually if they exist)
-        const overviewContent = contentContainer.querySelector('#overview');
-        const videoContent = contentContainer.querySelector('#video');
-        const slidesContent = contentContainer.querySelector('#slides');
-        const challengesContent = contentContainer.querySelector('#challenges');
-        const quizContent = contentContainer.querySelector('#quiz');
-
         // Overview Tab
+        const overviewContent = contentContainer.querySelector('#overview');
         if (overviewContent) {
             overviewContent.querySelector('#overviewText').textContent = project.overviewText || 'No overview provided.';
             renderLearnItemsForProject(project.learnData || [], overviewContent.querySelector('#learnContainer'));
-        }
+        } else { console.warn("Overview content area not found"); }
 
         // Video Tab
+        const videoContent = contentContainer.querySelector('#video');
         if (videoContent) {
              const videoIframe = videoContent.querySelector('#mainVideo');
              const keyPointsUL = videoContent.querySelector('#videoKeyPoints');
              videoContent.querySelector('#videoIntroText').textContent = project.videoIntroText || '';
              videoContent.querySelector('#videoTitle').textContent = project.videoTitle || '';
-             videoIframe.src = project.videoUrl || '';
-             keyPointsUL.innerHTML = ''; // Clear old points
-             if (project.videoKeyPoints && project.videoKeyPoints.length > 0) {
-                 project.videoKeyPoints.forEach(p => {
-                      if (p && p.trim()) { // Check if point is not empty
-                          const li = document.createElement('li'); li.textContent = p; keyPointsUL.appendChild(li);
-                      }
-                 });
+             if(videoIframe) videoIframe.src = project.videoUrl || '';
+             if(keyPointsUL) {
+                 keyPointsUL.innerHTML = ''; // Clear old points
+                 if (project.videoKeyPoints && project.videoKeyPoints.length > 0) {
+                     project.videoKeyPoints.forEach(p => {
+                          if (p && p.trim()) {
+                              const li = document.createElement('li'); li.textContent = p; keyPointsUL.appendChild(li);
+                          }
+                     });
+                 }
+                 if (keyPointsUL.innerHTML === '') keyPointsUL.innerHTML = '<li>No key points provided.</li>';
              }
-             if (keyPointsUL.innerHTML === '') keyPointsUL.innerHTML = '<li>No key points provided.</li>';
-        }
+        } else { console.warn("Video content area not found"); }
 
         // Slides Tab
+        const slidesContent = contentContainer.querySelector('#slides');
         if (slidesContent) {
             renderSlideshowForProject(project.slidesData || [], slidesContent.querySelector('#slideshowContainer'));
-        }
+        } else { console.warn("Slides content area not found"); }
 
         // Challenges Tab
+        const challengesContent = contentContainer.querySelector('#challenges');
         if (challengesContent) {
             renderChallengesForProject(project.challengesData || [], challengesContent.querySelector('#challengesContainer'));
-        }
+        } else { console.warn("Challenges content area not found"); }
 
         // Quiz Tab
+        const quizContent = contentContainer.querySelector('#quiz');
         if (quizContent) {
              renderQuizForProject(project.quizData || [], quizContent.querySelector('#quizContainer'), quizContent.querySelector('#submitQuizBtn'));
-        }
+        } else { console.warn("Quiz content area not found"); }
 
         // Activate the first project tab ('Overview') and update progress
         const projectTabsBar = projectView.querySelector('#projectTabs');
         if (projectTabsBar) {
              const firstProjectTabButton = projectTabsBar.querySelector('.tab'); // Assume first is Overview
              if (firstProjectTabButton) {
-                  openProjectTab('overview', firstProjectTabButton); // Explicitly open 'overview'
+                  // Find the tabName from the first button's onclick
+                  const clickAttr = firstProjectTabButton.getAttribute('onclick') || '';
+                  const match = clickAttr.match(/openProjectTab\('([^']+)'/);
+                  const firstTabName = match ? match[1] : 'overview'; // Default to overview if parsing fails
+                  openProjectTab(firstTabName, firstProjectTabButton);
              } else {
                   updateProjectProgressBar(''); // Reset progress if no tabs
              }
         }
     }
 
+
     // --- Project Specific Content Rendering Helpers ---
     function renderLearnItemsForProject(learnItemsData, container) {
-         if (!container) return; container.innerHTML = ''; // Clear first
+         if (!container) return; container.innerHTML = '';
          const validItems = (learnItemsData || []).filter(item => item.title && item.title.trim());
          if (validItems.length === 0) { container.innerHTML = '<p>No learning objectives specified.</p>'; return; }
          validItems.forEach((item, index) => {
-             const el = document.createElement('div'); el.className = 'step'; // Use 'step' class for consistent styling
+             const el = document.createElement('div'); el.className = 'step'; // Use step styling
              el.innerHTML = `<div class="step-number">${index + 1}</div>
                              <div class="step-content">
                                  <strong></strong>
-                                 <p class="description"></p>
+                                 ${ item.description ? '<p class="description"></p>' : '' }
                                  <div class="step-media" style="display: none;"></div>
                              </div>`;
              el.querySelector('strong').textContent = item.title;
-             const descP = el.querySelector('p.description');
-             if (item.description && item.description.trim()) {
-                  descP.textContent = item.description;
-             } else {
-                 descP.remove(); // Remove the paragraph if description is empty
-             }
+             if(item.description) el.querySelector('p.description').textContent = item.description;
+
              const mediaDiv = el.querySelector('.step-media');
              if (item.mediaType && item.mediaType !== 'none' && item.mediaUrl && item.mediaUrl.trim()) {
-                 mediaDiv.style.display = 'block'; // Show media div
+                 mediaDiv.style.display = 'block';
                  const url = item.mediaUrl.trim();
                  const title = item.title || 'Media';
                  if (item.mediaType === 'image') mediaDiv.innerHTML = `<img src="${url}" loading="lazy" alt="${title}">`;
                  else if (item.mediaType === 'video') mediaDiv.innerHTML = `<iframe src="${url}" frameborder="0" loading="lazy" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation" title="${title}"></iframe>`;
-             } else {
-                 mediaDiv.style.display = 'none'; // Ensure it's hidden if no media
              }
              container.appendChild(el);
          });
@@ -1005,20 +1037,16 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
          const validItems = (challengesItemsData || []).filter(item => item.title && item.title.trim());
          if (validItems.length === 0) { container.innerHTML = '<p>No challenges specified for this project.</p>'; return; }
          validItems.forEach((item) => {
-             const el = document.createElement('div'); el.className = 'step'; // Reuse step styling
+             const el = document.createElement('div'); el.className = 'step';
              el.innerHTML = `<div class="step-number" style="background-color: var(--accent); color: var(--dark);">★</div>
                               <div class="step-content">
                                  <strong></strong>
-                                 <p class="description"></p>
+                                 ${ item.description ? '<p class="description"></p>' : '' }
                                  <div class="step-media" style="display: none;"></div>
                              </div>`;
              el.querySelector('strong').textContent = item.title;
-             const descP = el.querySelector('p.description');
-              if (item.description && item.description.trim()) {
-                  descP.textContent = item.description;
-             } else {
-                 descP.remove();
-             }
+            if(item.description) el.querySelector('p.description').textContent = item.description;
+
              const mediaDiv = el.querySelector('.step-media');
              if (item.mediaType && item.mediaType !== 'none' && item.mediaUrl && item.mediaUrl.trim()) {
                  mediaDiv.style.display = 'block';
@@ -1026,16 +1054,16 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                  const title = item.title || 'Media';
                  if (item.mediaType === 'image') mediaDiv.innerHTML = `<img src="${url}" loading="lazy" alt="${title}">`;
                  else if (item.mediaType === 'video') mediaDiv.innerHTML = `<iframe src="${url}" frameborder="0" loading="lazy" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation" title="${title}"></iframe>`;
-             } else {
-                 mediaDiv.style.display = 'none';
              }
              container.appendChild(el);
          });
     }
 
      function renderSlideshowForProject(slidesItemsData, container) {
-         const nav = container?.parentElement?.querySelector('.slide-nav');
-         if (!container || !nav) return; container.innerHTML = '';
+         const slidesView = container?.closest('.tab-content#slides'); // Get parent tab content
+         const nav = slidesView?.querySelector('.slide-nav'); // Find nav within the slides tab
+         if (!container || !nav) { console.error("Slideshow container or nav not found"); return; }
+         container.innerHTML = '';
          const validSlides = (slidesItemsData || []).filter(slide => slide.url && slide.url.trim());
 
          if (validSlides.length === 0) {
@@ -1047,23 +1075,18 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
          nav.style.display = 'flex'; // Ensure nav is visible
          validSlides.forEach((slide, index) => {
              const slideDiv = document.createElement('div'); slideDiv.className = 'slide';
-             // Default to iframe, allow image override
              const contentType = slide.type === 'image' ? 'image' : 'iframe';
              const url = slide.url.trim();
              const title = slide.description || `Slide ${index + 1}`;
 
-             slideDiv.innerHTML = `<div class="slide-content-wrapper"></div><p></p>`;
+             slideDiv.innerHTML = `<div class="slide-content-wrapper"></div>${slide.description ? '<p></p>' : ''}`;
              const wrapper = slideDiv.querySelector('.slide-content-wrapper');
-             const caption = slideDiv.querySelector('p');
-
              if (contentType === 'iframe') {
                  wrapper.innerHTML = `<iframe src="${url}" frameborder="0" loading="lazy" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation" title="${title}"></iframe>`;
              } else if (contentType === 'image') {
                  wrapper.innerHTML = `<img src="${url}" loading="lazy" alt="${title}">`;
              }
-
-             if (slide.description && slide.description.trim()) caption.textContent = slide.description;
-             else caption.remove();
+             if (slide.description) slideDiv.querySelector('p').textContent = slide.description;
 
              container.appendChild(slideDiv);
          });
@@ -1073,11 +1096,11 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
      }
 
       function renderQuizForProject(quizItemsData, container, submitBtn) {
-          if (!container || !submitBtn) return;
+          if (!container || !submitBtn) { console.error("Quiz container or submit btn not found"); return; }
           container.innerHTML = ''; // Clear previous quiz
-          // Remove any previous final result message
-          const existingResult = container.parentElement.querySelector('.final-quiz-result');
-          existingResult?.remove();
+          // Remove any previous final result message within the quiz tab content
+          container.closest('.tab-content#quiz')?.querySelector('.final-quiz-result')?.remove();
+
           submitBtn.disabled = false; // Re-enable button
           submitBtn.style.display = 'none'; // Hide initially
 
@@ -1085,7 +1108,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
 
           if (validQuestions.length === 0) {
               container.innerHTML = '<p>No quiz questions available for this project.</p>';
-              return; // No quiz to show
+              return; // Keep button hidden
           }
 
           submitBtn.style.display = 'block'; // Show submit button only if questions exist
@@ -1093,7 +1116,7 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
           validQuestions.forEach((q, index) => {
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'quiz-question';
-                questionDiv.innerHTML = `<p class="question-text"></p><div class="quiz-options"></div><div class="quiz-feedback correct" style="display:none;">Correct!</div><div class="quiz-feedback incorrect" style="display:none;"></div>`; // Static Correct text
+                questionDiv.innerHTML = `<p class="question-text"></p><div class="quiz-options"></div><div class="quiz-feedback correct" style="display:none;">Correct!</div><div class="quiz-feedback incorrect" style="display:none;"></div>`;
                 questionDiv.querySelector('.question-text').textContent = `${index + 1}. ${q.questionText}`;
                 const optionsDiv = questionDiv.querySelector('.quiz-options');
 
@@ -1104,16 +1127,14 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                 shuffleArray(options); // Randomize option order
 
                 options.forEach((optionText) => {
-                    const isCorrect = (optionText === q.correctAnswer.trim()); // Compare trimmed
+                    const isCorrect = (optionText === q.correctAnswer.trim());
                     const optionEl = document.createElement('div');
                     optionEl.className = 'quiz-option';
                     optionEl.textContent = optionText;
                     optionEl.setAttribute('role', 'button');
                     optionEl.setAttribute('tabindex', '0');
-                    // Attach event listener
                     optionEl.onclick = () => selectQuizOption(optionEl);
-                    optionEl.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectQuizOption(optionEl); }}; // Keyboard accessibility
-                    // Store whether it's correct using data attribute
+                    optionEl.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectQuizOption(optionEl); }};
                     optionEl.setAttribute('data-is-correct', isCorrect.toString());
                     optionsDiv.appendChild(optionEl);
                 });
@@ -1125,15 +1146,11 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
     function openProjectTab(tabName, element) {
         const container = document.getElementById('projectTabContentContainer');
         if (!container) return;
-        // Deactivate all content sections
         container.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-        // Deactivate all tab buttons
         const buttonsContainer = document.getElementById('projectTabs');
         if (buttonsContainer) buttonsContainer.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-        // Activate the target content section
         const targetContent = container.querySelector('#' + tabName);
         if (targetContent) targetContent.classList.add('active');
-        // Activate the clicked tab button
         element?.classList.add('active');
         updateProjectProgressBar(tabName);
     }
@@ -1142,7 +1159,6 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
          const progressBar = document.getElementById('progressBar');
          if (!progressBar) return;
          let progress = 0;
-         // Determine progress based on tab order (assumes this order)
          const tabOrder = ['overview', 'video', 'slides', 'challenges', 'quiz'];
          const tabIndex = tabOrder.indexOf(tabName);
          if (tabIndex >= 0) {
@@ -1154,14 +1170,10 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
     function showSlide(n) {
         const slides = document.querySelectorAll('#project-view #slideshowContainer .slide');
         const validSlidesCount = slides.length;
-        if (validSlidesCount === 0) return; // No slides to show
+        if (validSlidesCount === 0) return;
 
-        slides.forEach(slide => slide.classList.remove('active')); // Hide all
-
-        // Calculate the correct index, wrapping around
+        slides.forEach(slide => slide.classList.remove('active'));
         currentSlideIndex = (n % validSlidesCount + validSlidesCount) % validSlidesCount;
-
-        // Show the current slide
         if(slides[currentSlideIndex]) {
             slides[currentSlideIndex].classList.add('active');
         }
@@ -1171,130 +1183,117 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
 
     function selectQuizOption(optionElement) {
         const questionDiv = optionElement.closest('.quiz-question');
-        // Prevent changing answer after submission or if the element is somehow invalid
         if (!questionDiv || questionDiv.classList.contains('answered')) return;
-
-        // Deselect other options within the same question
         questionDiv.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
-        // Select the clicked option
         optionElement.classList.add('selected');
     }
 
-     // CHANGE 4: Modified submitQuiz to mark project complete
     function submitQuiz() {
          const questions = document.querySelectorAll('#project-view #quizContainer .quiz-question');
          let answeredCount = 0, score = 0;
          const totalQuestions = questions.length;
-         if (totalQuestions === 0) return; // No quiz submitted
+         if (totalQuestions === 0) return;
 
          let firstUnanswered = null;
 
-         // --- 1. Check if all questions are answered ---
+         // 1. Check if all questions are answered and reset styles
          questions.forEach((qDiv) => {
               const selectedOption = qDiv.querySelector('.quiz-option.selected');
-              // Reset any previous feedback/styling from potential prior submits
-              qDiv.classList.remove('answered');
+              qDiv.classList.remove('answered'); // Reset state
               qDiv.querySelectorAll('.quiz-feedback').forEach(fb => fb.style.display = 'none');
               qDiv.querySelectorAll('.quiz-option').forEach(opt => {
                    opt.classList.remove('correct', 'incorrect');
                    opt.style.opacity = '1';
-                   opt.style.cursor = 'pointer'; // Make re-clickable before grading
+                   opt.style.cursor = 'pointer';
                    opt.onclick = () => selectQuizOption(opt); // Re-attach click
                    opt.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectQuizOption(opt); }};
               });
               if (selectedOption) {
                    answeredCount++;
               } else if (!firstUnanswered) {
-                   firstUnanswered = qDiv; // Track first unanswered for focusing
+                   firstUnanswered = qDiv;
               }
          });
 
-         // If not all answered, alert user and stop
+         // 2. Stop if not all answered
          if (answeredCount < totalQuestions) {
              alert(`Please answer all ${totalQuestions} questions before submitting!`);
              if(firstUnanswered) {
-                  // Highlight or scroll to the first unanswered question
                  firstUnanswered.scrollIntoView({behavior:'smooth',block:'center'});
-                 // Add temporary visual cue (optional)
                  firstUnanswered.style.outline='2px solid var(--danger)';
-                 setTimeout(()=> { firstUnanswered.style.outline=''; }, 2500);
+                 setTimeout(()=> { if(firstUnanswered) firstUnanswered.style.outline=''; }, 2500);
              }
-             return; // Stop submission
+             return;
          }
 
-         // --- 2. Grade the Quiz ---
+         // 3. Grade the Quiz
          questions.forEach((qDiv) => {
               const selectedOption = qDiv.querySelector('.quiz-option.selected');
               const feedbackCorrect = qDiv.querySelector('.quiz-feedback.correct');
               const feedbackIncorrect = qDiv.querySelector('.quiz-feedback.incorrect');
               const allOptions = qDiv.querySelectorAll('.quiz-option');
 
-              qDiv.classList.add('answered'); // Mark as answered to prevent re-selecting
+              qDiv.classList.add('answered'); // Mark as answered for display
               const isSelectedCorrect = selectedOption.getAttribute('data-is-correct') === 'true';
 
               // Disable interactions and style options
               allOptions.forEach(opt => {
                    const optIsCorrect = opt.getAttribute('data-is-correct') === 'true';
-                   if (optIsCorrect) opt.classList.add('correct'); // Show the correct answer always
-
-                   if (opt === selectedOption) { // If this option was the selected one
-                       if (!isSelectedCorrect) opt.classList.add('incorrect'); // Mark as incorrect if it wasn't the right one
-                   } else if (!optIsCorrect) { // Fade out non-selected, incorrect options
+                   if (optIsCorrect) opt.classList.add('correct');
+                   if (opt === selectedOption) {
+                       if (!isSelectedCorrect) opt.classList.add('incorrect');
+                   } else if (!optIsCorrect) {
                         opt.style.opacity = "0.6";
                    }
-
-                   // Disable interactions
                    opt.style.cursor = "default";
-                   opt.onclick = null; // Remove click handler
-                   opt.onkeydown = null; // Remove keydown handler
+                   opt.onclick = null; opt.onkeydown = null; // Disable interactions
               });
 
               // Provide feedback
               if (isSelectedCorrect) {
                     score++;
-                    if(feedbackCorrect) feedbackCorrect.style.display='block'; // Show static "Correct!" message
+                    if(feedbackCorrect) feedbackCorrect.style.display='block';
               } else {
                   if(feedbackIncorrect) {
-                      const correctOptionElement = qDiv.querySelector('.quiz-option.correct'); // Find the actual correct one
-                      feedbackIncorrect.textContent = `Not quite. The correct answer was: "${correctOptionElement ? correctOptionElement.textContent : 'N/A'}".`; // Show correct text
+                      const correctOptionElement = qDiv.querySelector('.quiz-option.correct');
+                      feedbackIncorrect.textContent = `Not quite. The correct answer was: "${correctOptionElement ? correctOptionElement.textContent : 'N/A'}".`;
                       feedbackIncorrect.style.display='block';
                   }
               }
          });
 
-         // --- 3. Show Final Result & Disable Button ---
+         // 4. Show Final Result & Mark Complete
          const submitBtn = document.querySelector('#project-view #submitQuizBtn');
-         if(submitBtn) submitBtn.disabled = true; // Prevent re-submission
+         if(submitBtn) submitBtn.disabled = true;
 
-         const quizTabContent = document.querySelector('#project-view #quiz');
+         const quizTabContent = document.querySelector('#project-view #quiz'); // Find the quiz tab content div
          let resultDiv = quizTabContent?.querySelector('.final-quiz-result');
-         if (!resultDiv && quizTabContent) { // Create if doesn't exist
+         if (!resultDiv && quizTabContent) { // Create if doesn't exist, append inside tab content
               resultDiv = document.createElement('div');
-              quizTabContent.appendChild(resultDiv); // Append inside the quiz tab
+              quizTabContent.appendChild(resultDiv);
           }
 
-          if (resultDiv) { // Display the result message
+          if (resultDiv) {
               const scorePercent = totalQuestions > 0 ? score / totalQuestions : 0;
               resultDiv.textContent = `Quiz Complete! You scored ${score} out of ${totalQuestions}!`;
-              resultDiv.className = 'final-quiz-result ' + (scorePercent >= 0.7 ? 'success' : 'fail'); // Style based on score
+              resultDiv.className = 'final-quiz-result ' + (scorePercent >= 0.7 ? 'success' : 'fail');
               resultDiv.style.display = 'block';
               resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-              // CHANGE 4: Mark project as completed if quiz was passed (e.g., >= 70%)
+              // Mark project as completed if quiz was passed
               if (scorePercent >= 0.7 && currentProjectId) {
                   markProjectAsCompleted(currentProjectId);
+                  // The visual update (tick mark) happens when navigating back to course view
               }
           }
     }
 
-     // CHANGE 4: Function to mark a project as completed in the main data
      function markProjectAsCompleted(projectId) {
          const project = courseData.projects.find(p => p.id === projectId);
          if (project && !project.isCompleted) {
              console.log(`Marking project ${projectId} as completed.`);
              project.isCompleted = true;
-             // Note: The course page will update its visuals next time renderCoursePage() is called
-             // (e.g., when navigating back using showCourseView()).
+             // Save persistence could be added here if needed (e.g., localStorage)
          }
      }
 
@@ -1314,9 +1313,9 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
          modal.querySelector('#editCourseTitle').value = courseData.title || '';
          modal.querySelector('#editCourseImage').value = courseData.imageUrl || '';
          modal.querySelector('#editCourseDescription').value = courseData.description || '';
-         renderProjectTabsEditor(); // Re-render the list of projects
+         renderProjectTabsEditor(); // Render the list of projects for management
          loadCourseColorSelections(); // Load current course colors into pickers
-         modal.style.display = 'block'; // Show the modal
+         modal.style.display = 'block';
     }
 
      function renderProjectTabsEditor() {
@@ -1324,27 +1323,25 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
          if (!listContainer) return;
          listContainer.innerHTML = ''; // Clear current list
 
-         // Create an editable entry for each project
          (courseData.projects || []).forEach((project, index) => {
-             if (!project || !project.id) return; // Skip invalid projects
+             if (!project || !project.id) return;
              const itemDiv = document.createElement('div');
              itemDiv.className = 'project-tab-edit-item';
-             itemDiv.setAttribute('data-project-id', project.id); // Store ID for removal
+             itemDiv.setAttribute('data-project-id', project.id);
              itemDiv.innerHTML = `
                  <span class="index">${index + 1}.</span>
                  <div class="inputs">
-                     <label for="tab-name-${project.id}">Tab Name:</label>
-                     <input type="text" id="tab-name-${project.id}" class="edit-tab-name" value="${project.tabName || ''}" placeholder="Name on course page">
-                     <label for="tab-image-${project.id}">Tab Image URL:</label>
-                     <input type="url" id="tab-image-${project.id}" class="edit-tab-image" value="${project.tabImage || ''}" placeholder="Image URL for tab">
+                     <label for="tab-name-${project.id}">Name (on course page):</label>
+                     <input type="text" id="tab-name-${project.id}" class="edit-tab-name" value="${project.tabName || ''}" required>
+                     <label for="tab-image-${project.id}">Image URL (on course page):</label>
+                     <input type="url" id="tab-image-${project.id}" class="edit-tab-image" value="${project.tabImage || ''}">
                  </div>
-                 <button type="button" class="remove-item-btn" onclick="removeProjectTab('${project.id}')" title="Remove this project" aria-label="Remove Project ${index + 1}">&times;</button>
+                 <button type="button" class="remove-item-btn" onclick="removeProjectTab('${project.id}', this)" title="Remove this project" aria-label="Remove Project ${index + 1}">&times;</button>
              `;
              listContainer.appendChild(itemDiv);
          });
-          // Add helper text if no projects
          if (!courseData.projects || courseData.projects.length === 0) {
-              listContainer.innerHTML = '<p style="font-style: italic; color: #666;">No projects added yet. Click "Add New Project Tab".</p>';
+              listContainer.innerHTML = '<p style="font-style: italic; color: #666; text-align: center;">No projects added yet.</p>';
          }
      }
 
@@ -1353,16 +1350,13 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                alert(`Maximum ${MAX_PROJECTS} projects allowed per course.`);
                return;
           }
-          // Create a new basic project object
-          const newProjectId = `proj_${Date.now()}`; // Simple unique ID
+          const newProjectId = `proj_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`; // More unique ID
           const newProject = {
                 id: newProjectId,
-                tabName: `New Project ${ (courseData.projects?.length || 0) + 1}`,
-                tabImage: "",
-                projectTitle: "New Project Title",
-                projectSubtitle: "", projectHeaderImage: "",
-                overviewText: "", videoUrl: "", videoKeyPoints: [], learnData: [], slidesData: [], challengesData: [], quizData: [],
-                // CHANGE 1 & 4: Ensure new projects have style object and completion flag
+                tabName: `New Project ${ (courseData.projects?.length || 0) + 1}`, tabImage: "",
+                projectTitle: "New Project Title", projectSubtitle: "", projectHeaderImage: "",
+                overviewText: "Add project description here.", videoIntroText: "", videoTitle: "", videoUrl: "", videoKeyPoints: [],
+                learnData: [], slidesData: [], challengesData: [], quizData: [],
                 style: { fontFamily: null, baseSize: null, primaryColor: null, secondaryColor: null, accentColor: null },
                 isCompleted: false
             };
@@ -1370,64 +1364,58 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
           if (!courseData.projects) courseData.projects = [];
           courseData.projects.push(newProject);
           renderProjectTabsEditor(); // Refresh the list in the modal
-          // Optional: scroll to the new item
           document.getElementById('projectTabsList')?.lastElementChild?.scrollIntoView({behavior:'smooth'});
      }
 
-     function removeProjectTab(projectIdToRemove) {
+     function removeProjectTab(projectIdToRemove, buttonElement) {
           const projIndex = courseData.projects.findIndex(p=>p.id===projectIdToRemove);
-          if (projIndex === -1) return; // Not found
+          if (projIndex === -1) return;
 
           const projName = courseData.projects[projIndex]?.tabName || projectIdToRemove;
-          if (!confirm(`Are you sure you want to remove project "${projName}"?\nThis will permanently delete the project and all its content (steps, quiz, etc.)!`)) {
-               return; // User cancelled
+          if (!confirm(`⚠️ Are you sure you want to REMOVE project "${projName}"?\n\nThis CANNOT be undone and will delete all its content (slides, quiz, etc.)!`)) {
+               return;
           }
-          // Remove the project from the array
+          // Remove the project from the main data array
           courseData.projects.splice(projIndex, 1);
-          renderProjectTabsEditor(); // Refresh the editor list
-          renderCoursePage(); // Refresh the main course grid
+          // Remove the item visually from the editor list immediately
+          buttonElement?.closest('.project-tab-edit-item')?.remove();
+          // Optional: Refresh the list numbering if needed (or handle via CSS :nth-child)
+          // renderProjectTabsEditor(); // Alternative: full refresh
+          renderCoursePage(); // Refresh the main course grid view
           // If the deleted project was currently being viewed, go back to course view
           if (currentProjectId === projectIdToRemove) {
               showCourseView();
           }
      }
 
-    // Course Color Picker Logic (Handles global course theme)
+    // Course Color Picker Logic
      function selectCourseColor(type, color) {
-        // Update CSS variable live for immediate preview
-        document.documentElement.style.setProperty(`--${type}`, color);
         // Store preference in the main course data
         if (!courseData.style) courseData.style = {};
         courseData.style[type + 'Color'] = color;
+        // Apply theme to see changes live
+        applyCourseTheme();
 
         // Update visual selection state in the COURSE editor modal
         const pickerInput = document.getElementById(`course${type.charAt(0).toUpperCase() + type.slice(1)}ColorPicker`);
-        if (pickerInput) pickerInput.value = color; // Update the input type=color element
-
-        // Highlight the selected preset circle (or none if custom color)
-        const pickerContainer = pickerInput?.closest('.color-picker');
-        if (pickerContainer) {
-            pickerContainer.querySelectorAll('.color-option').forEach(option => {
-                 // Compare normalized background color to selected color
-                option.classList.toggle('selected', areColorsEqual(option.style.backgroundColor, color));
-            });
-        }
+         const pickerContainer = pickerInput?.closest('.color-picker');
+         if (pickerInput) pickerInput.value = color;
+         if (pickerContainer) {
+             pickerContainer.querySelectorAll('.color-option').forEach(option => {
+                 option.classList.toggle('selected', areColorsEqual(option.style.backgroundColor, color));
+             });
+         }
     }
     function customCourseColorSelected(type, color) {
-        selectCourseColor(type, color); // Use the main function to update state and CSS
-        // Deselect any preset circle visually since a custom color was picked
+        selectCourseColor(type, color);
         const pickerContainer = document.getElementById(`course${type.charAt(0).toUpperCase() + type.slice(1)}ColorPicker`)?.closest('.color-picker');
         pickerContainer?.querySelectorAll('.color-option').forEach(option => option.classList.remove('selected'));
     }
      function loadCourseColorSelections() {
-         // Get current course colors, use defaults if not set
-         const currentPrimary = courseData.style?.primaryColor || '#5E81F4';
-         const currentSecondary = courseData.style?.secondaryColor || '#FF7AC6';
-         const currentAccent = courseData.style?.accentColor || '#FFB800';
-         // Set the colors in the editor using the select function (updates UI and internal state)
-         selectCourseColor('primary', currentPrimary);
-         selectCourseColor('secondary', currentSecondary);
-         selectCourseColor('accent', currentAccent);
+         // Set the colors in the editor using the select function (updates UI & data)
+         selectCourseColor('primary', courseData.style?.primaryColor || '#5E81F4');
+         selectCourseColor('secondary', courseData.style?.secondaryColor || '#FF7AC6');
+         selectCourseColor('accent', courseData.style?.accentColor || '#FFB800');
      }
 
     function saveCourseChanges() {
@@ -1436,11 +1424,8 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
          courseData.imageUrl = document.getElementById('editCourseImage')?.value.trim() || courseData.imageUrl;
          courseData.description = document.getElementById('editCourseDescription')?.value.trim() || courseData.description;
 
-         // Course colors are already saved in courseData.style by the 'selectCourseColor' calls
-
          // Save Project Tab Names and Images (from the editor list)
-         const tabEditItems = document.querySelectorAll('#projectTabsList .project-tab-edit-item');
-         tabEditItems.forEach(item => {
+         document.querySelectorAll('#projectTabsList .project-tab-edit-item').forEach(item => {
              const projectId = item.getAttribute('data-project-id');
              const project = courseData.projects.find(p => p.id === projectId);
              if (project) {
@@ -1449,28 +1434,34 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
              }
          });
 
-         applyCourseTheme(); // Apply potentially changed course colors globally
-         renderCoursePage(); // Re-render the main course page with changes
+         applyCourseTheme(); // Apply potentially changed course colors
+         renderCoursePage(); // Re-render the main course page
          closeModal('courseEditModal');
          alert("Course changes saved successfully!");
-         // Note: Individual project data isn't saved here, only course-level details and project tab appearances.
     }
 
 
     // --- Project Editor ---
     function openProjectEditModal() {
          const modal = document.getElementById('projectEditModal');
-         // Requires a project to be currently viewed/selected
-         if (!modal || !currentProjectId || !currentProjectDataCache) {
-              alert("Please select a project to edit first (view the project page).");
+         if (!modal || !currentProjectId) {
+              alert("Please navigate to a project page first to edit it.");
               return;
          }
-         const project = currentProjectDataCache; // Use the cached data
+         const projectIndex = courseData.projects.findIndex(p => p.id === currentProjectId);
+          if (projectIndex === -1) {
+               alert("Error: Cannot find data for the current project.");
+               return;
+          }
+         // Create a DEEP CLONE of the project data for editing to allow cancellation
+         currentProjectDataCache = JSON.parse(JSON.stringify(courseData.projects[projectIndex]));
 
-         modal.querySelector('#editingProjectId').value = project.id; // Store the ID being edited
+         const project = currentProjectDataCache; // Work with the clone
+
+         modal.querySelector('#editingProjectId').value = project.id;
          modal.querySelector('#editingProjectNameLabel').textContent = project.projectTitle || project.tabName || 'Unnamed Project';
 
-         // Load simple text/URL fields for the project
+         // Load simple text/URL fields from the CLONE
          modal.querySelector('#editProject_Title').value = project.projectTitle || '';
          modal.querySelector('#editProject_Subtitle').value = project.projectSubtitle || '';
          modal.querySelector('#editProject_HeaderImage').value = project.projectHeaderImage || '';
@@ -1480,334 +1471,267 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
          modal.querySelector('#editProject_VideoIntroText').value = project.videoIntroText || '';
          modal.querySelector('#editProject_VideoTitle').value = project.videoTitle || '';
          modal.querySelector('#editProject_VideoUrl').value = project.videoUrl || '';
-         // Join array back into newline-separated string for textarea
          modal.querySelector('#editProject_VideoKeyPoints').value = (project.videoKeyPoints || []).join('\n');
 
-         // Load data for dynamic list sections (Learn, Slides, Challenges, Quiz)
+         // Load data for dynamic list sections FROM THE CLONE
          loadLearnEditFieldsForProject(project.learnData || [], modal.querySelector('#learnEditContainer'));
          loadSlidesEditFieldsForProject(project.slidesData || [], modal.querySelector('#slidesEditContainer'));
          loadChallengesEditFieldsForProject(project.challengesData || [], modal.querySelector('#challengesEditContainer'));
          loadQuizEditFieldsForProject(project.quizData || [], modal.querySelector('#quizEditContainer'));
 
-         // CHANGE 1: Load project-specific styles (font, size, colors) into the style editor section
-         loadProjectStyleSelections(project.style || {}, modal); // Handles Font/Size
-         loadProjectColorSelections(project.style || {});   // Handles Colors
+         // Load project-specific styles FROM THE CLONE
+         loadProjectStyleSelections(project.style || {});
+         loadProjectColorSelections(project.style || {});
 
          modal.style.display = 'block'; // Show the modal
-         // Ensure the default section (Project Title) is visible first
-         document.getElementById('editSectionProject').value = 'projTitle'; // Reset dropdown
+         // Set default section and show it
+         document.getElementById('editSectionProject').value = 'projMeta';
          showProjectEditSection();
     }
 
-     // --- Editor Field Loaders (Project Modal Specific) ---
-    function createEditItemGroup(index, type, contentGenerator, removeHandler) {
-         const itemGroup = document.createElement('div');
-         itemGroup.className = 'edit-item-group';
-         itemGroup.innerHTML = contentGenerator(index); // Generate specific inputs via callback
+     // --- Editor Field Loaders (Project Modal Specific - Operate on CACHED data) ---
+     // Helper to create grouped items in project editor
+     function createEditItemGroup(index, typePrefix, contentGenerator, removeHandler) {
+          const itemGroup = document.createElement('div');
+          itemGroup.className = 'edit-item-group';
+          itemGroup.innerHTML = contentGenerator(index); // Generate specific inputs via callback
 
-         const removeBtn = document.createElement('button');
-         removeBtn.type = 'button'; removeBtn.className = 'remove-item-btn';
-         removeBtn.innerHTML = '&times;';
-         removeBtn.title = `Remove ${type} ${index + 1}`;
-         removeBtn.setAttribute('aria-label', `Remove ${type} ${index + 1}`);
-         removeBtn.onclick = () => removeHandler(itemGroup); // Pass the item group element to the handler
-         itemGroup.appendChild(removeBtn);
+          const removeBtn = document.createElement('button');
+          removeBtn.type = 'button'; removeBtn.className = 'remove-item-btn';
+          removeBtn.innerHTML = '&times;';
+          removeBtn.title = `Remove this ${typePrefix} item`;
+          removeBtn.setAttribute('aria-label', `Remove ${typePrefix} ${index + 1}`);
+          removeBtn.onclick = () => removeHandler(itemGroup); // Pass the group element
+          itemGroup.appendChild(removeBtn);
 
-         // Auto-show/hide media URL input based on initial selection
-         const mediaTypeSelect = itemGroup.querySelector('.media-type-select');
-         if (mediaTypeSelect) handleMediaTypeChange(mediaTypeSelect); // Trigger initial visibility check
+          // Auto-show/hide media URL input
+          const mediaTypeSelect = itemGroup.querySelector('.media-type-select');
+          if (mediaTypeSelect) handleMediaTypeChange(mediaTypeSelect); // Trigger initial check
 
-         return itemGroup;
-    }
-    function handleMediaTypeChange(selectElement) {
-        const group = selectElement.closest('.edit-item-group');
-        const urlInputContainer = group?.querySelector('.media-url-input-container');
-        if (urlInputContainer) {
-             // Show if type is image or video, hide if 'none'
-             urlInputContainer.style.display = (selectElement.value === 'none') ? 'none' : 'block';
-        }
-    }
-    function loadLearnEditFieldsForProject(data, container) {
-         if (!container) return; container.innerHTML = ''; // Clear
-         data.forEach((item, index) => {
-             // Ensure defaults if properties are missing
-             const title = item?.title || '';
-             const desc = item?.description || '';
-             const mediaType = item?.mediaType || 'none';
-             const mediaUrl = item?.mediaUrl || '';
-             const content = (i) => `
-                 <label for="learn-title-${i}"><b>Item ${i + 1} Title:</b></label>
-                 <input type="text" id="learn-title-${i}" class="learn-title" value="${title}" required>
-                 <label for="learn-desc-${i}">Description:</label>
-                 <textarea id="learn-desc-${i}" class="learn-desc" rows="2">${desc}</textarea>
-                 <div class="media-controls">
-                     <label for="learn-media-type-${i}">Optional Media:</label>
-                     <select id="learn-media-type-${i}" class="media-type-select" onchange="handleMediaTypeChange(this)">
-                         <option value="none" ${mediaType === 'none' ? 'selected' : ''}>None</option>
-                         <option value="image" ${mediaType === 'image' ? 'selected' : ''}>Image URL</option>
-                         <option value="video" ${mediaType === 'video' ? 'selected' : ''}>Video Embed URL</option>
+          return itemGroup;
+     }
+     function handleMediaTypeChange(selectElement) { // Helper for media URL visibility
+        const urlInputContainer = selectElement.closest('.edit-item-group')?.querySelector('.media-url-input-container');
+        if (urlInputContainer) { urlInputContainer.style.display = (selectElement.value === 'none') ? 'none' : 'block'; }
+     }
+     // Loaders - they receive the *cached* data array and the container element
+     function loadLearnEditFieldsForProject(data, container) {
+          if (!container) return; container.innerHTML = '';
+          data.forEach((item, index) => {
+              const prefix = 'learn'; // For IDs
+              const content = (i) => `
+                  <label for="${prefix}-title-${i}"><b>Item ${i + 1} Title:</b></label>
+                  <input type="text" id="${prefix}-title-${i}" class="${prefix}-title" value="${item.title || ''}" required>
+                  <label for="${prefix}-desc-${i}">Description:</label>
+                  <textarea id="${prefix}-desc-${i}" class="${prefix}-desc" rows="2">${item.description || ''}</textarea>
+                  <div class="media-controls">
+                     <label for="${prefix}-media-type-${i}">Optional Media:</label>
+                     <select id="${prefix}-media-type-${i}" class="media-type-select" onchange="handleMediaTypeChange(this)">
+                         <option value="none" ${item.mediaType === 'none' ? 'selected' : ''}>None</option>
+                         <option value="image" ${item.mediaType === 'image' ? 'selected' : ''}>Image URL</option>
+                         <option value="video" ${item.mediaType === 'video' ? 'selected' : ''}>Video Embed URL</option>
                      </select>
-                     <div class="media-url-input-container" style="display: none;">
-                         <label for="learn-media-url-${i}" class="sr-only">Media URL:</label>
-                         <input type="url" id="learn-media-url-${i}" class="media-url-input" placeholder="Enter Media URL..." value="${mediaUrl}">
+                     <div class="media-url-input-container" style="display: none;"> ${/* Initially hidden by handleMediaTypeChange */''}
+                         <label for="${prefix}-media-url-${i}" class="sr-only">Media URL:</label>
+                         <input type="url" id="${prefix}-media-url-${i}" class="media-url-input" placeholder="Enter Media URL..." value="${item.mediaUrl || ''}">
                      </div>
-                 </div>`;
-             container.appendChild(createEditItemGroup(index, 'Learn Item', content, handleRemoveLearnItem));
-         });
-         // Add helper text if empty
-         if (data.length === 0) container.innerHTML = '<p style="font-style: italic; color: #666;">No learning items added.</p>';
-    }
+                  </div>`;
+              container.appendChild(createEditItemGroup(index, prefix, content, handleRemoveLearnItem));
+          });
+          if (data.length === 0) container.innerHTML = '<p style="font-style: italic; color: #666; text-align: center;">No learning items added.</p>';
+     }
      function loadSlidesEditFieldsForProject(data, container) {
         if (!container) return; container.innerHTML = '';
         data.forEach((slide, index) => {
-            const url = slide?.url || '';
-            const desc = slide?.description || '';
-            const type = slide?.type || 'iframe'; // Default to iframe
+            const prefix = 'slide';
             const content = (i) => `
-                <label for="slide-url-${i}"><b>Slide ${i + 1} URL (Image or Embed Link):</b></label>
-                <input type="url" id="slide-url-${i}" class="slide-url" value="${url}" required>
-                <label for="slide-desc-${i}">Description (Optional Caption):</label>
-                <input type="text" id="slide-desc-${i}" class="slide-desc" value="${desc}" placeholder="Short caption for the slide">
-                <label for="slide-type-${i}">Content Type:</label>
-                <select id="slide-type-${i}" class="slide-type">
-                    <option value="iframe" ${type === 'iframe' ? 'selected' : ''}>Presentation/Video Embed</option>
-                    <option value="image" ${type === 'image' ? 'selected' : ''}>Image</option>
+                <label for="${prefix}-url-${i}"><b>Slide ${i + 1} URL (Image or Embed Link):</b></label>
+                <input type="url" id="${prefix}-url-${i}" class="${prefix}-url" value="${slide.url || ''}" required>
+                <label for="${prefix}-desc-${i}">Description (Optional Caption):</label>
+                <input type="text" id="${prefix}-desc-${i}" class="${prefix}-desc" value="${slide.description || ''}">
+                <label for="${prefix}-type-${i}">Content Type:</label>
+                <select id="${prefix}-type-${i}" class="${prefix}-type">
+                    <option value="iframe" ${slide.type === 'iframe' ? 'selected' : ''}>Embed (Video/Presentation)</option>
+                    <option value="image" ${slide.type === 'image' ? 'selected' : ''}>Image</option>
                 </select>`;
-            container.appendChild(createEditItemGroup(index, 'Slide', content, handleRemoveSlideItem));
+            container.appendChild(createEditItemGroup(index, prefix, content, handleRemoveSlideItem));
         });
-        if (data.length === 0) container.innerHTML = '<p style="font-style: italic; color: #666;">No slides added.</p>';
+        if (data.length === 0) container.innerHTML = '<p style="font-style: italic; color: #666; text-align: center;">No slides added.</p>';
      }
       function loadChallengesEditFieldsForProject(data, container) {
         if (!container) return; container.innerHTML = '';
         data.forEach((challenge, index) => {
-             const title = challenge?.title || '';
-             const desc = challenge?.description || '';
-             const mediaType = challenge?.mediaType || 'none';
-             const mediaUrl = challenge?.mediaUrl || '';
+            const prefix = 'challenge';
              const content = (i) => `
-                <label for="challenge-title-${i}"><b>Challenge ${i + 1} Title:</b></label>
-                <input type="text" id="challenge-title-${i}" class="challenge-title" value="${title}" required>
-                <label for="challenge-desc-${i}">Description:</label>
-                <textarea id="challenge-desc-${i}" class="challenge-desc" rows="2">${desc}</textarea>
+                <label for="${prefix}-title-${i}"><b>Challenge ${i + 1} Title:</b></label>
+                <input type="text" id="${prefix}-title-${i}" class="${prefix}-title" value="${challenge.title || ''}" required>
+                <label for="${prefix}-desc-${i}">Description:</label>
+                <textarea id="${prefix}-desc-${i}" class="${prefix}-desc" rows="2">${challenge.description || ''}</textarea>
                  <div class="media-controls">
-                    <label for="challenge-media-type-${i}">Optional Media:</label>
-                    <select id="challenge-media-type-${i}" class="media-type-select" onchange="handleMediaTypeChange(this)">
-                        <option value="none" ${mediaType === 'none' ? 'selected' : ''}>None</option>
-                        <option value="image" ${mediaType === 'image' ? 'selected' : ''}>Image URL</option>
-                        <option value="video" ${mediaType === 'video' ? 'selected' : ''}>Video Embed URL</option>
+                    <label for="${prefix}-media-type-${i}">Optional Media:</label>
+                    <select id="${prefix}-media-type-${i}" class="media-type-select" onchange="handleMediaTypeChange(this)">
+                        <option value="none" ${challenge.mediaType === 'none' ? 'selected' : ''}>None</option>
+                        <option value="image" ${challenge.mediaType === 'image' ? 'selected' : ''}>Image URL</option>
+                        <option value="video" ${challenge.mediaType === 'video' ? 'selected' : ''}>Video Embed URL</option>
                     </select>
                     <div class="media-url-input-container" style="display: none;">
-                         <label for="challenge-media-url-${i}" class="sr-only">Media URL:</label>
-                         <input type="url" id="challenge-media-url-${i}" class="media-url-input" placeholder="Enter Media URL..." value="${mediaUrl}">
+                         <label for="${prefix}-media-url-${i}" class="sr-only">Media URL:</label>
+                         <input type="url" id="${prefix}-media-url-${i}" class="media-url-input" placeholder="Enter Media URL..." value="${challenge.mediaUrl || ''}">
                     </div>
                 </div>`;
-            container.appendChild(createEditItemGroup(index, 'Challenge', content, handleRemoveChallengeItem));
+            container.appendChild(createEditItemGroup(index, prefix, content, handleRemoveChallengeItem));
         });
-        if (data.length === 0) container.innerHTML = '<p style="font-style: italic; color: #666;">No challenges added.</p>';
+        if (data.length === 0) container.innerHTML = '<p style="font-style: italic; color: #666; text-align: center;">No challenges added.</p>';
      }
       function loadQuizEditFieldsForProject(data, container) {
         if (!container) return; container.innerHTML = '';
         data.forEach((q, index) => {
-            const questionText = q?.questionText || '';
-            const correctAnswer = q?.correctAnswer || '';
+             const prefix = 'quiz';
             let incorrectInputsHTML = '';
-            // Generate inputs for existing incorrect answers + placeholders up to MAX
             for (let i = 0; i < MAX_INCORRECT_ANSWERS; i++) {
                 const val = (q.incorrectAnswers && q.incorrectAnswers[i]) ? q.incorrectAnswers[i] : '';
                 incorrectInputsHTML += `
-                    <label for="quiz-incorrect-${index}-${i}" class="incorrect-answer-label">Incorrect Answer Option ${i + 1}:</label>
-                    <input type="text" id="quiz-incorrect-${index}-${i}" class="quiz-incorrect" value="${val}" placeholder="Optional incorrect choice">`;
+                    <label for="${prefix}-incorrect-${index}-${i}" class="incorrect-answer-label">Incorrect Option ${i + 1}:</label>
+                    <input type="text" id="${prefix}-incorrect-${index}-${i}" class="${prefix}-incorrect" value="${val}" placeholder="(Optional)">`;
             }
-
             const content = (i) => `
-                <label for="quiz-question-${i}"><b>Question ${i + 1}:</b></label>
-                <textarea id="quiz-question-${i}" class="quiz-question" rows="2" required placeholder="Enter the quiz question">${questionText}</textarea>
-                <label for="quiz-correct-${i}" style="color: var(--success); font-weight: bold;">Correct Answer:</label>
-                <input type="text" id="quiz-correct-${i}" class="quiz-correct" value="${correctAnswer}" required placeholder="The correct option">
-                ${incorrectInputsHTML}`; // Insert the generated incorrect answer inputs
-            container.appendChild(createEditItemGroup(index, 'Question', content, handleRemoveQuizItem));
+                <label for="${prefix}-question-${i}"><b>Question ${i + 1}:</b></label>
+                <textarea id="${prefix}-question-${i}" class="${prefix}-question" rows="2" required>${q.questionText || ''}</textarea>
+                <label for="${prefix}-correct-${i}" style="color: var(--success); font-weight: bold;">Correct Answer:</label>
+                <input type="text" id="${prefix}-correct-${i}" class="${prefix}-correct" value="${q.correctAnswer || ''}" required>
+                ${incorrectInputsHTML}`;
+            container.appendChild(createEditItemGroup(index, prefix, content, handleRemoveQuizItem));
         });
-        if (data.length === 0) container.innerHTML = '<p style="font-style: italic; color: #666;">No quiz questions added.</p>';
+        if (data.length === 0) container.innerHTML = '<p style="font-style: italic; color: #666; text-align: center;">No quiz questions added.</p>';
       }
 
+     // Project Style & Color Editor Logic (Operates on CACHE)
+     function loadProjectStyleSelections(projectStyleData) {
+         const modal = document.getElementById('projectEditModal');
+         if (!modal) return;
+         const styleData = projectStyleData || {};
 
-     // CHANGE 1: Project Style & Color Editor Logic
-     // Load current project font/size settings into modal selectors
-     function loadProjectStyleSelections(projectStyleData, modal) {
-         const modalRoot = modal || document.getElementById('projectEditModal');
-         if (!modalRoot) return;
-         const styleData = projectStyleData || {}; // Ensure it's an object
-
-         // Font Family: null means inherit/use default
-         const currentFont = styleData.fontFamily;
-         const fontSelector = modalRoot.querySelector('#projectFontSelector');
-         if(fontSelector) {
+         // Font Family
+         const currentFont = styleData.fontFamily || null; // Explicitly null if not set
+          const fontSelector = modal.querySelector('#projectFontSelector');
+          if (fontSelector) {
               fontSelector.querySelectorAll('.font-option').forEach(option => {
-                   const optionValueAttr = option.getAttribute('onclick');
-                   // Extract value ('null' or font string)
-                   const optionValueMatch = optionValueAttr ? optionValueAttr.match(/selectProjectStyle\('fontFamily',\s*('.*?'|null)\)/) : null;
-                   const optionValue = optionValueMatch ? (optionValueMatch[1] === 'null' ? null : optionValueMatch[1].slice(1,-1)) : undefined; // Remove quotes for strings
-                   // Select if values match (null == null, or string == string)
-                   option.classList.toggle('selected', optionValue === currentFont);
+                   const onclickAttr = option.getAttribute('onclick');
+                   // Match null or the quoted string, handling potential single/double quotes variations
+                   const match = onclickAttr?.match(/selectProjectStyle\('fontFamily',\s*(null|(['"`])(.*?)\2)\)/);
+                  let optionValue = undefined;
+                  if (match) {
+                      optionValue = match[1] === 'null' ? null : match[3]; // Get 'null' or the font string
+                  }
+                  option.classList.toggle('selected', optionValue === currentFont);
               });
-         }
+          }
 
-         // Base Size: null means inherit/use default
-         const currentSize = styleData.baseSize; // Could be null, 'small', 'medium', 'large'
-         const sizeSelector = modalRoot.querySelector('#projectSizeSelector');
-         if(sizeSelector) {
+         // Base Size
+         const currentSize = styleData.baseSize || null;
+         const sizeSelector = modal.querySelector('#projectSizeSelector');
+         if (sizeSelector) {
              sizeSelector.querySelectorAll('.size-option').forEach(option => {
-                 const optionValueAttr = option.getAttribute('onclick');
-                 const optionValueMatch = optionValueAttr ? optionValueAttr.match(/selectProjectStyle\('baseSize',\s*('.*?'|null)\)/) : null;
-                 const optionValue = optionValueMatch ? (optionValueMatch[1] === 'null' ? null : optionValueMatch[1].slice(1,-1)) : undefined;
-                 option.classList.toggle('selected', optionValue === currentSize);
+                  const onclickAttr = option.getAttribute('onclick');
+                  const match = onclickAttr?.match(/selectProjectStyle\('baseSize',\s*(null|'small'|'medium'|'large')\)/);
+                  const optionValue = match ? (match[1] === 'null' ? null : match[1]) : undefined;
+                  option.classList.toggle('selected', optionValue === currentSize);
              });
          }
      }
-
-     // Load current project color overrides into modal selectors
      function loadProjectColorSelections(projectStyleData) {
         const styleData = projectStyleData || {};
-        // Get current PROJECT colors, default to NULL (meaning inherit from course)
-        const currentPrimary = styleData.primaryColor || null;
-        const currentSecondary = styleData.secondaryColor || null;
-        const currentAccent = styleData.accentColor || null;
-        // Update the PROJECT color pickers in the modal
-        // Pass null if no project-specific color is set
-        selectProjectColor('primary', currentPrimary);
-        selectProjectColor('secondary', currentSecondary);
-        selectProjectColor('accent', currentAccent);
+        // Pass null if no project-specific color override is set in the cache
+        selectProjectColor('primary', styleData.primaryColor || null, false); // Don't apply live preview on initial load
+        selectProjectColor('secondary', styleData.secondaryColor || null, false);
+        selectProjectColor('accent', styleData.accentColor || null, false);
      }
 
-      // Handles selecting/setting a PROJECT-specific style (font or size)
+     // Selects project style (font/size), updates CACHE and modal UI
      function selectProjectStyle(styleProperty, value) {
-         // Update the temporary cached data for the project being edited
          if (!currentProjectDataCache) return;
          if (!currentProjectDataCache.style) currentProjectDataCache.style = {};
-         // Store the value (null means 'use default')
          currentProjectDataCache.style[styleProperty] = value;
-
-         // Update the visual selection in the PROJECT editor modal immediately
-         const modal = document.getElementById('projectEditModal');
-         loadProjectStyleSelections(currentProjectDataCache.style, modal);
-
-         // Optional: Apply live preview to the background project view? (Could be complex)
-         // applyProjectSpecificStyles(currentProjectDataCache); // Call if live preview needed
+         // Update the visual selection in the PROJECT editor modal
+         loadProjectStyleSelections(currentProjectDataCache.style);
+         // console.log("Updated project cache style:", currentProjectDataCache.style); // For debugging
      }
-
-      // Handles selecting/setting a PROJECT-specific COLOR override
-     function selectProjectColor(type, color) {
-         // Color can be null (means inherit from course) or a hex string
+     // Selects project color override, updates CACHE and modal UI
+     function selectProjectColor(type, color, applyLive = true) { // 'color' can be null or hex string
          if (!currentProjectDataCache) return;
          if (!currentProjectDataCache.style) currentProjectDataCache.style = {};
-
-         // Store preference (null means inherit, string means override)
          currentProjectDataCache.style[type + 'Color'] = color;
 
-         // --- Update visual selection in the PROJECT editor modal ---
+         // Update PROJECT editor modal UI
          const pickerInputId = `project${type.charAt(0).toUpperCase() + type.slice(1)}ColorPicker`;
          const pickerInput = document.getElementById(pickerInputId);
-         const pickerContainerId = `${pickerInputId}Container`; // Assuming container has ID like 'projectPrimaryColorPickerContainer'
-         const pickerContainer = document.getElementById(pickerContainerId);
+         const pickerContainer = document.getElementById(`${pickerInputId}Container`);
 
          if (pickerInput) {
-              // Set the input[type=color]. If color is null, set to a default like white/black?
-              // Let's set it to the corresponding *course* color if project override is null
-              pickerInput.value = color || courseData.style?.[type + 'Color'] || '#ffffff'; // Fallback to white
-              // Add visual indicator if inheriting? (e.g., border)
-              pickerInput.style.border = color ? 'none' : '2px dashed #ccc';
+              // Show course color in picker if override is null, otherwise show the override color
+              pickerInput.value = color || courseData.style?.[type + 'Color'] || '#ffffff';
+              pickerInput.style.border = color ? 'none' : '2px dashed #ccc'; // Indicate inheritance
          }
          if (pickerContainer) {
              pickerContainer.querySelectorAll('.color-option').forEach(option => {
-                 // Only mark selected if an actual color override is set AND it matches the preset
                  option.classList.toggle('selected', color !== null && areColorsEqual(option.style.backgroundColor, color));
              });
          }
-         // Note: Live preview for project colors isn't applied here, only on save/load
+         // Optional live preview (apply changes to background project view)
+         if (applyLive) { applyProjectSpecificStyles(currentProjectDataCache); }
+         // console.log("Updated project cache style:", currentProjectDataCache.style); // For debugging
      }
-
      function customProjectColorSelected(type, color) {
-        selectProjectColor(type, color); // Use the main function
-        // Deselect preset circles visually in the PROJECT modal
+        selectProjectColor(type, color, true); // Apply live preview
         const pickerContainer = document.getElementById(`project${type.charAt(0).toUpperCase() + type.slice(1)}ColorPickerContainer`);
         pickerContainer?.querySelectorAll('.color-option').forEach(option => option.classList.remove('selected'));
      }
-
      function clearProjectColorOverrides() {
-         if (!confirm("This will reset the colors for this project to use the main course theme colors. Are you sure?")) return;
-         // Set project-specific colors to null in the cache
-         selectProjectColor('primary', null);
-         selectProjectColor('secondary', null);
-         selectProjectColor('accent', null);
-         alert("Project colors reset to course defaults. Save the project to apply.");
+         if (!confirm("Reset project colors to use the main course theme?")) return;
+         // Set colors to null in cache, trigger UI update (without live preview)
+         selectProjectColor('primary', null, false);
+         selectProjectColor('secondary', null, false);
+         selectProjectColor('accent', null, false);
+         alert("Project colors reset to course defaults. Save project to apply changes.");
      }
 
-
-     // --- Add/Remove handlers for dynamic list items in project editor ---
-     // Generic helper to find index and remove from array in currentProjectDataCache
+     // --- Add/Remove handlers for dynamic list items in project editor (operate on CACHE) ---
      function findIndexAndRemove(element, dataArrayName, reloadFunctionName) {
         if (!currentProjectDataCache || !currentProjectDataCache[dataArrayName]) return;
-
-        const container = element.parentNode; // The container holding the edit groups
-        // Get only the actual item groups within this container
+        const container = element.parentNode;
         const items = Array.from(container.children).filter(child => child.classList.contains('edit-item-group'));
-        const index = items.indexOf(element); // Find the index of the element to remove
-
+        const index = items.indexOf(element);
         if (index > -1) {
              currentProjectDataCache[dataArrayName].splice(index, 1); // Remove from the cached data array
-             // Dynamically call the correct reload function (passed as string name)
-             if (typeof window[reloadFunctionName] === 'function') {
-                window[reloadFunctionName](currentProjectDataCache[dataArrayName], container); // Reload fields for this section
-             } else {
-                 console.error(`Reload function ${reloadFunctionName} not found!`);
-                 element.remove(); // Fallback: remove visually anyway
-             }
-        } else {
-             console.error("Could not find item index to remove.");
-             element.remove(); // Fallback: remove visually
-        }
+             // Reload fields for this section using the cached data
+             window[reloadFunctionName](currentProjectDataCache[dataArrayName], container);
+        } else { console.error("Could not find item index to remove."); element.remove(); }
      }
-
-     // Specific remove handlers calling the generic helper
      function handleRemoveLearnItem(elementToRemove) { findIndexAndRemove(elementToRemove, 'learnData', 'loadLearnEditFieldsForProject'); }
      function handleRemoveSlideItem(elementToRemove) { findIndexAndRemove(elementToRemove, 'slidesData', 'loadSlidesEditFieldsForProject'); }
      function handleRemoveChallengeItem(elementToRemove) { findIndexAndRemove(elementToRemove, 'challengesData', 'loadChallengesEditFieldsForProject'); }
      function handleRemoveQuizItem(elementToRemove) { findIndexAndRemove(elementToRemove, 'quizData', 'loadQuizEditFieldsForProject'); }
 
-     // --- Add item functions for project editor ---
-     // Generic Add function
+     // Add item functions for project editor (operate on CACHE)
      function addItemToProjectData(dataArrayName, maxItems, newItemObject, reloadFunctionName, containerSelector, focusSelector = null) {
-         if (!currentProjectDataCache) return; // Need context
-         // Ensure array exists
-         if (!currentProjectDataCache[dataArrayName]) {
-             currentProjectDataCache[dataArrayName] = [];
-         }
-         // Check limit
-         if (currentProjectDataCache[dataArrayName].length >= maxItems) {
-             alert(`Maximum ${maxItems} items allowed for this section.`); return;
-         }
-         // Add new item structure
-         currentProjectDataCache[dataArrayName].push(newItemObject);
-         // Reload the UI section
+         if (!currentProjectDataCache) return; // Need cache context
+         if (!currentProjectDataCache[dataArrayName]) currentProjectDataCache[dataArrayName] = []; // Ensure array exists
+         if (currentProjectDataCache[dataArrayName].length >= maxItems) { alert(`Maximum ${maxItems} items allowed.`); return; }
+
+         currentProjectDataCache[dataArrayName].push(newItemObject); // Add to cache
+
          const container = document.querySelector(containerSelector);
-         if (typeof window[reloadFunctionName] === 'function') {
+         // Reload the UI section using the updated cache
+         if (container && typeof window[reloadFunctionName] === 'function') {
              window[reloadFunctionName](currentProjectDataCache[dataArrayName], container);
-         } else {
-             console.error(`Reload function ${reloadFunctionName} not found.`); return;
-         }
-         // Scroll and focus on the new item (optional)
-         if (container) {
-              const lastItem = container.lastElementChild;
-              if (lastItem && lastItem.classList.contains('edit-item-group')) {
+             // Scroll and focus
+             const lastItem = container.lastElementChild;
+             if (lastItem && lastItem.classList.contains('edit-item-group')) {
                    lastItem.scrollIntoView({behavior:'smooth', block:'nearest'});
-                   if(focusSelector) {
-                       const inputToFocus = lastItem.querySelector(focusSelector);
-                       inputToFocus?.focus();
-                   }
-              }
-         }
+                   if(focusSelector) lastItem.querySelector(focusSelector)?.focus();
+             }
+         } else { console.error(`Reload function ${reloadFunctionName} or container ${containerSelector} not found.`); }
      }
-     // Specific add handlers using the generic helper
      function addLearnEditField() { addItemToProjectData('learnData', MAX_LEARN_ITEMS, { title: "", description: "", mediaType:'none', mediaUrl:'' }, 'loadLearnEditFieldsForProject', '#projectEditModal #learnEditContainer', '.learn-title'); }
      function addSlideEditField() { addItemToProjectData('slidesData', MAX_SLIDES, { url: "", description: "", type:"iframe" }, 'loadSlidesEditFieldsForProject', '#projectEditModal #slidesEditContainer', '.slide-url'); }
      function addChallengeEditField() { addItemToProjectData('challengesData', MAX_CHALLENGES, { title: "", description: "", mediaType:'none', mediaUrl:'' }, 'loadChallengesEditFieldsForProject', '#projectEditModal #challengesEditContainer', '.challenge-title'); }
@@ -1819,53 +1743,48 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
          const modal = document.getElementById('projectEditModal');
          const select = document.getElementById('editSectionProject');
          if (!modal || !select) return;
-
-         // Hide all sections first
          modal.querySelectorAll('.edit-section').forEach(section => section.style.display = 'none');
-
-         // Build the ID of the section to show based on dropdown value
-         // Corrected to handle 'projStyleEdit' which matches the div ID
-         const sectionId = select.value + 'Edit'; // e.g., 'projTitle' -> 'projTitleEdit', 'projStyle' -> 'projStyleEdit'
-
+         // ID mapping: 'projMeta' -> 'projMetaEdit', 'overview' -> 'overviewEdit', etc.
+         const sectionId = select.value + 'Edit';
          const targetSection = modal.querySelector('#' + sectionId);
          if (targetSection) {
-             targetSection.style.display = 'block'; // Show the selected section
-         } else {
-             console.warn("Edit section not found:", sectionId);
-         }
+             targetSection.style.display = 'block';
+         } else { console.warn("Edit section not found:", sectionId); }
      }
 
-
+    // Saves changes from Project Modal back to main courseData
     function saveProjectChanges() {
          const projectId = document.getElementById('editingProjectId')?.value;
          const projectIndex = courseData.projects.findIndex(p => p.id === projectId);
-         if (projectIndex === -1) { alert("Error: Could not find project data to save."); return; }
-
-         // Get a direct reference to modify the project in the main courseData array
-         const project = courseData.projects[projectIndex];
-         // Also use the currentProjectDataCache which was modified by the editor (colors, styles)
-         const editedCache = currentProjectDataCache;
+         if (projectIndex === -1 || !currentProjectDataCache) { alert("Error: Could not find project data to save."); return; }
 
          const modal = document.getElementById('projectEditModal');
          if (!modal) { alert("Error: Project edit modal not found."); return; }
 
-         try {
-             // --- Save simple fields ---
-             project.projectTitle = modal.querySelector('#editProject_Title')?.value.trim() || 'Project Title';
-             project.projectSubtitle = modal.querySelector('#editProject_Subtitle')?.value.trim() || '';
-             project.projectHeaderImage = modal.querySelector('#editProject_HeaderImage')?.value.trim() || '';
-             project.tabName = modal.querySelector('#editProject_TabName')?.value.trim() || project.projectTitle; // Default tab name to project title
-             project.tabImage = modal.querySelector('#editProject_TabImage')?.value.trim() || '';
-             project.overviewText = modal.querySelector('#editProject_OverviewText')?.value.trim() || '';
-             project.videoIntroText = modal.querySelector('#editProject_VideoIntroText')?.value.trim() || '';
-             project.videoTitle = modal.querySelector('#editProject_VideoTitle')?.value.trim() || '';
-             project.videoUrl = modal.querySelector('#editProject_VideoUrl')?.value.trim() || '';
-             // Split key points from textarea, trim, and filter empty lines
-             project.videoKeyPoints = modal.querySelector('#editProject_VideoKeyPoints')?.value.split('\n').map(s => s.trim()).filter(s => s) || [];
+         // --- Create a new object with data read from the modal & cache ---
+         let updatedProjectData = {
+             id: projectId, // Keep the original ID
+             isCompleted: currentProjectDataCache.isCompleted, // Preserve completion status
+             style: { ...(currentProjectDataCache.style || {}) }, // Copy style object from cache
 
-             // --- Save dynamic list fields ---
+             // Read simple fields from modal
+             projectTitle: modal.querySelector('#editProject_Title')?.value.trim() || 'Project Title',
+             projectSubtitle: modal.querySelector('#editProject_Subtitle')?.value.trim() || '',
+             projectHeaderImage: modal.querySelector('#editProject_HeaderImage')?.value.trim() || '',
+             tabName: modal.querySelector('#editProject_TabName')?.value.trim() || 'Unnamed Tab',
+             tabImage: modal.querySelector('#editProject_TabImage')?.value.trim() || '',
+             overviewText: modal.querySelector('#editProject_OverviewText')?.value.trim() || '',
+             videoIntroText: modal.querySelector('#editProject_VideoIntroText')?.value.trim() || '',
+             videoTitle: modal.querySelector('#editProject_VideoTitle')?.value.trim() || '',
+             videoUrl: modal.querySelector('#editProject_VideoUrl')?.value.trim() || '',
+             videoKeyPoints: modal.querySelector('#editProject_VideoKeyPoints')?.value.split('\n').map(s => s.trim()).filter(s => s),
+
+             // Read dynamic list fields from modal inputs
+             learnData: [], slidesData: [], challengesData: [], quizData: []
+         };
+
+         try {
              // Learn Items
-             project.learnData = [];
              modal.querySelectorAll('#learnEditContainer .edit-item-group').forEach(item => {
                  const titleInput = item.querySelector('.learn-title');
                  const title = titleInput?.value.trim();
@@ -1873,37 +1792,29 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                      const mediaTypeSelect = item.querySelector('.media-type-select');
                      const mediaUrlInput = item.querySelector('.media-url-input');
                      const mediaType = mediaTypeSelect?.value || 'none';
-                     project.learnData.push({
+                     updatedProjectData.learnData.push({
                          title: title,
                          description: item.querySelector('.learn-desc')?.value.trim() || "",
                          mediaType: mediaType,
                          mediaUrl: (mediaType !== 'none' && mediaUrlInput) ? mediaUrlInput.value.trim() : ''
                      });
-                 } else if (titleInput && !titleInput.validity.valid) { // If required title is empty
-                    console.warn("Skipping learn item due to missing title.");
-                    titleInput.style.border = '1px solid red'; // Highlight missing field
-                 }
+                 } else if (titleInput?.required && !title) titleInput.style.border = '1px solid red';
              });
 
              // Slides
-             project.slidesData = [];
              modal.querySelectorAll('#slidesEditContainer .edit-item-group').forEach(item => {
                   const urlInput = item.querySelector('.slide-url');
                   const url = urlInput?.value.trim();
                   if (url) {
-                      project.slidesData.push({
+                      updatedProjectData.slidesData.push({
                            url: url,
                            description: item.querySelector('.slide-desc')?.value.trim() || "",
                            type: item.querySelector('.slide-type')?.value || "iframe"
                        });
-                  } else if (urlInput && !urlInput.validity.valid) {
-                      console.warn("Skipping slide due to missing URL.");
-                      urlInput.style.border = '1px solid red';
-                  }
+                  } else if (urlInput?.required && !url) urlInput.style.border = '1px solid red';
              });
 
               // Challenges
-             project.challengesData = [];
              modal.querySelectorAll('#challengesEditContainer .edit-item-group').forEach(item => {
                   const titleInput = item.querySelector('.challenge-title');
                   const title = titleInput?.value.trim();
@@ -1911,55 +1822,41 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                       const mediaTypeSelect = item.querySelector('.media-type-select');
                       const mediaUrlInput = item.querySelector('.media-url-input');
                       const mediaType = mediaTypeSelect?.value || 'none';
-                      project.challengesData.push({
+                      updatedProjectData.challengesData.push({
                            title: title,
                            description: item.querySelector('.challenge-desc')?.value.trim() || "",
                            mediaType: mediaType,
                            mediaUrl: (mediaType !== 'none' && mediaUrlInput) ? mediaUrlInput.value.trim() : ''
                       });
-                  } else if (titleInput && !titleInput.validity.valid) {
-                       console.warn("Skipping challenge due to missing title.");
-                       titleInput.style.border = '1px solid red';
-                  }
+                  } else if (titleInput?.required && !title) titleInput.style.border = '1px solid red';
              });
 
              // Quiz Questions
-             project.quizData = [];
              modal.querySelectorAll('#quizEditContainer .edit-item-group').forEach(item => {
                   const questionInput = item.querySelector('.quiz-question');
                   const correctInput = item.querySelector('.quiz-correct');
                   const question = questionInput?.value.trim();
                   const correct = correctInput?.value.trim();
 
-                  if (question && correct) { // Question and correct answer are required
+                  if (question && correct) {
                        let incorrect = [];
-                       item.querySelectorAll('.quiz-incorrect').forEach(inp => {
-                            const val = inp.value.trim();
-                            if(val) incorrect.push(val); // Only add non-empty incorrect answers
-                       });
-                       // Basic validation: at least one incorrect answer is good practice, but not enforced here
-                       project.quizData.push({
-                            questionText: question,
-                            correctAnswer: correct,
-                            incorrectAnswers: incorrect
-                       });
+                       item.querySelectorAll('.quiz-incorrect').forEach(inp => { if(inp.value.trim()) incorrect.push(inp.value.trim()); });
+                       updatedProjectData.quizData.push({ questionText: question, correctAnswer: correct, incorrectAnswers: incorrect });
                   } else {
-                      if (questionInput && !questionInput.validity.valid) questionInput.style.border = '1px solid red';
-                      if (correctInput && !correctInput.validity.valid) correctInput.style.border = '1px solid red';
-                       console.warn("Skipping quiz question due to missing question or correct answer.");
+                      if (questionInput?.required && !question) questionInput.style.border = '1px solid red';
+                      if (correctInput?.required && !correct) correctInput.style.border = '1px solid red';
                   }
              });
 
-             // --- Save Style Overrides ---
-             // Style/color data was updated in 'editedCache' via selectProjectStyle/Color functions
-             // Make sure the main 'project' object gets this updated style object
-             project.style = { ...(editedCache?.style || { fontFamily: null, baseSize: null, primaryColor: null, secondaryColor: null, accentColor: null }) };
+             // --- COMMIT Changes: Replace the project object in the main courseData array ---
+             courseData.projects[projectIndex] = updatedProjectData;
 
              // --- Update UI & Close ---
-             renderProjectPage(project); // Update the currently viewed project page display
+             renderProjectPage(updatedProjectData); // Update the project view display with new data
              renderCoursePage();       // Update the course grid (tab name/image might have changed)
              closeModal('projectEditModal');
-             alert(`Project "${project.projectTitle || project.tabName}" changes saved!`);
+             alert(`Project "${updatedProjectData.projectTitle || updatedProjectData.tabName}" changes saved!`);
+             currentProjectDataCache = null; // Clear the edit cache
 
          } catch (error) {
               console.error("Error saving project changes:", error);
@@ -1969,125 +1866,92 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
 
     // --- Utility Functions ---
     function shuffleArray(array){for(let i=array.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[array[i],array[j]]=[array[j],array[i]]}}
-    // Helper to compare colors accurately (handles rgb vs hex)
     function areColorsEqual(color1, color2){
-        if (!color1 || !color2) return false; // One or both are null/empty
-        if (color1 === color2) return true; // Quick check for identical strings
-
-        // Use a dummy element to normalize color formats (e.g., hex to rgb)
+        if (!color1 || !color2) return false;
+        if (color1 === color2) return true;
         try{
-            const dummy = document.createElement('div');
-            dummy.style.color = color1;
-            const normalized1 = dummy.style.color; // Browser computes the value (e.g., rgb(r, g, b))
-            dummy.style.color = color2;
-            const normalized2 = dummy.style.color;
-            // Need to handle cases where normalization fails (invalid color)
-            return !(!normalized1 || !normalized2) && normalized1 === normalized2;
-        } catch(e) {
-            // Fallback for very simple comparison if DOM method fails
-            return String(color1).trim().toLowerCase() === String(color2).trim().toLowerCase();
-        }
+            const dummy = document.createElement('div'); dummy.style.color = color1;
+            const n1 = dummy.style.color; dummy.style.color = color2; const n2 = dummy.style.color;
+            return Boolean(n1 && n2 && n1 === n2);
+        } catch(e) { return String(color1).trim().toLowerCase() === String(color2).trim().toLowerCase(); }
     }
 
-    // --- EXPORT COURSE ---
+    // --- EXPORT COURSE (Keep original course export, ensure it includes all data) ---
     function exportCourseHTML() {
         console.log("Starting COURSE export...");
         try {
-            // Apply the *current* theme state (could include project overrides if project is viewed)
-            // It's better to ensure we export with the BASE course theme active.
-            applyCourseTheme();
+            applyCourseTheme(); // Ensure base course theme is active for export styles
             const exportDocElement = document.documentElement.cloneNode(true);
 
-            // Clean up editor/export elements
+            // Clean up editor UI
             exportDocElement.querySelector('#courseEditModal')?.remove();
             exportDocElement.querySelector('#projectEditModal')?.remove();
             exportDocElement.querySelectorAll('.edit-btn').forEach(btn => btn.remove());
-            exportDocElement.querySelectorAll('.export-btn').forEach(btn => btn.remove());
-            // The back button on project view remains, controlled by its specific CSS
+            exportDocElement.querySelectorAll('.export-btn').forEach(btn => btn.remove()); // Course export button
+            exportDocElement.querySelectorAll('.back-btn').forEach(btn => btn.remove()); // Project back button
 
             // Reset view state for export
             exportDocElement.querySelector('#course-view').style.display = 'block';
             exportDocElement.querySelector('#project-view').style.display = 'none';
-            // Reset quiz state visually for export
-            exportDocElement.querySelectorAll('.quiz-question.answered').forEach(q => q.classList.remove('answered'));
-            exportDocElement.querySelectorAll('.quiz-option.selected').forEach(o => o.classList.remove('selected'));
-            exportDocElement.querySelectorAll('.quiz-option.correct').forEach(o => o.classList.remove('correct'));
-            exportDocElement.querySelectorAll('.quiz-option.incorrect').forEach(o => o.classList.remove('incorrect'));
-            exportDocElement.querySelectorAll('.quiz-feedback').forEach(f => f.style.display = 'none');
+             // Clear any lingering project-specific inline styles
+             const exportProjectViewEl = exportDocElement.querySelector('#project-view');
+             if(exportProjectViewEl) { exportProjectViewEl.style.fontFamily = ''; exportProjectViewEl.style.fontSize = ''; }
+
+            // Reset quiz state visually
+            exportDocElement.querySelectorAll('.quiz-question').forEach(q => {
+                q.classList.remove('answered');
+                q.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected', 'correct', 'incorrect'));
+                 q.querySelectorAll('.quiz-feedback').forEach(f => f.style.display = 'none');
+             });
             exportDocElement.querySelector('.final-quiz-result')?.remove();
             const exportSubmitBtn = exportDocElement.querySelector('#project-view #submitQuizBtn');
             if (exportSubmitBtn) exportSubmitBtn.disabled = false;
-            // Ensure project-specific inline styles are cleared from #project-view for export
-             const exportProjectViewEl = exportDocElement.querySelector('#project-view');
-             if(exportProjectViewEl) {
-                 exportProjectViewEl.style.fontFamily = '';
-                 exportProjectViewEl.style.fontSize = '';
-             }
 
-            // Remove ALL original script tags to prevent editor logic in export
+            // Remove ALL original script tags
             exportDocElement.querySelectorAll('script').forEach(script => script.remove());
 
-            // --- Create the minimal viewer script ---
+            // Create the minimal viewer script
             const viewerScript = document.createElement('script');
-            // Embed the CURRENT courseData state (including isCompleted flags and style overrides)
-            // All necessary VIEWING functions need to be self-contained here.
+            // Embed the CURRENT, complete courseData state
             viewerScript.textContent = `
                 // --- EXPORTED VIEWER SCRIPT ---
-                const courseDataForView = ${JSON.stringify(courseData)}; // Embed current data
+                const courseDataForView = ${JSON.stringify(courseData)};
                 let currentSlideIndex = 0;
                 let currentProjectIdForView = null;
 
                 // --- Utilities ---
                 function shuffleArray(array){for(let i=array.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[array[i],array[j]]=[array[j],array[i]]}}
-                // No areColorsEqual needed in viewer
+                function areColorsEqual(c1, c2){ if(!c1||!c2)return!1;if(c1===c2)return!0;try{const d=document.createElement('div');d.style.color=c1;const n1=d.style.color;d.style.color=c2;const n2=d.style.color;return!(!n1||!n2)&&n1===n2}catch(e){return String(c1).trim().toLowerCase()===String(c2).trim().toLowerCase()}}
 
                 // --- Theme & Style Application ---
-                 function applyCourseThemeForView() { // Applies base course theme
-                    const root = document.documentElement;
-                    const cs = courseDataForView.style || {};
+                 function applyCourseThemeForView() {
+                    const root = document.documentElement; const cs = courseDataForView.style || {};
                     root.style.setProperty('--primary', cs.primaryColor || '#5E81F4');
                     root.style.setProperty('--secondary', cs.secondaryColor || '#FF7AC6');
                     root.style.setProperty('--accent', cs.accentColor || '#FFB800');
-                    root.style.setProperty('--base-font-family', 'Segoe UI, sans-serif');
-                    root.style.setProperty('--base-font-size', '16px');
-                    // Clear project-specific inline styles when applying course theme
-                    const projectViewEl = document.getElementById('project-view');
-                     if(projectViewEl) {
-                         projectViewEl.style.fontFamily = ''; projectViewEl.style.fontSize = '';
-                    }
+                    root.style.setProperty('--base-font-family', "'Segoe UI', sans-serif"); // Default font
+                    root.style.setProperty('--base-font-size', '16px'); // Default size
+                    const pView = document.getElementById('project-view'); if(pView){ pView.style.fontFamily=''; pView.style.fontSize=''; }
                  }
-                // CHANGE 1 (Viewer): Apply project styles OVER course theme
                 function applyProjectStylesForView(project) {
-                    if (!project) return;
-                    const root = document.documentElement;
-                    const pStyle = project.style; const cStyle = courseDataForView.style || {};
-                    root.style.setProperty('--primary', pStyle?.primaryColor || cStyle.primaryColor || '#5E81F4');
-                    root.style.setProperty('--secondary', pStyle?.secondaryColor || cStyle.secondaryColor || '#FF7AC6');
-                    root.style.setProperty('--accent', pStyle?.accentColor || cStyle.accentColor || '#FFB800');
-
-                    const projectViewEl = document.getElementById('project-view');
-                    if(!projectViewEl) return;
-
-                    const pFont = pStyle?.fontFamily; // null = use default
-                    projectViewEl.style.fontFamily = pFont || 'var(--base-font-family)';
-
-                    const pSize = pStyle?.baseSize; // null = use default
-                    let effSize = 'var(--base-font-size)';
-                    if (pSize === 'small') effSize = '14px';
-                    else if (pSize === 'large') effSize = '18px';
-                    else if (pSize === 'medium') effSize = '16px';
-                    projectViewEl.style.fontSize = effSize;
+                    if (!project) return; const root = document.documentElement;
+                    const pStyle = project.style || {}; const cStyle = courseDataForView.style || {};
+                    root.style.setProperty('--primary', pStyle.primaryColor || cStyle.primaryColor || '#5E81F4');
+                    root.style.setProperty('--secondary', pStyle.secondaryColor || cStyle.secondaryColor || '#FF7AC6');
+                    root.style.setProperty('--accent', pStyle.accentColor || cStyle.accentColor || '#FFB800');
+                    const pView = document.getElementById('project-view'); if(!pView) return;
+                    pView.style.fontFamily = pStyle.fontFamily || 'var(--base-font-family)';
+                    let effSize='var(--base-font-size)';
+                    if(pStyle.baseSize==='small')effSize='14px';else if(pStyle.baseSize==='large')effSize='18px';else if(pStyle.baseSize==='medium')effSize='16px';
+                    pView.style.fontSize = effSize;
                 }
-
 
                 // --- View Navigation ---
                 function showCourseView() {
                     document.getElementById('course-view').style.display = 'block';
                     document.getElementById('project-view').style.display = 'none';
                     currentProjectIdForView = null; document.title = courseDataForView.title || "Course";
-                    applyCourseThemeForView(); // Reset to course theme
-                    renderCoursePageForView(); // Re-render needed for completion ticks
-                    window.scrollTo(0,0);
+                    applyCourseThemeForView(); renderCoursePageForView(); window.scrollTo(0,0);
                 }
                 function showProjectView(projectId) {
                      const project = courseDataForView.projects.find(p => p.id === projectId);
@@ -2097,13 +1961,11 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                      document.getElementById('course-view').style.display = 'none';
                      document.getElementById('project-view').style.display = 'block';
                      document.title = project.projectTitle || "Project";
-                     // CHANGE 1 (Viewer): Apply base then override
-                     applyCourseThemeForView(); // Ensure base is set
-                     applyProjectStylesForView(project); // Apply specific overrides
+                     applyCourseThemeForView(); applyProjectStylesForView(project); // Apply base then overrides
                      window.scrollTo(0,0);
                  }
 
-                 // --- Content Rendering (Minified/Simplified Viewer Version) ---
+                 // --- Content Rendering (Viewer Version - Includes all project parts) ---
                 function renderCoursePageForView() {
                     const c = courseDataForView; document.getElementById('courseTitle').textContent = c.title;
                     const img = document.getElementById('courseImage'); if(img){ img.src = c.imageUrl || ''; img.alt = c.title + " Image"; }
@@ -2111,96 +1973,65 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
                     const grid = document.getElementById('projectGrid'); grid.innerHTML = '';
                     if (!c.projects || c.projects.length === 0) { grid.innerHTML = '<p>No projects found.</p>'; return; }
                     c.projects.forEach(p => {
-                        if (!p || !p.id) return;
-                        const t = document.createElement('a'); t.className = 'project-tab'; t.href = '#project-' + p.id;
+                        if (!p || !p.id) return; const t = document.createElement('a');
+                        t.className = 'project-tab'; t.href = '#project-' + p.id;
                         t.onclick = (e) => { e.preventDefault(); showProjectView(p.id); };
-                        // Inner HTML including image and title span
-                        t.innerHTML = \`<img src="\${p.tabImage || 'https://via.placeholder.com/300x200/eee/999?text=Prj'}" alt="\${p.tabName || 'Project'}" loading="lazy"><div class="project-tab-info"><span>\${p.tabName || 'Project'}</span></div>\`;
-                        // CHANGE 4 (Viewer): Add completion tick if needed
-                        if (p.isCompleted) {
-                           const tick = document.createElement('span');
-                           tick.className = 'completion-tick';
-                           tick.innerHTML = '&#10004;';
-                           tick.setAttribute('aria-label', 'Completed');
-                           t.appendChild(tick);
-                        }
+                        t.innerHTML = \`<img src="\${p.tabImage||'https://via.placeholder.com/300x200/eee/999?text=Prj'}" alt="\${p.tabName||'Project'}" loading="lazy"><div class="project-tab-info"><span>\${p.tabName||'Project'}</span></div>\`;
+                        if(p.isCompleted){ const tick=document.createElement('span'); tick.className='completion-tick'; tick.innerHTML='&#10004;'; tick.setAttribute('aria-label','Completed'); t.appendChild(tick); }
                         grid.appendChild(t);
                      });
                 }
-                 function renderProjectPageForView(project) { // Simplified for viewer
-                      if (!project) return;
-                      const pView = document.getElementById('project-view'); if (!pView) return;
+                function renderProjectPageForView(project) { // Renders all sections based on project data
+                      if (!project) return; const pView = document.getElementById('project-view'); if (!pView) return;
                       const header = pView.querySelector('#project-header');
-                      if(header){ header.querySelector('#projectImage').src = project.projectHeaderImage || project.tabImage || ''; header.querySelector('#projectImage').alt = project.projectTitle + " Header"; header.querySelector('#projectTitle').textContent = project.projectTitle; header.querySelector('#projectSubtitle').textContent = project.projectSubtitle; }
-                      const contentContainer = pView.querySelector('#projectTabContentContainer'); if (!contentContainer) return;
-                      // Render each section using specific helpers (ensure these helpers are included below)
-                      const ov = contentContainer.querySelector('#overview'); if(ov){ ov.querySelector('#overviewText').textContent = project.overviewText || ''; renderLearnItemsForProjectView(project.learnData || [], ov.querySelector('#learnContainer')); }
-                      const vid = contentContainer.querySelector('#video'); if(vid){ vid.querySelector('#videoIntroText').textContent = project.videoIntroText || ''; vid.querySelector('#videoTitle').textContent = project.videoTitle || ''; vid.querySelector('#mainVideo').src = project.videoUrl || ''; const ul = vid.querySelector('#videoKeyPoints'); ul.innerHTML = ''; (project.videoKeyPoints || []).forEach(pt => { if(pt && pt.trim()) ul.innerHTML += \`<li>\${pt}</li>\`; }); if(!ul.innerHTML) ul.innerHTML = '<li>No key points.</li>'; }
-                      const sli = contentContainer.querySelector('#slides'); if(sli) renderSlideshowForProjectView(project.slidesData || [], sli.querySelector('#slideshowContainer'));
-                      const chal = contentContainer.querySelector('#challenges'); if(chal) renderChallengesForProjectView(project.challengesData || [], chal.querySelector('#challengesContainer'));
-                      const quiz = contentContainer.querySelector('#quiz'); if(quiz) renderQuizForProjectView(project.quizData || [], quiz.querySelector('#quizContainer'), quiz.querySelector('#submitQuizBtn'));
-                      // Activate first tab by default
-                      const tabsBar = pView.querySelector('#projectTabs'); const firstTab = tabsBar?.querySelector('.tab'); if (firstTab) openProjectTab('overview', firstTab); else updateProjectProgressBar('');
-                 }
-                 // Minimal Rendering helpers for Viewer (copied/simplified from main script)
-                 function renderLearnItemsForProjectView(data, container){ if(!container)return; container.innerHTML=''; const valid=data.filter(i=>(i.title||'').trim()); if(valid.length===0){container.innerHTML='<p>No details provided.</p>';return;} valid.forEach((item, idx)=>{ const el = document.createElement('div'); el.className='step'; el.innerHTML=\`<div class="step-number">\${idx+1}</div><div class="step-content"><strong>\${item.title}</strong>\${ (item.description||'').trim() ? \`<p class="description">\${item.description}</p>\` : '' }<div class="step-media" style="display:none;"></div></div>\`; const media = el.querySelector('.step-media'); if(item.mediaType !== 'none' && item.mediaUrl){ const url=item.mediaUrl.trim(); if(url){ media.style.display='block'; if(item.mediaType==='image') media.innerHTML=\`<img src="\${url}" loading="lazy" alt="\${item.title||'Media'}">\`; else if(item.mediaType==='video') media.innerHTML=\`<iframe src="\${url}" frameborder="0" loading="lazy" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation" title="\${item.title||'Media'}"></iframe>\`; }} container.appendChild(el); }); }
-                 function renderChallengesForProjectView(data, container){ if(!container)return; container.innerHTML=''; const valid=data.filter(i=>(i.title||'').trim()); if(valid.length===0){container.innerHTML='<p>No challenges defined.</p>';return;} valid.forEach(item=>{ const el = document.createElement('div'); el.className='step'; el.innerHTML=\`<div class="step-number" style="background-color: var(--accent); color: var(--dark);">★</div><div class="step-content"><strong>\${item.title}</strong>\${ (item.description||'').trim() ? \`<p class="description">\${item.description}</p>\` : ''}<div class="step-media" style="display:none;"></div></div>\`; const media = el.querySelector('.step-media'); if(item.mediaType !== 'none' && item.mediaUrl){ const url=item.mediaUrl.trim(); if(url){ media.style.display='block'; if(item.mediaType==='image') media.innerHTML=\`<img src="\${url}" loading="lazy" alt="\${item.title||'Media'}">\`; else if(item.mediaType==='video') media.innerHTML=\`<iframe src="\${url}" frameborder="0" loading="lazy" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation" title="\${item.title||'Media'}"></iframe>\`; }} container.appendChild(el); }); }
-                 function renderSlideshowForProjectView(data, container){ const nav=container?.parentElement?.querySelector('.slide-nav'); if(!container||!nav)return; container.innerHTML=''; const valid=data.filter(s=>s.url&&s.url.trim()); if(valid.length===0){container.innerHTML='<p>No slides available.</p>';nav.style.display='none';return;} nav.style.display='flex'; valid.forEach((slide, idx)=>{ const el=document.createElement('div'); el.className='slide'; const url=slide.url.trim(); const type=slide.type==='image'?'image':'iframe'; const desc=slide.description||''; el.innerHTML=\`<div class="slide-content-wrapper"></div>\${desc?\`<p>\${desc}</p>\`:''}\`; const w=el.querySelector('.slide-content-wrapper'); if(type==='iframe') w.innerHTML=\`<iframe src="\${url}" frameborder="0" loading="lazy" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation" title="\${desc||'Slide '+(idx+1)}"></iframe>\`; else if(type==='image') w.innerHTML=\`<img src="\${url}" loading="lazy" alt="\${desc||'Slide '+(idx+1)}">\`; container.appendChild(el); }); currentSlideIndex=0; showSlide(0); }
-                 function renderQuizForProjectView(data, container, submitBtn){ if(!container||!submitBtn)return; container.innerHTML=''; container.parentElement.querySelector('.final-quiz-result')?.remove(); submitBtn.disabled=false; submitBtn.style.display='none'; const valid=(data||[]).filter(q=>(q.questionText||'').trim()&&(q.correctAnswer||'').trim()); if(valid.length===0){container.innerHTML='<p>No quiz available.</p>';return;} submitBtn.style.display='block'; valid.forEach((q,index)=>{ const div=document.createElement('div'); div.className='quiz-question'; div.innerHTML=\`<p class="question-text">\${index+1}. \${q.questionText}</p><div class="quiz-options"></div><div class="quiz-feedback correct" style="display:none;">Correct!</div><div class="quiz-feedback incorrect" style="display:none;"></div>\`; const optsDiv=div.querySelector('.quiz-options'); let opts=[q.correctAnswer.trim()]; (q.incorrectAnswers||[]).forEach(ans=>{if(ans&&ans.trim())opts.push(ans.trim());}); shuffleArray(opts); opts.forEach(optTxt=>{ const correct=(optTxt===q.correctAnswer.trim()); const optEl=document.createElement('div'); optEl.className='quiz-option'; optEl.textContent=optTxt; optEl.setAttribute('role','button'); optEl.setAttribute('tabindex','0'); optEl.onclick=()=>selectQuizOption(optEl); optEl.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectQuizOption(optEl);}}; optEl.setAttribute('data-is-correct',correct.toString()); optsDiv.appendChild(optEl); }); container.appendChild(div); }); }
+                      if(header){ header.querySelector('#projectImage').src=project.projectHeaderImage||project.tabImage||''; header.querySelector('#projectImage').alt=project.projectTitle+" Header"; header.querySelector('#projectTitle').textContent=project.projectTitle; header.querySelector('#projectSubtitle').textContent=project.projectSubtitle; }
+                      const cont = pView.querySelector('#projectTabContentContainer'); if(!cont) return;
+                      const ov = cont.querySelector('#overview'); if(ov){ ov.querySelector('#overviewText').textContent = project.overviewText||''; renderLearnItemsForProjectView(project.learnData||[],ov.querySelector('#learnContainer')); }
+                      const vid = cont.querySelector('#video'); if(vid){ vid.querySelector('#videoIntroText').textContent=project.videoIntroText||''; vid.querySelector('#videoTitle').textContent=project.videoTitle||''; vid.querySelector('#mainVideo').src=project.videoUrl||''; const ul=vid.querySelector('#videoKeyPoints'); ul.innerHTML=''; (project.videoKeyPoints||[]).forEach(pt=>{if(pt&&pt.trim())ul.innerHTML+=\`<li>\${pt}</li>\`;}); if(!ul.innerHTML)ul.innerHTML='<li>No points.</li>'; }
+                      const sli = cont.querySelector('#slides'); if(sli) renderSlideshowForProjectView(project.slidesData||[], sli.querySelector('#slideshowContainer'));
+                      const chal = cont.querySelector('#challenges'); if(chal) renderChallengesForProjectView(project.challengesData||[], chal.querySelector('#challengesContainer'));
+                      const quiz = cont.querySelector('#quiz'); if(quiz) renderQuizForProjectView(project.quizData||[], quiz.querySelector('#quizContainer'), quiz.querySelector('#submitQuizBtn'));
+                      const tabsBar = pView.querySelector('#projectTabs'); const firstTab = tabsBar?.querySelector('.tab'); if(firstTab){ const clickAttr=firstTab.getAttribute('onclick')||''; const match=clickAttr.match(/openProjectTab\\('([^']+)'/); openProjectTab(match?match[1]:'overview', firstTab); } else { updateProjectProgressBar(''); }
+                }
+                 function renderLearnItemsForProjectView(data, c){ if(!c)return; c.innerHTML=''; const v=(data||[]).filter(i=>(i.title||'').trim()); if(v.length===0){c.innerHTML='<p>No details.</p>';return;} v.forEach((item, idx)=>{ const el=document.createElement('div'); el.className='step'; el.innerHTML=\`<div class="step-number">\${idx+1}</div><div class="step-content"><strong>\${item.title}</strong>\${(item.description||'').trim()?\`<p class="description">\${item.description}</p>\`:''}<div class="step-media" style="display:none;"></div></div>\`; const m=el.querySelector('.step-media'); if(item.mediaType&&item.mediaType!=='none'&&item.mediaUrl){const u=item.mediaUrl.trim();if(u){m.style.display='block';if(item.mediaType==='image')m.innerHTML=\`<img src="\${u}" loading="lazy" alt="\${item.title||'Media'}">\`; else if(item.mediaType==='video')m.innerHTML=\`<iframe src="\${u}" frameborder="0" loading="lazy" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation" title="\${item.title||'Media'}"></iframe>\`;}} c.appendChild(el); }); }
+                 function renderChallengesForProjectView(data, c){ if(!c)return; c.innerHTML=''; const v=(data||[]).filter(i=>(i.title||'').trim()); if(v.length===0){c.innerHTML='<p>No challenges.</p>';return;} v.forEach(item=>{ const el=document.createElement('div'); el.className='step'; el.innerHTML=\`<div class="step-number" style="background-color: var(--accent); color: var(--dark);">★</div><div class="step-content"><strong>\${item.title}</strong>\${(item.description||'').trim()?\`<p class="description">\${item.description}</p>\`:''}<div class="step-media" style="display:none;"></div></div>\`; const m=el.querySelector('.step-media'); if(item.mediaType&&item.mediaType!=='none'&&item.mediaUrl){const u=item.mediaUrl.trim();if(u){m.style.display='block';if(item.mediaType==='image')m.innerHTML=\`<img src="\${u}" loading="lazy" alt="\${item.title||'Media'}">\`; else if(item.mediaType==='video')m.innerHTML=\`<iframe src="\${u}" frameborder="0" loading="lazy" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation" title="\${item.title||'Media'}"></iframe>\`;}} c.appendChild(el); }); }
+                 function renderSlideshowForProjectView(data, c){ const n=c?.closest('.tab-content#slides')?.querySelector('.slide-nav'); if(!c||!n)return; c.innerHTML=''; const v=(data||[]).filter(s=>s.url&&s.url.trim()); if(v.length===0){c.innerHTML='<p>No slides.</p>';n.style.display='none';return;} n.style.display='flex'; v.forEach((s, idx)=>{ const el=document.createElement('div'); el.className='slide'; const u=s.url.trim(); const t=s.type==='image'?'image':'iframe'; const d=s.description||''; el.innerHTML=\`<div class="slide-content-wrapper"></div>\${d?\`<p>\${d}</p>\`:''}\`; const w=el.querySelector('.slide-content-wrapper'); if(t==='iframe')w.innerHTML=\`<iframe src="\${u}" frameborder="0" loading="lazy" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation" title="\${d||'Slide '+(idx+1)}"></iframe>\`; else if(t==='image')w.innerHTML=\`<img src="\${u}" loading="lazy" alt="\${d||'Slide '+(idx+1)}">\`; c.appendChild(el); }); currentSlideIndex=0; showSlide(0); }
+                 function renderQuizForProjectView(data, c, btn){ if(!c||!btn)return; c.innerHTML=''; c.closest('.tab-content#quiz')?.querySelector('.final-quiz-result')?.remove(); btn.disabled=false; btn.style.display='none'; const v=(data||[]).filter(q=>(q.questionText||'').trim()&&(q.correctAnswer||'').trim()); if(v.length===0){c.innerHTML='<p>No quiz.</p>';return;} btn.style.display='block'; v.forEach((q,idx)=>{ const div=document.createElement('div'); div.className='quiz-question'; div.innerHTML=\`<p class="question-text">\${idx+1}. \${q.questionText}</p><div class="quiz-options"></div><div class="quiz-feedback correct" style="display:none;">Correct!</div><div class="quiz-feedback incorrect" style="display:none;"></div>\`; const optsDiv=div.querySelector('.quiz-options'); let opts=[q.correctAnswer.trim()]; (q.incorrectAnswers||[]).forEach(ans=>{if(ans&&ans.trim())opts.push(ans.trim());}); shuffleArray(opts); opts.forEach(optTxt=>{ const correct=(optTxt===q.correctAnswer.trim()); const optEl=document.createElement('div'); optEl.className='quiz-option'; optEl.textContent=optTxt; optEl.setAttribute('role','button'); optEl.setAttribute('tabindex','0'); optEl.onclick=()=>selectQuizOption(optEl); optEl.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectQuizOption(optEl);}}; optEl.setAttribute('data-is-correct',correct.toString()); optsDiv.appendChild(optEl); }); c.appendChild(div); }); }
 
                 // --- Interaction Functions (Viewer Version) ---
-                function openProjectTab(tabName, element) { const c = document.getElementById('projectTabContentContainer'); if (!c) return; c.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active')); const b = document.getElementById('projectTabs'); if (b) b.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active')); const t = c.querySelector('#' + tabName); if (t) t.classList.add('active'); element?.classList.add('active'); updateProjectProgressBar(tabName); }
-                function updateProjectProgressBar(tabName) { const p = document.getElementById('progressBar'); if (!p) return; let r = 0; const o = ['overview', 'video', 'slides', 'challenges', 'quiz']; const i = o.indexOf(tabName); if (i >= 0) r = ((i + 1) / o.length) * 100; p.style.width = r + '%'; }
-                function showSlide(n) { const s = document.querySelectorAll('#project-view #slideshowContainer .slide'); const c = s.length; if (c === 0) return; s.forEach(sl => sl.classList.remove('active')); currentSlideIndex = (n % c + c) % c; if(s[currentSlideIndex]) s[currentSlideIndex].classList.add('active'); }
-                function nextSlide() { showSlide(currentSlideIndex + 1); } function prevSlide() { showSlide(currentSlideIndex - 1); }
-                function selectQuizOption(optionElement) { const qDiv = optionElement.closest('.quiz-question'); if (!qDiv || qDiv.classList.contains('answered')) return; qDiv.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected')); optionElement.classList.add('selected'); }
-
-                // CHANGE 4 (Viewer): Added completion logic to quiz submission
-                function markProjectAsCompletedInView(projectId) { // Operate on courseDataForView
-                    const project = courseDataForView.projects.find(p => p.id === projectId);
-                    if (project && !project.isCompleted) {
-                        project.isCompleted = true;
-                        console.log("Project " + projectId + " marked complete in viewer data.");
-                        // The tick mark will appear when navigating back via showCourseView() -> renderCoursePageForView()
-                    }
-                 }
+                function openProjectTab(tabName, element) { const c=document.getElementById('projectTabContentContainer');if(!c)return; c.querySelectorAll('.tab-content').forEach(tc=>tc.classList.remove('active'));const b=document.getElementById('projectTabs');if(b)b.querySelectorAll('.tab').forEach(btn=>btn.classList.remove('active'));const t=c.querySelector('#'+tabName);if(t)t.classList.add('active');element?.classList.add('active');updateProjectProgressBar(tabName); }
+                function updateProjectProgressBar(tabName) { const p=document.getElementById('progressBar');if(!p)return;let r=0;const o=['overview','video','slides','challenges','quiz'];const i=o.indexOf(tabName);if(i>=0)r=((i+1)/o.length)*100;p.style.width=r+'%'; }
+                function showSlide(n) { const s=document.querySelectorAll('#project-view #slideshowContainer .slide');const c=s.length;if(c===0)return;s.forEach(sl=>sl.classList.remove('active'));currentSlideIndex=(n%c+c)%c;if(s[currentSlideIndex])s[currentSlideIndex].classList.add('active'); }
+                function nextSlide(){ showSlide(currentSlideIndex+1); } function prevSlide(){ showSlide(currentSlideIndex-1); }
+                function selectQuizOption(optionElement) { const qDiv=optionElement.closest('.quiz-question');if(!qDiv||qDiv.classList.contains('answered'))return; qDiv.querySelectorAll('.quiz-option').forEach(opt=>opt.classList.remove('selected')); optionElement.classList.add('selected'); }
+                function markProjectAsCompletedInView(projectId) { const proj=courseDataForView.projects.find(p=>p.id===projectId); if(proj&&!proj.isCompleted) proj.isCompleted = true; }
                 function submitQuiz() {
-                     const qs = document.querySelectorAll('#project-view #quizContainer .quiz-question'); let ans = 0, score = 0; const total = qs.length; if (total === 0) return; let firstUnanswered = null;
-                     qs.forEach(q => { const sel = q.querySelector('.quiz-option.selected'); q.classList.remove('answered'); q.querySelectorAll('.quiz-feedback').forEach(f=>f.style.display='none'); q.querySelectorAll('.quiz-option').forEach(o=>{ o.classList.remove('correct','incorrect'); o.style.opacity='1'; o.style.cursor='pointer'; o.onclick=()=>selectQuizOption(o); o.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectQuizOption(o);}}; }); if(sel) ans++; else if(!firstUnanswered) firstUnanswered = q; });
-                     if (ans < total) { alert('Please answer all '+total+' questions!'); if(firstUnanswered){ firstUnanswered.scrollIntoView({behavior:'smooth',block:'center'}); firstUnanswered.style.outline='2px solid red'; setTimeout(()=>firstUnanswered.style.outline='',2000); } return; }
-                     qs.forEach(q => { const sel = q.querySelector('.quiz-option.selected'); const fbC = q.querySelector('.quiz-feedback.correct'); const fbI = q.querySelector('.quiz-feedback.incorrect'); const allO = q.querySelectorAll('.quiz-option'); q.classList.add('answered'); const isC = sel.getAttribute('data-is-correct') === 'true'; allO.forEach(o => { const oC = o.getAttribute('data-is-correct') === 'true'; if (oC) o.classList.add('correct'); if (o === sel){ if (!isC) o.classList.add('incorrect'); } else if (!oC) { o.style.opacity = "0.6"; } o.style.cursor = "default"; o.onclick = null; o.onkeydown = null; }); if (isC) { score++; if(fbC) fbC.style.display='block'; } else { if(fbI){ const cO = q.querySelector('.quiz-option.correct'); fbI.textContent = \`Not quite. Correct answer: "\${cO ? cO.textContent : 'N/A'}"\`; fbI.style.display='block'; } } });
-                     const btn = document.querySelector('#project-view #submitQuizBtn'); if(btn) btn.disabled = true;
-                     const resCont = document.querySelector('#project-view #quiz'); let resDiv = resCont?.querySelector('.final-quiz-result'); if (!resDiv && resCont) { resDiv = document.createElement('div'); resCont.appendChild(resDiv); }
-                     if (resDiv) {
-                         const perc = total > 0 ? score / total : 0;
-                         resDiv.textContent = \`Quiz Complete! Score: \${score}/\${total}\`; resDiv.className = 'final-quiz-result ' + (perc >= 0.7 ? 'success' : 'fail'); resDiv.style.display = 'block'; resDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                         // Mark completed in VIEW data if passed
-                         if (perc >= 0.7 && currentProjectIdForView) {
-                            markProjectAsCompletedInView(currentProjectIdForView);
-                         }
-                     }
+                     const qs=document.querySelectorAll('#project-view #quizContainer .quiz-question');let ans=0,score=0;const total=qs.length;if(total===0)return;let firstUnanswered=null;
+                     qs.forEach(q=>{ const sel=q.querySelector('.quiz-option.selected'); q.classList.remove('answered'); q.querySelectorAll('.quiz-feedback').forEach(f=>f.style.display='none'); q.querySelectorAll('.quiz-option').forEach(o=>{o.classList.remove('correct','incorrect');o.style.opacity='1';o.style.cursor='pointer';o.onclick=()=>selectQuizOption(o);o.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectQuizOption(o);}};}); if(sel)ans++;else if(!firstUnanswered)firstUnanswered=q; });
+                     if(ans<total){ alert('Please answer all '+total+' questions!'); if(firstUnanswered){firstUnanswered.scrollIntoView({behavior:'smooth',block:'center'});firstUnanswered.style.outline='2px solid red';setTimeout(()=>firstUnanswered.style.outline='',2000);} return;}
+                     qs.forEach(q=>{ const sel=q.querySelector('.quiz-option.selected'); const fbC=q.querySelector('.quiz-feedback.correct'); const fbI=q.querySelector('.quiz-feedback.incorrect'); const allO=q.querySelectorAll('.quiz-option'); q.classList.add('answered'); const isC=sel.getAttribute('data-is-correct')==='true'; allO.forEach(o=>{ const oC=o.getAttribute('data-is-correct')==='true'; if(oC)o.classList.add('correct'); if(o===sel){ if(!isC)o.classList.add('incorrect'); } else if(!oC){ o.style.opacity="0.6"; } o.style.cursor="default"; o.onclick=null; o.onkeydown=null; }); if(isC){score++;if(fbC)fbC.style.display='block';} else {if(fbI){ const cO=q.querySelector('.quiz-option.correct'); fbI.textContent=\`Not quite. Correct: "\${cO?cO.textContent:'N/A'}"\`; fbI.style.display='block';}} });
+                     const btn=document.querySelector('#project-view #submitQuizBtn');if(btn)btn.disabled=true;
+                     const resCont=document.querySelector('#project-view #quiz'); let resDiv=resCont?.querySelector('.final-quiz-result'); if(!resDiv&&resCont){resDiv=document.createElement('div');resCont.appendChild(resDiv);}
+                     if(resDiv){ const perc=total>0?score/total:0; resDiv.textContent=\`Quiz Complete! Score: \${score}/\${total}\`; resDiv.className='final-quiz-result '+(perc>=0.7?'success':'fail'); resDiv.style.display='block'; resDiv.scrollIntoView({behavior:'smooth',block:'center'}); if(perc>=0.7&&currentProjectIdForView) markProjectAsCompletedInView(currentProjectIdForView); }
                  }
 
                 // --- Initial Load for Exported Viewer ---
                 document.addEventListener('DOMContentLoaded', function() {
-                    applyCourseThemeForView(); // Apply theme from embedded data
-                    renderCoursePageForView(); // Render the course grid (includes completion ticks)
-                    showCourseView(); // Ensure course view is visible by default
-
-                    // Handle potential deep links (if URL includes #project-...)
+                    applyCourseThemeForView();
+                    renderCoursePageForView();
+                    // Handle deep links before showing default view
+                    let displayedProject = false;
                     if (window.location.hash && window.location.hash.startsWith('#project-')) {
-                         const projectIdFromHash = window.location.hash.substring(9); // Get ID after #project-
-                         // Verify project exists before showing it
-                         if (courseDataForView.projects.some(p => p.id === projectIdFromHash)) {
-                              showProjectView(projectIdFromHash);
-                         } else {
-                             console.warn("Project ID in URL hash not found:", projectIdFromHash);
+                         const pid = window.location.hash.substring(9);
+                         if (courseDataForView.projects.some(p => p.id === pid)) {
+                              showProjectView(pid);
+                              displayedProject = true;
                          }
                     }
+                    if (!displayedProject) showCourseView(); // Show course view if no valid project hash
                     console.log("Exported Course Viewer Initialized.");
                 });
-            `; // End viewerScript.textContent
-
+            `;
             exportDocElement.querySelector('body').appendChild(viewerScript);
 
             // Generate HTML string and trigger download
@@ -2209,27 +2040,24 @@ Okay, here is the modified code incorporating all your requested changes. I'll p
             const downloadUrl = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = downloadUrl;
-            // Generate a cleaner filename
             const filename = (courseData.title || "course_export").replace(/[^\w\s.-]/gi, '').replace(/\s+/g, '_').toLowerCase() + '.html';
             a.download = filename;
-            document.body.appendChild(a);
-            a.click(); // Trigger download
-            document.body.removeChild(a); // Clean up link
-            URL.revokeObjectURL(downloadUrl); // Release object URL
-            console.log("Course export generation complete.");
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            URL.revokeObjectURL(downloadUrl);
+            console.log("Course export completed.");
 
         } catch (error) {
             console.error("Error during COURSE export:", error);
-            alert("An error occurred during course export. Check the browser console for details.");
+            alert("An error occurred during course export. Check console.");
         }
     }
 
     // --- INITIAL PAGE LOAD (Editor Mode) ---
     document.addEventListener('DOMContentLoaded', function() {
         console.log("Course Editor/Viewer Initializing...");
-        applyCourseTheme(); // Apply initial theme based on data/defaults
-        renderCoursePage(); // Render the initial course page view (which includes projects)
-        showCourseView(); // Ensure course view is visible first
+        applyCourseTheme(); // Apply initial theme
+        renderCoursePage(); // Render the course grid
+        showCourseView();   // Show course view by default
         console.log("Initialization complete.");
     });
 
