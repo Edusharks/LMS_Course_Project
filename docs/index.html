@@ -144,18 +144,27 @@
             display: none;
             text-align: center;
         }
-        
-        /* Adjusted aspect ratio for images/iframes */
+
+        .slide-content-wrapper {
+          position: relative;
+          padding-bottom: 56.25%; /* 16:9 aspect ratio */
+          height: 0;
+          overflow: hidden;
+          margin: 15px 0;
+         }
+
         .slide iframe, .slide img {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: auto; /* Adjust height automatically */
-            max-height: 400px; /* Max height to control */
+            height: 100%;
             object-fit: contain;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             background-color: #f5f5f5;
-            
         }
+       
         
         .slide p {
             margin: 10px 0 0;
@@ -568,10 +577,7 @@
             .tab-content {
                 padding: 15px;
             }
-            
-            .slide iframe, .slide img {
-                height: 250px;
-            }
+          
         }
     </style>
 </head>
@@ -1472,19 +1478,22 @@ We use 'show icon' and 'pause' blocks to create animation</textarea>
                 const slideDiv = document.createElement('div');
                 slideDiv.className = 'slide';
                 if (index === 0) slideDiv.classList.add('active');
-                
+              
+                const slideContentWrapper = document.createElement('div');
+                slideContentWrapper.className = 'slide-content-wrapper';
+
                 if (slide.type === 'iframe') {
-                    slideDiv.innerHTML = `
+                  slideContentWrapper.innerHTML =  `
                         <iframe src="${slide.url}" frameborder="0" allowfullscreen></iframe>
-                        <p>${slide.description}</p>
                     `;
                 } else if (slide.type === 'image') {
-                    slideDiv.innerHTML = `
+                     slideContentWrapper.innerHTML = `
                         <img src="${slide.url}" alt="${slide.description}">
-                        <p>${slide.description}</p>
                     `;
                 }
                 
+                slideDiv.appendChild(slideContentWrapper);
+                slideDiv.innerHTML +=  `<p>${slide.description}</p>`
                 container.appendChild(slideDiv);
             });
             
@@ -1676,15 +1685,6 @@ We use 'show icon' and 'pause' blocks to create animation</textarea>
                 
                 // Initialize slideshow
                 document.addEventListener('DOMContentLoaded', function() {
-                     // Set up event listeners for iframe resizing
-                     window.addEventListener('resize', function() {
-                         const iframes = document.querySelectorAll('.slide iframe, .slide img');
-                         iframes.forEach(iframe => {
-                             if (iframe.offsetWidth > 0) {
-                                 iframe.style.height = (iframe.offsetWidth * 0.5625) + 'px';
-                             }
-                         });
-                    });
                 });
             `;
             exportDoc.body.appendChild(newScript);
@@ -1721,15 +1721,6 @@ We use 'show icon' and 'pause' blocks to create animation</textarea>
             updateChallenges();
              updateQuiz();
             
-            // Set up event listeners for iframe resizing
-            window.addEventListener('resize', function() {
-                const iframes = document.querySelectorAll('.slide iframe, .slide img');
-                iframes.forEach(iframe => {
-                    if (iframe.offsetWidth > 0) {
-                        iframe.style.height = (iframe.offsetWidth * 0.5625) + 'px';
-                    }
-                });
-            });
             
             // Pause video when tab switch occurs
              document.querySelectorAll('.tab').forEach(tab => {
