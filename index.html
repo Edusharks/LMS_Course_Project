@@ -1521,7 +1521,7 @@
                      <option value="presentation">Presentation Embed</option>
                  </select>
 
-                 <div id="courseMultimediaEditorFieldsContainer" class="course-multimedia-editor-fields" style="display:none;"> {/* Initially hidden */}
+                 <div id="courseMultimediaEditorFieldsContainer" class="course-multimedia-editor-fields" style="display:none;"> 
                      <label for="editCourseMultimediaUrl">Media URL:</label>
                      <input type="url" id="editCourseMultimediaUrl" placeholder="Enter Image URL or Embed URL...">
 
@@ -1569,7 +1569,7 @@
             <section id="projectTabsEditor" class="edit-section">
                  <h4>Manage Project Tabs</h4>
                   <!-- UPDATED Hint Text -->
-                 <p class="form-hint">Add, remove, or rename project tabs. Max ${MAX_PROJECTS} projects.</p>
+                 <p class="form-hint">Add, remove, or rename project tabs. Max projects.</p>
                  <div id="projectTabsList">
                      <!-- Project tab edit items will be listed here -->
                  </div>
@@ -1630,7 +1630,7 @@
                 <textarea id="editProject_OverviewText" rows="5" placeholder="Describe the project..."></textarea>
                  <hr style="margin: 25px 0;">
                   <h4>"What You'll Learn" Items</h4>
-                  <p class="form-hint">Add key learning objectives. Optionally include media. Max ${MAX_LEARN_ITEMS} items.</p>
+                  <p class="form-hint">Add key learning objectives. Optionally include media. Max items.</p>
                   <div id="learnEditContainer"> <!-- Populated by loadLearnEditFieldsForProject --> </div>
                   <button type="button" class="add-item-btn" onclick="addLearnEditField()">+ Add Learning Item</button>
             </section>
@@ -1653,7 +1653,7 @@ Point 3..."></textarea>
             <!-- === Slides Edit === -->
             <section id="slidesEdit" class="edit-section" style="display:none;">
                 <h4>Step-by-Step Slides</h4>
-                <p class="form-hint">Add slides with multimedia content (image or embed URL). Max ${MAX_SLIDES} slides.</p>
+                <p class="form-hint">Add slides with multimedia content (image or embed URL). Max slides.</p>
                 <div id="slidesEditContainer"> <!-- Populated by loadSlidesEditFieldsForProject --> </div>
                 <button type="button" class="add-item-btn" onclick="addSlideEditField()">+ Add Slide</button>
             </section>
@@ -1661,7 +1661,7 @@ Point 3..."></textarea>
             <!-- === Challenges Edit === -->
             <section id="challengesEdit" class="edit-section" style="display:none;">
                 <h4>Project Challenges</h4>
-                <p class="form-hint">Add challenges for users, optionally with an image or video. Max ${MAX_CHALLENGES} challenges.</p>
+                <p class="form-hint">Add challenges for users, optionally with an image or video. Max challenges.</p>
                 <div id="challengesEditContainer"> <!-- Populated by loadChallengesEditFieldsForProject --> </div>
                 <button type="button" class="add-item-btn" onclick="addChallengeEditField()">+ Add Challenge</button>
             </section>
@@ -1669,7 +1669,7 @@ Point 3..."></textarea>
             <!-- === Quiz Edit === -->
             <section id="quizEdit" class="edit-section" style="display:none;">
                 <h4>Quiz Questions</h4>
-                <p class="form-hint">Add questions. Mark one answer as correct. Provide up to ${MAX_INCORRECT_ANSWERS} incorrect options. Max ${MAX_QUIZ_QUESTIONS} questions.</p>
+                <p class="form-hint">Add questions. Mark one answer as correct. Provide 3 incorrect options. </p>
                  <div id="quizEditContainer"> <!-- Populated by loadQuizEditFieldsForProject --> </div>
                  <button type="button" class="add-item-btn" onclick="addQuizEditField()">+ Add Question</button>
             </section>
