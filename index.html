@@ -1772,24 +1772,27 @@ Point 3..."></textarea>
         projects: [
             // Project 1: Catch and Win Game (Data merged from project page)
             {
-                id: 'proj_heart',
+                id: 'proj_catch and win',
                 tabName: "8.Catch and Win",
-                tabImage: "https://makecode.microbit.org/v0/beta-sim.html?nohw=1#pub:_7cvWKT73g7Pv", // MakeCode Share Image
+                tabImage: "https://static.wixstatic.com/media/ecb02e_da4d01ce625b4cc0a0f79b7e553f50f9~mv2.gif", // MakeCode Share Image
                 projectTitle: "Catch and Win Game",
                 projectSubtitle: "Make your Own game with Microbit",
-                projectHeaderImage: "https://makecode.microbit.org/v0/beta-sim.html?nohw=1#pub:_7cvWKT73g7Pv",
-                overviewText: "Welcome to your first Micro:bit project! You'll learn the basics of block coding by creating a simple but effective animation on the Micro:bit's LED display – a beating heart. This is a fantastic way to understand loops and timing in programming.",
-                videoIntroText: "Watch this short video guide to see exactly how to build the code blocks for the beating heart animation in the MakeCode editor:",
-                videoTitle: "Coding the Beating Heart",
-                videoUrl: "https://www.youtube.com/embed/2yzT7_QGLLc", // Example Video
+                projectHeaderImage: "https://static.wixstatic.com/media/ecb02e_0d14c8f0fcc740b49dd9dee5dddf4802~mv2.gif",
+                overviewText: " Turn your Micro:bit into a fun arcade-style game! Control a paddle at the bottom of the screen using the A and B buttons to catch falling objects. Every successful catch earns you points, but miss too many, and it’s game over !",
+                videoIntroText: 'none',
+                videoTitle: "Catcha and Win Game Play",
+                videoUrl: "https://video.wixstatic.com/video/ecb02e_6cd237055ba94d3aa4c314361c4a6619/720p/mp4/file.mp4", // Example Video
                 videoKeyPoints: [
-                    "The LED matrix is a 5x5 grid of lights.",
-                    "Code in the 'on start' block runs only once.",
-                    "Code in the 'forever' block repeats continuously.",
-                    "'show leds' block lets you draw custom patterns.",
-                    "'show icon' block provides pre-made images.",
-                    "'pause (ms)' block creates delays for animation timing (ms = milliseconds)."
-                ],
+                    "The player sprite is controlled with Button A (left) and Button B (right).",
+                    "Falling objects spawn randomly at the top (y=0) of the 5x5 LED grid.",
+                    "Collision happens when object's (x,y) matches player's (x,4) position.",
+                    "Use 'plot (x,y)' to display and 'unplot (x,y)' to clear sprites.",
+                    "The 'forever' block handles continuous game movement and logic.",
+                    "'pause (ms)' controls game speed (lower = faster difficulty).",
+                    "Variables track score, player_x position, and missed objects count.",
+                    "Game ends when missed objects reach a set limit (e.g., 3 misses).",
+                    "'show number' displays the final score when game ends."
+                 ],
                 learnData: [
                     { title: "Micro:bit LEDs", description: "Understand the 5x5 LED grid and how each LED can be turned on or off.", mediaType: 'image', mediaUrl: 'https://os.mbed.com/docs/mbed-os/v6.16/apis/assets/images/Glossary_MB_LEDMatrix.png' },
                     { title: "'Forever' Loop", description: "Learn how the 'forever' block continuously runs the code inside it, essential for animations.", mediaType: 'none', mediaUrl: '' },
