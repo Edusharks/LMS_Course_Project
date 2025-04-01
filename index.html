@@ -1387,7 +1387,7 @@
         <header class="page-header" id="course-header">
              <button class="edit-btn" onclick="openCourseEditModal()" aria-label="Edit Course Details" title="Edit Course">✏️</button>
              <button class="export-btn" onclick="exportCourseHTML()" aria-label="Export Course HTML" title="Export Course">⬇️</button>
-             <img src="https://images.unsplash.com/photo-1619410283995-43d9134e7656?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZ3JhbW1pbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Course Image" class="header-image" id="courseImage">
+             <img src="https://static.wixstatic.com/media/ecb02e_d86006f33f6c4a448e2c1ec1517c2690~mv2.png" alt="Course Image" class="header-image" id="courseImage">
              <div class="header-title-container">
                  <h1 class="header-title" id="courseTitle">Course Title</h1>
                  <!-- Course subtitle/short desc could go here if needed -->
@@ -1748,14 +1748,14 @@ Point 3..."></textarea>
 <script>
     // --- Global Data Storage ---
     let courseData = {
-        title: "Micro:bit Adventures",
+        title: "Micro:bit Level 1",
         description: "Explore the exciting world of physical computing with the BBC micro:bit! This course contains several projects designed to introduce you to coding concepts and hardware interaction in a fun, hands-on way.",
         imageUrl: "https://images.unsplash.com/photo-1619410283995-43d9134e7656?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZ3JhbW1pbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
         // NEW: Course Multimedia Data
         courseMultimedia: {
              type: 'image', // 'none', 'image', 'video', 'presentation'
-             url: 'https://microbit.org/images/microbit-new-hero.jpg', // Example Image URL
-             title: 'BBC micro:bit device', // Optional title/alt text
+             url: 'https://www.youtube.com/embed/u2u7UJSRuko?si=xQP-9bTiqcBInPeb', // Example Image URL
+             title: 'Introduction to Microbit', // Optional title/alt text
              minimized: false // Initial state
          },
         // Course-level theme colors
@@ -1766,13 +1766,13 @@ Point 3..."></textarea>
             // No course-level font/size needed here, defaults in :root CSS
         },
         projects: [
-            // Project 1: Beating Heart (Data merged from project page)
+            // Project 1: Catch and Win Game (Data merged from project page)
             {
                 id: 'proj_heart',
-                tabName: "Beating Heart",
+                tabName: "8.Catch and Win",
                 tabImage: "https://makecode.microbit.org/v0/beta-sim.html?nohw=1#pub:_7cvWKT73g7Pv", // MakeCode Share Image
-                projectTitle: "Beating Heart Animation",
-                projectSubtitle: "Make your Micro:bit display a classic beating heart!",
+                projectTitle: "Catch and Win Game",
+                projectSubtitle: "Make your Own game with Microbit",
                 projectHeaderImage: "https://makecode.microbit.org/v0/beta-sim.html?nohw=1#pub:_7cvWKT73g7Pv",
                 overviewText: "Welcome to your first Micro:bit project! You'll learn the basics of block coding by creating a simple but effective animation on the Micro:bit's LED display – a beating heart. This is a fantastic way to understand loops and timing in programming.",
                 videoIntroText: "Watch this short video guide to see exactly how to build the code blocks for the beating heart animation in the MakeCode editor:",
