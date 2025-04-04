@@ -1879,13 +1879,9 @@ Point 3..."></textarea>
                     { questionText: "To make an animation, you show an image, then _______, then show another image.", correctAnswer: "Pause", incorrectAnswers: ["Stop", "Repeat", "Shake"] }
                 ],
                 // Project specific style overrides (null = inherit from course)
-                style: {
-                    fontFamily: null, // Inherit Font
-                    baseSize: null, // Inherit size
-                    primaryColor: '#E63946', // Red Primary for this project only
-                    secondaryColor: '#F1FAEE', // Off-white Secondary
-                    accentColor: '#A8DADC', // Light Blue Accent
-                 },
+                 // Default style (inherits all from course)
+                 style: { fontFamily: null, baseSize: null, primaryColor: null, secondaryColor: null, accentColor: null },
+
                  isCompleted: true // Completion flag
             }
             // Add more project objects here... (up to 15)
