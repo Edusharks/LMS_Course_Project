@@ -1773,7 +1773,7 @@ Point 3..."></textarea>
             // Project 1: Catch and Win Game (Data merged from project page)
             {
                 id: 'proj_catch and win',
-                tabName: "8.Catch and Win",
+                tabName: "Catch and Win",
                 tabImage: "https://static.wixstatic.com/media/ecb02e_da4d01ce625b4cc0a0f79b7e553f50f9~mv2.gif", // MakeCode Share Image
                 projectTitle: "Catch and Win Game",
                 projectSubtitle: "Make your Own game with Microbit",
@@ -1794,24 +1794,25 @@ Point 3..."></textarea>
                     "'show number' displays the final score when game ends."
                  ],
                 learnData: [
-                    { title: "Micro:bit LEDs", description: "Understand the 5x5 LED grid and how each LED can be turned on or off.", mediaType: 'image', mediaUrl: 'https://os.mbed.com/docs/mbed-os/v6.16/apis/assets/images/Glossary_MB_LEDMatrix.png' },
-                    { title: "'Forever' Loop", description: "Learn how the 'forever' block continuously runs the code inside it, essential for animations.", mediaType: 'none', mediaUrl: '' },
-                    { title: "Displaying Images", description: "Explore using 'show leds' to draw custom shapes and 'show icon' for built-in images like hearts.", mediaType: 'image', mediaUrl: 'https://microbit.org/images/lessons/flashing-heart/animated-step-3.gif' },
-                    { title: "Timing with 'Pause'", description: "Understand how the 'pause (ms)' block controls the speed of the animation by creating delays.", mediaType: 'none', mediaUrl: '' },
-                    { title: "Sequencing", description: "Recognize that the order of code blocks determines the sequence of the animation steps.", mediaType: 'none', mediaUrl: '' }
+                    { title: "Hardware Concepts", description: "LED Matrix Control (5×5 grid addressing) , Button Input Handling (A/B for player movement) , Microcontroller Basics (real-time program execution)", mediaType: 'none', mediaUrl: '' },
+                    { title: "Software Concepts", description: "Coordinate System , Event-Driven Programming (button presses triggering actions) , Game State Management (score, player position, misses) , Random Number Generation (object spawning) , Frame-Based Animation (using pause-delayed loops) .", mediaType: 'none', mediaUrl: '' },
+                    { title: "Computational Thinking : Decomposition", description: "Breaking complex apps into modules Separated game into: • Input (buttons) • Processing (collision logic) • Output (LED feedback)", mediaType: 'image', mediaUrl: 'https://static.wixstatic.com/media/ecb02e_40038ca4cab340678eaa74b60e83d23f~mv2.jpg' },
+                    { title: "Computational Thinking : Pattern Recognition", description: "Identifying reusable code blocks Noticed repeating patterns: • plot/unplot pairs • Button event handlers • Looped fall animations", mediaType: 'image', mediaUrl: 'https://static.wixstatic.com/media/ecb02e_1654c328578f40f695256521a75afe9f~mv2.jpg' },
+                    { title: "Computational Thinking : Abstraction", description: "Creating Sprite interfaces Simplified: • Collision = matching coordinates • Game state = 3 variables (score, x, misses)", mediaType: 'image', mediaUrl: 'https://static.wixstatic.com/media/ecb02e_23928bedf5934dffb0deb675b5ab49b5~mv2.jpg' },
+                    { title: "Computational Thinking : Algorithm Design", description: "Developing logic Designed: • Object fall algorithm • Scoring system • Game-over conditions ", mediaType: 'image', mediaUrl: 'https://static.wixstatic.com/media/ecb02e_f2db902baed74502827dd272f83605b2~mv2.jpg' }
                 ],
                 slidesData: [
-                    { url: "https://view.genially.com/67985dd4b5a925bc9a375172", description: "1. Let's explore the game's building blocks—using MakeCode's interface to program player controls and falling objects while applying LED plotting concepts to animate sprites on the 5×5 grid.", type: "iframe" },
-                    { url: "https://view.genially.com/67ebbba7d41a27cc8ddc2218", description: "2. In our Catch and Win game, a sprite is a movable game character (like the player or falling objects) created by lighting up LEDs on the Micro:bit’s 5×5 grid, controlled using plot and unplot commands.", type: "iframe" },
+                    { url: "https://view.genially.com/67ecdd788c39a945978ebccd", description: "1. Let's explore the game's building blocks—using MakeCode's interface to program player controls and falling objects while applying LED plotting concepts to animate sprites on the 5×5 grid.", type: "iframe" },
+                    { url: "https://view.genially.com/67ed20fd760c39a593735c5c", description: "2. In our Catch and Win game, a sprite is a movable game character (like the player or falling objects) created by lighting up LEDs on the Micro:bit’s 5×5 grid, controlled using plot and unplot commands.", type: "iframe" },
                     { url: "https://view.genially.com/67ebba390c63eea3efd8a34f", description: "3. Try out the Snap the Dot game ", type: "iframe" },
-                    { url: "https://view.genially.com/67de49ded67908621a726b03", description: "4. Before diving into ‘Catch and Win,’ students will practice core concepts with ‘Snap the Dot’—a simple reaction game where players press Button A when a randomly appearing LED (dot) lights up.", type: "iframe" }, 
+                    { url: "https://view.genially.com/67ee14b750005b84f7668051", description: "4. Before diving into ‘Catch and Win,’ students will practice core concepts with ‘Snap the Dot’—a simple reaction game where players press Button A when a randomly appearing LED (dot) lights up.", type: "iframe" }, 
                     { url: "https://view.genially.com/67ebb9d8a3539e6346b287af", description: "5. Try out the Catch and Win game", type: "iframe" },
-                    { url: "https://view.genially.com/67de49e4ab31ac746b27c48b", description: "6. In this step-by-step tutorial, you'll build your own Catch and Win game on the Micro:bit! ", type: "iframe" },
+                    { url: "https://view.genially.com/67ee5f7a769240f636349838", description: "6. In this step-by-step tutorial, you'll build your own Catch and Win game on the Micro:bit! ", type: "iframe" },
                 ],
                 challengesData: [
                     { title: "Speed Control", description: "Experiment by changing the numbers in the 'pause (ms)' blocks. What happens if you use 1000? What about 100?", mediaType: 'none', mediaUrl: '' },
                     { title: "Different Icon", description: "Instead of 'show leds', try using the 'show icon' block with different heart sizes (Heart, SmallHeart). Does it look different?", mediaType: 'none', mediaUrl: '' },
-                    { title: "Your Own Animation", description: "Create a completely different two-frame animation. Maybe a blinking eye or a simple shape that grows and shrinks?", mediaType: 'image', mediaUrl: 'https://lancaster-university.github.io/microbit-docs/assets/images/microbit-smiley.png' },
+                    { title: "Add Tilt to move the Sprite", description: "Remove the A and B button inputs and replace it with Tilt to move the Sprite", mediaType: 'image', mediaUrl: 'https://static.wixstatic.com/media/ecb02e_38cc2517f4b0447284ea5872e48c6c96~mv2.gif' }
                 ],
                 quizData: [
                     { questionText: "Which block makes code run over and over again?", correctAnswer: "'forever'", incorrectAnswers: ["'on start'", "'pause (ms)'", "'show icon'"] },
@@ -1829,50 +1830,63 @@ Point 3..."></textarea>
                  },
                  isCompleted: false // Completion flag
             },
-            // Project 2: Smiley Buttons (Basic data for structure)
+            // Project 2: Beating Heart (Data merged from project page)
             {
-                 id: 'proj_smiley',
-                 tabName: "Smiley Buttons",
-                 tabImage: "https://makecode.microbit.org/v0/beta-sim.html?nohw=1#pub:_LL1gP83dhL7K", // MakeCode Share Image
-                 projectTitle: "Smiley Buttons Interaction",
-                 projectSubtitle: "Show different faces when buttons A and B are pressed.",
-                 projectHeaderImage: "https://makecode.microbit.org/v0/beta-sim.html?nohw=1#pub:_LL1gP83dhL7K",
-                 overviewText: "Learn how to make your Micro:bit react to input! In this project, pressing button A will show a happy face, and pressing button B will show a sad face. This introduces event handling and basic input.",
-                 videoIntroText: "This video demonstrates how to use the 'on button pressed' blocks:",
-                 videoTitle: "Handling Button Inputs",
-                 videoUrl: "https://www.youtube.com/embed/Gk_Q8Rv9AlU", // Example Video
-                 videoKeyPoints: [
-                     "Use 'on button A pressed' block to detect button A clicks.",
-                     "Use 'on button B pressed' block for button B.",
-                     "Code inside these blocks only runs when the corresponding button is pressed.",
-                     "'show icon' is useful for displaying standard faces."
-                    ],
-                 learnData: [
-                     {title:"Input Events", description:"Understand that 'on button pressed' blocks trigger code based on an external event (a button click).", mediaType:'none', mediaUrl:''},
-                     {title:"Event Handlers", description:"Learn that these specific blocks handle specific events.", mediaType:'none', mediaUrl:''},
-                     {title:"Button Identification", description:"Distinguish between button A and button B on the Micro:bit.", mediaType:'image', mediaUrl:'https://teach.microbit.org/images/buttons.png'}
-                  ],
-                 slidesData: [
-                    { url: "https://makecode.microbit.org/v0/beta-sim.html?nohw=1#pub:_LL1gP83dhL7K", description: "1. Final Code: Separate blocks for Button A and Button B presses.", type: "iframe" },
-                    { url: "https://microbit.org/images/lessons/smiley-buttons/animated-step-2.gif", description: "2. Drag out an 'on button A pressed' block.", type: "image" },
-                    { url: "https://microbit.org/images/lessons/smiley-buttons/animated-step-3.gif", description: "3. Place a 'show icon' block inside and select the Happy face.", type: "image" },
-                    { url: "https://microbit.org/images/lessons/smiley-buttons/animated-step-4.gif", description: "4. Drag out another 'on button pressed' block and change 'A' to 'B'.", type: "image" },
-                    { url: "https://microbit.org/images/lessons/smiley-buttons/animated-step-5.gif", description: "5. Place a 'show icon' block inside the 'B' block and select the Sad face.", type: "image" },
+                id: 'proj_beating heart',
+                tabName: "Beating Heart",
+                tabImage: "https://static.wixstatic.com/media/ecb02e_78f86aa17f7e45baa9fa01d284a59baf~mv2.gif", // MakeCode Share Image
+                projectTitle: "Beating Heart",
+                projectSubtitle: "Make your Micro:bit to display a Classic Beating Heart",
+                projectHeaderImage: "https://static.wixstatic.com/media/ecb02e_78f86aa17f7e45baa9fa01d284a59baf~mv2.gif",
+                overviewText: " Welcome to your first Micro:bit project! You'll learn the basics of block coding by creating a simple but effective animation on the Micro:bit's LED display – a beating heart. This is a fantastic way to understand timing and sequential programming.",
+                videoIntroText: "" ,
+                videoTitle: "The Beating Heart",
+                videoUrl: "https://video.wixstatic.com/video/ecb02e_b1d7e399c37041d08ad9cac998d53b00/1080p/mp4/file.mp4", // Example Video
+                videoKeyPoints: [
+                    "The project creates a pulsing heart animation on the micro:bit’s 5×5 LED display.",
+                    "Using Built-in icons",
+                    "The heart "beats" by switching between the two images with a short delay (e.g., 300–500 milliseconds).",
+                    "Users can define their own heart shapes using a 5×5 grid format (e.g., "01110:10001:...")",
+                    "Varying speeds → Faster delays for a rapid heartbeat, slower for a calm pulse.",
+                    "Button control → Heart beats only when a button is pressed.",
+                    "Sensors → Adjust speed using the accelerometer (e.g., shake to make it beat faster).",
+                    "Simple introduction to LED animations."
                  ],
-                 challengesData: [
-                     {title: "Surprise Face!", description: "Can you add an 'on button A+B pressed' block to show a 'Surprised' face when both buttons are pressed together?", mediaType:'none', mediaUrl:''},
-                     {title: "Clear the Screen", description: "Add a 'clear screen' block inside each button press event *before* showing the icon. What changes?", mediaType:'none', mediaUrl:''},
-                     {title: "Different Icons", description: "Choose completely different icons for button A and button B.", mediaType:'none', mediaUrl:''}
-                 ],
-                 quizData: [
-                     {questionText: "Which block runs code ONLY when Button A is clicked?", correctAnswer:"'on button A pressed'", incorrectAnswers:["'forever'", "'on start'", "'show leds'"]},
-                     {questionText: "What is the term for something that happens outside the normal code flow, like a button press?", correctAnswer:"Event", incorrectAnswers:["Loop", "Variable", "Sequence"]},
-                     {questionText: "If you want to show a pre-drawn image, which block is often easiest?", correctAnswer:"'show icon'", incorrectAnswers:["'show leds'", "'pause (ms)'", "'clear screen'"]}
-                 ],
-                 // Default style (inherits all from course)
-                 style: { fontFamily: null, baseSize: null, primaryColor: null, secondaryColor: null, accentColor: null },
-                 isCompleted: false
-             }
+                learnData: [
+                    { title: "Micro:bit Display", description: "Learn how to code and use the microbit display", mediaType: 'none', mediaUrl: '' },
+                    { title: "Software Concepts", description: "Learn basic programming concepts like setup", mediaType: 'none', mediaUrl: '' },
+                    { title: "Computational Thinking : Decomposition", description: "Breaking complex apps into modules Separated game into: • Input (buttons) • Processing (collision logic) • Output (LED feedback)", mediaType: 'image', mediaUrl: 'https://static.wixstatic.com/media/ecb02e_40038ca4cab340678eaa74b60e83d23f~mv2.jpg' },
+                    { title: "Computational Thinking : Pattern Recognition", description: "Identifying reusable code blocks Noticed repeating patterns: • plot/unplot pairs • Button event handlers • Looped fall animations", mediaType: 'image', mediaUrl: 'https://static.wixstatic.com/media/ecb02e_1654c328578f40f695256521a75afe9f~mv2.jpg' },
+                    { title: "Computational Thinking : Abstraction", description: "Creating Sprite interfaces Simplified: • Collision = matching coordinates • Game state = 3 variables (score, x, misses)", mediaType: 'image', mediaUrl: 'https://static.wixstatic.com/media/ecb02e_23928bedf5934dffb0deb675b5ab49b5~mv2.jpg' },
+                    { title: "Computational Thinking : Algorithm Design", description: "Developing logic Designed: • Object fall algorithm • Scoring system • Game-over conditions ", mediaType: 'image', mediaUrl: 'https://static.wixstatic.com/media/ecb02e_f2db902baed74502827dd272f83605b2~mv2.jpg' }
+                ],
+                slidesData: [
+                    { url: "https://view.genially.com/67ece8c288defe39c2f3059b", description: "1. Let's explore the game's building blocks—using MakeCode's interface to program player controls and falling objects while applying LED plotting concepts to animate sprites on the 5×5 grid.", type: "iframe" },
+                    { url: "https://view.genially.com/67ecf9c819b22b97739663f5", description: "2. In our Catch and Win game, a sprite is a movable game character (like the player or falling objects) created by lighting up LEDs on the Micro:bit’s 5×5 grid, controlled using plot and unplot commands.", type: "iframe" },
+                    { url: "https://view.genially.com/67ee325feac0c6c654cf59ed", description: "3. Try out the Snap the Dot game ", type: "iframe" },
+                    { url: "https://view.genially.com/67ed0d1d8c39a94597a12b4e", description: "4. Before diving into ‘Catch and Win,’ students will practice core concepts with ‘Snap the Dot’—a simple reaction game where players press Button A when a randomly appearing LED (dot) lights up.", type: "iframe" }, 
+                    { url: "https://view.genially.com/67ee3417743c6c0c1fa21ff6", description: "5. Try out the Catch and Win game", type: "iframe" },
+                    { url: "https://view.genially.com/67ee49f0769240f6362ae99e", description: "6. In this step-by-step tutorial, you'll build your own Catch and Win game on the Micro:bit! ", type: "iframe" },
+                ],
+                challengesData: [
+                    { title: "Try a similar one", description: "Try a smily face sad face animation", mediaType: 'image', mediaUrl: 'https://static.wixstatic.com/media/ecb02e_6e5d23ece0cf42b09492436710cf6ba0~mv2.gif' },
+                    { title: "Try a pattern", description: "Create the below pattern", mediaType: 'image', mediaUrl: 'https://static.wixstatic.com/media/ecb02e_8309e52daabd46a7a6114ccd0ef49f8b~mv2.gif' }
+                quizData: [
+                    { questionText: "Which block makes code run over and over again?", correctAnswer: "'forever'", incorrectAnswers: ["'on start'", "'pause (ms)'", "'show icon'"] },
+                    { questionText: "How many LEDs are in the Micro:bit's display grid?", correctAnswer: "25 (5x5)", incorrectAnswers: ["10 (2x5)", "5 (1x5)", "50 (5x10)"] },
+                    { questionText: "What unit does the 'pause (ms)' block use?", correctAnswer: "Milliseconds", incorrectAnswers: ["Seconds", "Minutes", "Microseconds"] },
+                    { questionText: "To make an animation, you show an image, then _______, then show another image.", correctAnswer: "Pause", incorrectAnswers: ["Stop", "Repeat", "Shake"] }
+                ],
+                // Project specific style overrides (null = inherit from course)
+                style: {
+                    fontFamily: null, // Inherit Font
+                    baseSize: null, // Inherit size
+                    primaryColor: '#E63946', // Red Primary for this project only
+                    secondaryColor: '#F1FAEE', // Off-white Secondary
+                    accentColor: '#A8DADC', // Light Blue Accent
+                 },
+                 isCompleted: true // Completion flag
+            }
             // Add more project objects here... (up to 15)
         ]
     };
