@@ -1833,25 +1833,24 @@ Point 3..."></textarea>
             // Project 2: Beating Heart (Data merged from project page)
             {
                 id: 'proj_beating heart',
-                tabName: "Catch and Win",
-                tabImage: "https://static.wixstatic.com/media/ecb02e_da4d01ce625b4cc0a0f79b7e553f50f9~mv2.gif", // MakeCode Share Image
-                projectTitle: "Catch and Win Game",
-                projectSubtitle: "Make your Own game with Microbit",
-                projectHeaderImage: "https://static.wixstatic.com/media/ecb02e_0d14c8f0fcc740b49dd9dee5dddf4802~mv2.gif",
-                overviewText: " Turn your Micro:bit into a fun arcade-style game! Control a paddle at the bottom of the screen using the A and B buttons to catch falling objects. Every successful catch earns you points, but miss too many, and it’s game over !",
+                tabName: "Beating Heart",
+                tabImage: "https://static.wixstatic.com/media/ecb02e_78f86aa17f7e45baa9fa01d284a59baf~mv2.gif", // MakeCode Share Image
+                projectTitle: "Beating Heart",
+                projectSubtitle: "Make your Microbit to display a Classic Beating Heart",
+                projectHeaderImage: "https://static.wixstatic.com/media/ecb02e_78f86aa17f7e45baa9fa01d284a59baf~mv2.gif",
+                overviewText: "Welcome to your first Micro:bit project! You'll learn the basics of block coding by creating a simple but effective animation on the Micro:bit's LED display – a beating heart. This is a fantastic way to understand timing and sequential programming.",
                 videoIntroText: "" ,
-                videoTitle: "Catcha and Win Game Play",
-                videoUrl: "https://video.wixstatic.com/video/ecb02e_6cd237055ba94d3aa4c314361c4a6619/720p/mp4/file.mp4", // Example Video
+                videoTitle: "The Beating Heart ",
+                videoUrl: "https://video.wixstatic.com/video/ecb02e_b1d7e399c37041d08ad9cac998d53b00/1080p/mp4/file.mp4", // Example Video
                 videoKeyPoints: [
-                    "The player sprite is controlled with Button A (left) and Button B (right).",
-                    "Falling objects spawn randomly at the top (y=0) of the 5x5 LED grid.",
-                    "Collision happens when object's (x,y) matches player's (x,4) position.",
-                    "Use 'plot (x,y)' to display and 'unplot (x,y)' to clear sprites.",
-                    "The 'forever' block handles continuous game movement and logic.",
-                    "'pause (ms)' controls game speed (lower = faster difficulty).",
-                    "Variables track score, player_x position, and missed objects count.",
-                    "Game ends when missed objects reach a set limit (e.g., 3 misses).",
-                    "'show number' displays the final score when game ends."
+                    "The project creates a pulsing heart animation on the micro:bit’s 5×5 LED display.",
+                    "Using Built-in icons",
+                    "The heart "beats" by switching between the two images with a short delay (e.g., 300–500 milliseconds).",
+                    "Users can define their own heart shapes using a 5×5 grid format (e.g., "01110:10001:...")",
+                    "Varying speeds → Faster delays for a rapid heartbeat, slower for a calm pulse.",
+                    "Button control → Heart beats only when a button is pressed.",
+                    "Sensors → Adjust speed using the accelerometer (e.g., shake to make it beat faster).",
+                    "Simple introduction to LED animations."
                  ],
                 learnData: [
                     { title: "Hardware Concepts", description: "LED Matrix Control (5×5 grid addressing) , Button Input Handling (A/B for player movement) , Microcontroller Basics (real-time program execution)", mediaType: 'none', mediaUrl: '' },
@@ -1862,12 +1861,12 @@ Point 3..."></textarea>
                     { title: "Computational Thinking : Algorithm Design", description: "Developing logic Designed: • Object fall algorithm • Scoring system • Game-over conditions ", mediaType: 'image', mediaUrl: 'https://static.wixstatic.com/media/ecb02e_f2db902baed74502827dd272f83605b2~mv2.jpg' }
                 ],
                 slidesData: [
-                    { url: "https://view.genially.com/67ecdd788c39a945978ebccd", description: "1. Let's explore the game's building blocks—using MakeCode's interface to program player controls and falling objects while applying LED plotting concepts to animate sprites on the 5×5 grid.", type: "iframe" },
-                    { url: "https://view.genially.com/67ed20fd760c39a593735c5c", description: "2. In our Catch and Win game, a sprite is a movable game character (like the player or falling objects) created by lighting up LEDs on the Micro:bit’s 5×5 grid, controlled using plot and unplot commands.", type: "iframe" },
-                    { url: "https://view.genially.com/67ebba390c63eea3efd8a34f", description: "3. Try out the Snap the Dot game ", type: "iframe" },
-                    { url: "https://view.genially.com/67ee14b750005b84f7668051", description: "4. Before diving into ‘Catch and Win,’ students will practice core concepts with ‘Snap the Dot’—a simple reaction game where players press Button A when a randomly appearing LED (dot) lights up.", type: "iframe" }, 
-                    { url: "https://view.genially.com/67ebb9d8a3539e6346b287af", description: "5. Try out the Catch and Win game", type: "iframe" },
-                    { url: "https://view.genially.com/67ee5f7a769240f636349838", description: "6. In this step-by-step tutorial, you'll build your own Catch and Win game on the Micro:bit! ", type: "iframe" }
+                    { url: "https://view.genially.com/67ece8c288defe39c2f3059b", description: "1. Introduction to Makecode Microbit", type: "iframe" },
+                    { url: "https://view.genially.com/67ecf9c819b22b97739663f5", description: "2. Using Basic Blocks ", type: "iframe" },
+                    { url: "https://view.genially.com/67ee325feac0c6c654cf59ed", description: "3. How to Add Blocks and Delete Blocks ", type: "iframe" },
+                    { url: "https://view.genially.com/67ed0d1d8c39a94597a12b4e", description: "4. Micro:bit Display ", type: "iframe" }, 
+                    { url: "https://view.genially.com/67ee3417743c6c0c1fa21ff6", description: "5. Smily Face", type: "iframe" },
+                    { url: "https://view.genially.com/67ee49f0769240f6362ae99e", description: "6. Beating Heart ", type: "iframe" }
                 ],
                 challengesData: [
                     { title: "Speed Control", description: "Experiment by changing the numbers in the 'pause (ms)' blocks. What happens if you use 1000? What about 100?", mediaType: 'none', mediaUrl: '' },
