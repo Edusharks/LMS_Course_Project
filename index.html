@@ -91,14 +91,16 @@
         .item-card .item-image[data-error="true"] { content: var(--error-image-fallback); object-fit: contain; padding: 10px; }
         .item-card .item-content { padding: var(--card-padding); flex-grow: 1; display: flex; flex-direction: column;}
         
-.item-card h4,
+ .item-card h4,
  .item-row h4 {
-     margin-bottom: 0; /* Remove bottom margin from h4 itself */
-     flex-grow: 1; /* Allow title to take remaining space */
-     word-break: break-word; /* Keep word break */
-     /* Font size adjustments already in place are fine */
+     margin-bottom: 0;
+     flex-grow: 1; /* Allow title to take space */
+     flex-shrink: 1; /* <<< ADD: Allow title to shrink if actions need space */
+     word-break: break-word;
+     overflow: hidden; /* Optional: Hide overflow if title is very long */
+     text-overflow: ellipsis; /* Optional: Add ellipsis */
+     white-space: nowrap; /* Optional: Prevent title wrapping if desired */
  }
-
         .item-card p { font-size: 0.9rem; color: #555; margin-bottom: 15px; word-break: break-word; flex-grow: 1; /* Pushes actions down */ display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
         .item-card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
         .item-card-actions .action-btn { padding: 6px; font-size: 1.1rem;} /* Make icons slightly bigger */
@@ -106,7 +108,8 @@
  .item-heading-container {
      display: flex;
      align-items: center; /* Vertically align buttons and text */
-     gap: 8px; /* Space between buttons and title */
+     justify-content: space-between; /* <<< CHANGED: Push title left, actions right */
+     gap: 15px; /* Space between title and actions */
      margin-bottom: 8px; /* Space below heading block */
      flex-wrap: nowrap; /* Prevent wrapping */
  }
@@ -114,14 +117,14 @@
  .item-inline-actions {
      display: flex;
      gap: 4px; /* Space between edit/remove buttons */
-     flex-shrink: 0; /* Prevent buttons from shrinking */
+     flex-shrink: 0; /* <<< ENSURE: Prevent buttons from shrinking */
  }
 
  .item-inline-actions .action-btn {
-     padding: 4px; /* Slightly smaller padding */
-     font-size: 1rem; /* Adjust icon size */
-     background-color: transparent; /* Make them less prominent */
-     border: 1px solid transparent; /* Add border space */
+     padding: 4px;
+     font-size: 1rem;
+     background-color: transparent;
+     border: 1px solid transparent;
      opacity: 0.6;
  }
  .item-inline-actions .action-btn:hover {
@@ -129,7 +132,6 @@
      background-color: rgba(0,0,0,0.08);
      border-color: #ccc;
  }
-
         
  /* List View */
 
@@ -841,7 +843,7 @@ function renderDashboardView() {
             const imageUrl = course.imageUrl || defaultImage;
             const descriptionHtml = course.description ? `<p>${escapeHtml(course.description)}</p>` : '';
 
-            // --- NEW Structure ---
+            // --- Structure with Actions on Right ---
             const inlineActionsHtml = `
                 <div class="item-inline-actions">
                     <button class="edit-btn action-btn" data-action="edit-course" title="Edit Course">✏️</button>
@@ -850,14 +852,13 @@ function renderDashboardView() {
 
             const headingHtml = `
                 <div class="item-heading-container">
-                    ${inlineActionsHtml}
                     <h4>${escapeHtml(course.name)}</h4>
+                    ${inlineActionsHtml}
                 </div>`;
-            // --- End NEW Structure ---
+            // --- End Structure ---
 
 
             if (courseListContainer.classList.contains('list-view')) {
-                 // List View: Image, Content (Heading+Actions, Desc)
                  itemElement.innerHTML = `
                     <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(course.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
                     <div class="item-content">
@@ -865,10 +866,9 @@ function renderDashboardView() {
                              ${headingHtml}
                              ${descriptionHtml}
                          </div>
-                         <!-- Actions container removed/hidden by CSS -->
+                         <!-- Bottom actions hidden -->
                     </div>`;
-            } else {
-                // Grid View: Image, Content (Heading+Actions, Desc, Bottom Actions)
+            } else { // Grid view
                 itemElement.innerHTML = `
                     <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(course.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
                     <div class="item-content">
@@ -878,7 +878,6 @@ function renderDashboardView() {
                              <button class="view-btn action-btn" data-action="view-projects" title="View Projects">
                                 ▶ Projects (${course.projects?.length || 0})
                              </button>
-                             <!-- Edit/Remove buttons moved -->
                         </div>
                     </div>
                 `;
@@ -893,6 +892,77 @@ function renderDashboardView() {
     addCourseButton.disabled = appData.courses.length >= MAX_COURSES;
     document.getElementById('max-courses-msg')?.remove();
     if(addCourseButton.disabled) addCourseButton.insertAdjacentHTML('afterend', `<p id="max-courses-msg" style="color:var(--danger); font-size:0.9em;">Maximum courses (${MAX_COURSES}) reached.</p>`);
+}
+
+function renderCourseView(courseId) {
+    projectListContainer.innerHTML = '';
+    const course = findCourse(courseId);
+
+    if (!course) { /* ... (keep error handling) ... */ return; }
+
+    courseViewTitle.textContent = `${escapeHtml(course.name)} Projects`;
+    const projects = course.projects || [];
+
+    if (projects.length === 0) {
+        projectListContainer.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: #777;">No projects created yet. Add one below!</p>';
+    } else {
+        projects.forEach(project => {
+            const itemElement = document.createElement('div');
+            itemElement.className = projectListContainer.classList.contains('list-view') ? 'item-row item-container' : 'item-card item-container';
+            itemElement.dataset.projectId = project.id;
+            itemElement.dataset.courseId = courseId;
+
+            const defaultImage = 'https://via.placeholder.com/300x150/eee/ccc?text=Project';
+            const imageUrl = project.imageUrl || defaultImage;
+            const descriptionHtml = project.description ? `<p>${escapeHtml(project.description)}</p>` : '';
+
+             // --- Structure with Actions on Right ---
+             const inlineActionsHtml = `
+                <div class="item-inline-actions">
+                    <button class="edit-btn action-btn" data-action="edit-project" title="Edit Project">✏️</button>
+                    <button class="remove-btn action-btn" data-action="remove-project" title="Remove Project">×</button>
+                </div>`;
+
+            const headingHtml = `
+                <div class="item-heading-container">
+                     <h4>${escapeHtml(project.name)}</h4>
+                    ${inlineActionsHtml}
+                </div>`;
+             // --- End Structure ---
+
+
+            if (projectListContainer.classList.contains('list-view')) {
+                 itemElement.innerHTML = `
+                    <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(project.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
+                     <div class="item-content">
+                         <div class="item-text-details">
+                            ${headingHtml}
+                            ${descriptionHtml}
+                         </div>
+                         <!-- Bottom actions hidden -->
+                     </div>`;
+            } else { // Grid View
+                 itemElement.innerHTML = `
+                    <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(project.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
+                    <div class="item-content">
+                        ${headingHtml}
+                        ${descriptionHtml || '<p style="display:none;"></p>'}
+                        <div class="item-card-actions">
+                            <!-- No bottom actions needed -->
+                        </div>
+                    </div>
+                `;
+            }
+
+            projectListContainer.appendChild(itemElement);
+            const img = itemElement.querySelector('.item-image');
+            if (img && img.complete && img.naturalWidth === 0 && !img.dataset.error) { handleImageError(img); }
+        });
+    }
+    // Update add button state
+    addProjectButton.disabled = projects.length >= MAX_PROJECTS_PER_COURSE;
+     document.getElementById('max-projects-msg')?.remove();
+     if(addProjectButton.disabled) addProjectButton.insertAdjacentHTML('afterend', `<p id="max-projects-msg" style="color:var(--danger); font-size:0.9em;">Maximum projects (${MAX_PROJECTS_PER_COURSE}) reached.</p>`);
 }
 
 function renderCourseView(courseId) {
