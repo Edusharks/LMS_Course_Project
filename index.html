@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Editor & Viewer V3 - Fixed Hoisting</title>
+    <style>
+        /* Global Variables & Basic Styles */
+        :root {
+            --primary: #5E81F4;
+            --secondary: #FF7AC6;
+            --accent: #FFB800;
+            --light: #F5F7FA;
+            --dark: #1A1D28;
+            --success: #7CE7AC;
+            --danger: #FF7E7E;
+            --primary-rgb: 94, 129, 244;
+            /* Default Global Text Styles - Set by JS */
+            --global-font-family: 'Segoe UI', sans-serif;
+            --global-font-size: 16px;
+            --global-text-color: var(--dark);
+
+            --transition-speed: 0.3s;
+            --sidebar-width: 270px;
+            --header-image-size: 80px;
+            --challenge-icon-size: 40px;
+        }
+
+        html { scroll-behavior: smooth; box-sizing: border-box; font-size: var(--global-font-size); }
+        *, *:before, *:after { box-sizing: inherit; }
+
+        body {
+            font-family: var(--global-font-family); color: var(--global-text-color);
+            margin: 0; padding: 0; background-color: var(--light); line-height: 1.6;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, font-family var(--transition-speed) ease, font-size var(--transition-speed) ease;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+        h1, h2, h3, h4 { color: var(--primary); transition: color var(--transition-speed) ease; margin-top: 0; }
+        h2 { font-size: 1.6rem; border-bottom: 2px solid var(--secondary); padding-bottom: 5px; display: inline-block; margin-bottom: 20px; transition: border-color var(--transition-speed) ease; }
+        h2.element-heading { font-size: 1.5rem; border-bottom: none; margin-bottom: 10px; color: inherit; font-family: inherit; }
+        h3.media-heading { font-size: 1.3rem; margin-bottom: 8px; color: var(--dark); border-bottom: 1px solid #eee; padding-bottom: 4px; }
+        h3#modal-title { margin-bottom: 20px; font-size: 1.4rem; }
+        h4 { font-size: 1.1rem; color: var(--dark); }
+
+        button { cursor: pointer; font-family: inherit; padding: 8px 15px; border-radius: 6px; border: 1px solid transparent; transition: all 0.2s ease; font-size: 0.95rem; vertical-align: middle; }
+        button:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        button:disabled { cursor: not-allowed; opacity: 0.6; }
+
+        .action-btn { font-size: 0.8em; padding: 4px 8px; margin-left: 5px; border: none; opacity: 0.7; font-weight: bold; vertical-align: middle; line-height: 1; display: inline-flex; align-items: center; justify-content: center; }
+        .action-btn:hover:not(:disabled) { opacity: 1; }
+        .add-btn { background-color: var(--success); color: white; font-weight: bold; }
+        .add-btn:hover:not(:disabled) { background-color: #63c899; }
+        .edit-btn { background-color: var(--accent); color: var(--dark); }
+        .edit-btn:hover:not(:disabled) { background-color: #ffc833; }
+        .remove-btn { background-color: var(--danger); color: white; }
+        .remove-btn:hover:not(:disabled) { background-color: #e66a6a; }
+
+        /* Header */
+        .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); transition: background var(--transition-speed) ease; }
+        .header-content { display: flex; align-items: center; gap: 20px; flex-grow: 1; }
+        #projectHeaderImage { width: var(--header-image-size); height: var(--header-image-size); object-fit: cover; border-radius: 8px; border: 3px solid rgba(255, 255, 255, 0.5); background-color: rgba(255, 255, 255, 0.2); flex-shrink: 0; }
+        .header-title-container { flex-grow: 1; }
+        .page-header .header-title { margin: 0 0 5px 0; color: white; font-size: 1.8rem;}
+        .page-header .header-subtitle { margin: 0; color: rgba(255,255,255,0.9); font-size: 1rem; }
+        .page-header .header-btn { background-color: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.5); width: 38px; height: 38px; border-radius: 50%; font-size: 20px; padding: 0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .page-header .header-btn:hover { background-color: rgba(255,255,255,0.4); }
+
+        /* Layout & Sidebar */
+        .project-layout { display: flex; gap: 25px; }
+        #project-sidebar { width: var(--sidebar-width); flex-shrink: 0; background-color: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); height: fit-content; }
+        #project-tabs { margin-bottom: 15px; }
+        .tab, .sub-tab { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; margin-bottom: 8px; border-radius: 6px; cursor: pointer; border: 1px solid #eee; transition: all 0.2s ease; background-color: #fff; position: relative; }
+        .tab:hover:not(.active), .sub-tab:hover:not(.active) { background-color: #f0f5ff; border-color: #c4cde0; }
+        .tab.active, .sub-tab.active { font-weight: bold; box-shadow: 0 2px 5px rgba(var(--primary-rgb), 0.2); }
+        .tab.active { background-color: var(--primary); color: white; border-color: var(--primary); }
+        .sub-tab.active { background-color: var(--secondary); border-color: var(--secondary); color: white; box-shadow: 0 2px 5px rgba(255, 122, 198, 0.2); }
+        .tab:hover .tab-controls, .sub-tab:hover .sub-tab-controls, .tab.active .tab-controls, .sub-tab.active .sub-tab-controls { display: inline-flex; gap: 5px; }
+        .tab.active .action-btn { color: var(--primary); background-color: white; opacity: 1; }
+        .sub-tab.active .action-btn { color: var(--secondary); background-color: white; opacity: 1; }
+        .tab-name, .sub-tab-name { flex-grow: 1; margin-right: 10px; word-break: break-word; padding: 2px 0; }
+        .sub-tab { margin-left: 20px; padding: 8px 10px; font-size: 0.9em; margin-bottom: 5px; background-color: #f9f9fc; }
+        .tab-controls, .sub-tab-controls { display: none; flex-shrink: 0; }
+        .sidebar-actions { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; text-align: center; }
+        .sidebar-actions .add-btn { width: 80%; }
+
+        /* Main Content */
+        #project-main-content { flex-grow: 1; background-color: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); min-height: 400px; }
+        #tab-content-area { margin-bottom: 30px; }
+        #tab-content-area > p { text-align: center; color: #888; margin-top: 30px; font-style: italic; }
+
+        /* Content Element Styles */
+        .content-element { margin-bottom: 25px; padding: 20px; border: 1px dashed #e0e0e0; border-radius: 8px; position: relative; transition: all 0.2s ease; }
+        .content-element:hover { border-style: solid; border-color: #b0b0b0; background-color: #fdfdfd; }
+        .element-actions { position: absolute; top: 8px; right: 8px; display: none; background: rgba(245, 247, 250, 0.9); padding: 4px; border-radius: 5px; z-index: 10; gap: 4px; }
+        .content-element:hover .element-actions { display: flex; }
+        .element-text { white-space: pre-wrap; line-height: 1.7; margin: 0; color: inherit; font-family: inherit;}
+        .media-description { font-size: 0.95rem; color: #555; margin-top: 5px; margin-bottom: 15px; white-space: pre-wrap; }
+        .element-image img { display: block; max-width: 100%; height: auto; border-radius: 8px; border: none; background-color: #eee; box-shadow: 0 3px 8px rgba(0,0,0,0.1); }
+        .element-image-wrapper { margin-top: 10px; overflow: hidden; position: relative; max-width: 100%; }
+        .media-wrapper-16-9 { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 1000px; margin: 10px auto 0 auto; border-radius: 12px; background-color: #eee; box-shadow: 0 5px 12px rgba(0,0,0,.1); }
+        .media-wrapper-16-9 iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 12px; }
+
+        /* Quiz Styles */
+        .element-quiz { background-color: #f8f9ff; padding: 20px; border: 1px solid #e0e8ff; }
+        .quiz-container-inner { margin-top: 10px; }
+        .quiz-question { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .quiz-question:last-child { border-bottom: none; margin-bottom: 0; }
+        .quiz-question-content { display: flex; gap: 15px; align-items: flex-start; margin-bottom: 10px;}
+        .quiz-question-image { order: -1; max-width: 150px; max-height: 120px; border-radius: 4px; object-fit: contain; flex-shrink: 0;}
+        .quiz-question-text { flex-grow: 1; font-weight: bold; color: var(--dark); margin: 0; }
+        .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+        .quiz-option { display: flex; gap: 10px; align-items: center; padding: 10px 15px; background-color: #fff; border: 1px solid #d8dde6; border-radius: 6px; cursor: pointer; transition: all .2s ease; }
+        .quiz-option-image { max-width: 100px; max-height: 75px; border-radius: 4px; object-fit: contain; flex-shrink: 0;}
+        .quiz-option-text { flex-grow: 1; }
+        .quiz-question:not(.answered) .quiz-option:hover { background-color: #e8ecf3; border-color: #c4cde0; }
+        .quiz-option.selected { border-color: var(--primary) !important; background-color: #e8f0fe; font-weight: 500; }
+        .quiz-option.correct { background-color: var(--success) !important; color: #fff !important; border-color: #63c899 !important; font-weight: bold; }
+        .quiz-option.incorrect { background-color: var(--danger) !important; color: #fff !important; border-color: #e66a6a !important; }
+        .quiz-option.incorrect .quiz-option-text { text-decoration: line-through; }
+        .quiz-question.answered .quiz-option { cursor: default; }
+        .quiz-question.answered .quiz-option:not(.selected):not(.correct) { opacity: .6; }
+        .quiz-feedback { margin-top: 10px; padding: 8px 12px; border-radius: 6px; display: none; font-size: .9rem; font-weight: 500;}
+        .quiz-feedback.correct { background-color: #e6f7ed; color: #1d6c45; border: 1px solid #c3e6cb; }
+        .quiz-feedback.incorrect { background-color: #fde8e8; color: #9b1c1c; border: 1px solid #f5c6cb; }
+        .quiz-submit-btn { background-color: var(--accent); color: var(--dark); border: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; margin-top: 20px; display: block; width: fit-content; }
+        .quiz-submit-btn:hover:not(:disabled) { background-color: #ffc833; }
+        .final-quiz-result { margin-top: 15px; padding: 12px 15px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 1.05rem;}
+        .final-quiz-result.success { background-color: var(--success); color: white; }
+        .final-quiz-result.fail { background-color: var(--danger); color: white; }
+
+        /* Challenges Element Styles */
+         .element-challenges { padding: 15px; background-color: #fff8e1; border: 1px solid #ffe082; }
+         .challenges-list { list-style: none; padding: 0; margin: 0; }
+         .challenge-item { display: flex; align-items: flex-start; gap: 15px; padding: 15px 0; border-bottom: 1px dotted #ccc; }
+         .challenge-item:last-child { border-bottom: none; }
+         .challenge-icon { width: var(--challenge-icon-size); height: var(--challenge-icon-size); flex-shrink: 0; border-radius: 50%; object-fit: contain; background-color: #eee;}
+         .challenge-content { flex-grow: 1; }
+         .challenge-content h4 { margin: 0 0 5px 0; font-size: 1.1rem; color: var(--dark); }
+         .challenge-content p { margin: 0 0 10px 0; font-size: 0.95rem; color: #444; white-space: pre-wrap;}
+         .challenge-content img { display: block; max-width: 250px; max-height: 180px; height: auto; margin-top: 10px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        /* Element Add Controls */
+        #element-add-controls { margin-top: 20px; padding-top: 20px; border-top: 2px solid #eee; }
+        #element-add-controls p { font-weight: bold; margin: 0 0 10px 0; color: var(--primary); }
+        #element-add-controls button { margin-right: 10px; margin-bottom: 10px; background-color: #eef2ff; color: var(--primary); border: 1px solid var(--primary); font-size: 0.9em; font-weight: 500; }
+        #element-add-controls button:hover:not(:disabled) { background-color: var(--primary); color: white; }
+
+        /* Modal Styles */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,.6); z-index: 1000; overflow-y: auto; padding: 20px; align-items: center; justify-content: center; }
+        .modal-content { background-color: #fff; margin: auto; padding: 25px 30px; border-radius: 10px; width: 90%; max-width: 800px; box-shadow: 0 5px 15px rgba(0,0,0,.3); position: relative; display: flex; flex-direction: column; max-height: 90vh; }
+        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 32px; font-weight: bold; color: #aaa; cursor: pointer; line-height: 1; padding: 0 5px; z-index: 1010; }
+        .close-modal:hover { color: #333; }
+        #modal-form-content { margin-top: 10px; overflow-y: auto; padding: 5px 15px 5px 5px; flex-grow: 1; }
+        #modal-form-content label { display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark); font-size: .95rem; }
+        #modal-form-content input[type=text], #modal-form-content input[type=url], #modal-form-content input[type=number], #modal-form-content input[type=color], #modal-form-content textarea, #modal-form-content select { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; box-sizing: border-box; font-family: inherit; }
+        #modal-form-content input[type=color] { padding: 2px; height: 40px; }
+        #modal-form-content textarea { min-height: 100px; white-space: pre-wrap; resize: vertical; }
+        #modal-form-content input:focus, #modal-form-content textarea:focus, #modal-form-content select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2); }
+        #modal-form-content .input-group { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        #modal-form-content .input-group > div { flex: 1; min-width: 150px; }
+        #modal-form-content fieldset { border: 1px solid #ccc; border-radius: 6px; padding: 15px 20px; margin-bottom: 20px; }
+        #modal-form-content legend { font-weight: bold; padding: 0 8px; font-size: 1em; color: var(--primary); }
+
+        /* Global Text Style Options in Modal */
+        .global-text-style-options { border: 1px solid #eee; padding: 15px; margin-top: 15px; border-radius: 6px; }
+        .global-text-style-options label { font-size: 0.9rem; margin-right: 8px; display: inline-block; min-width: 80px; }
+        .global-text-style-options select, .global-text-style-options input[type=color], .global-text-style-options input[type=text] { display: inline-block; width: auto; margin-right: 15px; margin-bottom: 10px; padding: 6px 8px; font-size: 0.9rem; }
+        .global-text-style-options input[type=color] { height: 30px; width: 50px; vertical-align: middle;}
+        .global-text-style-options br { display: block; margin-bottom: 5px; content: "";}
+
+        /* Quiz Edit Specific */
+        .quiz-edit-question { border: 1px solid #eee; padding: 15px; border-radius: 6px; margin-bottom: 15px; background: #fdfdfd; position: relative; }
+        .quiz-edit-question h4 { margin: 0 0 15px 0; font-size: 1.1rem; color: var(--dark); }
+        .quiz-edit-question h4 .remove-btn { position: absolute; top: 10px; right: 10px; }
+        .quiz-edit-question label { margin-top: 10px; font-weight: 500; font-size: 0.9rem;}
+        .quiz-edit-question input[type=text], .quiz-edit-question input[type=url], .quiz-edit-question textarea { margin-bottom: 10px; font-size: 0.95rem; }
+        .quiz-edit-question .quiz-image-input { margin-top: -5px; margin-bottom: 15px; }
+        .quiz-edit-question .quiz-image-input label { font-size: 0.85rem; color: #555;}
+        .quiz-edit-question .quiz-image-input input { padding: 6px 8px; font-size: 0.9rem;}
+        .quiz-edit-question .quiz-q-incorrect { background-color: #fff7f7; border-color: #f5c6cb; }
+        #modal-form-content #quiz-editor-add-question-btn { margin-top: 10px; display: block; width: fit-content; font-size: 0.9rem; }
+
+        /* Challenges Edit Specific */
+         #challenges-editor-list { max-height: 400px; overflow-y: auto; padding: 5px; margin-bottom: 15px;}
+         .challenge-edit-item { border: 1px solid #ddd; padding: 15px; border-radius: 6px; margin-bottom: 10px; background-color: #f9f9f9; position: relative;}
+         .challenge-edit-item h5 { margin: 0 0 10px 0; font-size: 1rem; color: var(--dark); }
+         .challenge-edit-item label { font-size: 0.9rem; }
+         .challenge-edit-item input[type=text], .challenge-edit-item input[type=url], .challenge-edit-item textarea { font-size: 0.95rem; }
+         .challenge-edit-item .remove-btn { position: absolute; top: 10px; right: 10px; }
+         #modal-form-content #challenges-editor-add-btn { margin-top: 0; display: block; width: fit-content; font-size: 0.9rem; }
+
+        .modal-actions { margin-top: 20px; text-align: right; border-top: 1px solid #eee; padding-top: 20px; flex-shrink: 0; }
+        .modal-actions button { margin-left: 10px; padding: 10px 20px; }
+        .modal-actions button.cancel-btn { background-color: #aaa; color: white; }
+        .modal-actions button.cancel-btn:hover { background-color: #888; }
+        .modal-actions button.save-btn { background-color: var(--success); color: white; font-weight: bold; }
+        .modal-actions button.save-btn:hover { background-color: #63c899; }
+
+        /* Color Picker Simple */
+        .color-picker { display: flex; gap: 15px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; }
+        .color-picker label { margin-bottom: 0; margin-right: 5px; }
+        input[type=color] { width: 40px; height: 40px; border: 1px solid #ccc; padding: 2px; border-radius: 6px; cursor: pointer; vertical-align: middle; background-color: transparent; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
+        input[type="color"]::-moz-color-swatch { border: none; border-radius: 4px; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .project-layout { flex-direction: column; }
+            #project-sidebar { width: 100%; margin-bottom: 20px; height: auto; }
+            #project-tabs { display: flex; overflow-x: auto; padding-bottom: 10px; white-space: nowrap; border-bottom: 1px solid #eee;}
+            #project-tabs p { text-align: left !important; }
+            .tab, .sub-tab { flex-shrink: 0; margin-right: 8px; margin-bottom: 0; }
+            .tab-controls, .sub-tab-controls { display: none !important; }
+            .tab-name, .sub-tab-name { margin-right: 0; }
+            .sub-tab { margin-left: 5px; }
+        }
+        @media (max-width: 600px) {
+             :root { --base-font-size: 15px; --header-image-size: 60px; --challenge-icon-size: 30px;}
+             .container { padding: 10px; }
+             .page-header { flex-direction: column; align-items: stretch; gap: 10px;}
+             .header-content { gap: 15px;}
+             .page-header .header-btn { position: absolute; top: 15px; right: 15px;}
+             #project-main-content { padding: 15px; }
+             .content-element { padding: 15px; }
+             .modal-content { padding: 20px; margin: 10px; width: calc(100% - 20px); }
+             .modal-actions { display: flex; justify-content: space-between;}
+             .modal-actions button { flex-grow: 1; margin: 0 5px; padding: 10px 15px; font-size: 0.9rem;}
+             #element-add-controls button { font-size: 0.85rem; padding: 6px 10px;}
+             .quiz-question-content {flex-direction: column;}
+             .quiz-question-image { max-width: 100px; max-height: 80px; margin-bottom: 5px;}
+             .quiz-option { flex-direction: column; align-items: flex-start;}
+             .quiz-option-image { max-width: 80px; max-height: 60px; margin-bottom: 5px;}
+             .challenge-item { gap: 10px; }
+             .challenge-content h4 { font-size: 1rem; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <div class="header-content">
+                <img id="projectHeaderImage" src="https://via.placeholder.com/80/cccccc/ffffff?text=P" alt="Project Header Image">
+                <div class="header-title-container">
+                    <h1 class="header-title" id="projectTitle">My Awesome Project</h1>
+                    <p class="header-subtitle" id="projectSubtitle">Building things step-by-step</p>
+                </div>
+            </div>
+            <button id="edit-project-styles-btn" class="header-btn" title="Edit Project Info & Styles">⚙️</button>
+        </header>
+
+        <div class="project-layout">
+            <aside id="project-sidebar">
+                <nav id="project-tabs"></nav>
+                <div class="sidebar-actions">
+                    <button id="add-tab-btn" class="add-btn">+ Add Tab</button>
+                </div>
+            </aside>
+
+            <main id="project-main-content">
+                <div id="tab-content-area"></div>
+                <div id="element-add-controls" class="element-controls" style="display: none;">
+                    <hr><p>Add to this section:</p>
+                    <button data-type="heading">Heading</button>
+                    <button data-type="text">Text Block</button>
+                    <button data-type="image">Image/GIF</button>
+                    <button data-type="video">Video</button>
+                    <button data-type="presentation">Presentation</button>
+                    <button data-type="challenges">Challenges Section</button>
+                    <button data-type="quiz">Quiz Section</button>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal-btn" class="close-modal" title="Close">&times;</span>
+            <h3 id="modal-title">Edit</h3>
+            <div id="modal-form-content"></div>
+            <div class="modal-actions">
+                <button type="button" id="cancel-modal-btn" class="cancel-btn">Cancel</button>
+                <button type="button" id="save-modal-btn" class="save-btn">Save</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+// --- Constants (Defined Globally) ---
+const FONT_FAMILIES = [ { name: 'Default (Segoe UI)', value: "'Segoe UI', sans-serif" }, { name: 'Arial', value: "Arial, Helvetica, sans-serif" }, { name: 'Georgia', value: "Georgia, 'Times New Roman', serif" }, { name: 'Verdana', value: "Verdana, Geneva, sans-serif" }, { name: 'Courier New', value: "'Courier New', monospace" }, { name: 'Comic Sans MS', value: "'Comic Sans MS', cursive, sans-serif" } ];
+const FONT_SIZES = ['small', 'medium', 'large', 'xlarge', 'custom'];
+const DEFAULT_FONT_SIZE_NAME = 'medium';
+const DEFAULT_FONT_SIZE_CSS = '16px';
+const DEFAULT_FONT_FAMILY = "'Segoe UI', sans-serif";
+const DEFAULT_TEXT_COLOR = '#1A1D28';
+const MAX_CHALLENGES = 25;
+
+// --- Utility Functions ---
+function escapeHtml(unsafe) { if (typeof unsafe !== 'string') return unsafe; return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
+function generateId(prefix = 'id_') { return prefix + Date.now() + '_' + Math.random().toString(36).substring(2, 9); }
+function getEmbedUrlWithOptions(url) { if (!url || typeof url !== 'string') return 'about:blank'; try { let pUrl = new URL(url); if (url.includes('youtube.com') || url.includes('youtu.be')) { pUrl.searchParams.set('autoplay', '0'); pUrl.searchParams.set('mute', '1'); pUrl.searchParams.set('playsinline', '1'); } else if (url.includes('vimeo.com')) { pUrl.searchParams.set('autoplay', '0'); pUrl.searchParams.set('dnt', '1'); } else { pUrl.searchParams.set('autoplay', '0'); } return pUrl.toString(); } catch (e) { return url; } }
+
+document.addEventListener('DOMContentLoaded', () => {
+    // --- DOM Element Lookups ---
+    const tabsContainer = document.getElementById('project-tabs');
+    const contentArea = document.getElementById('tab-content-area');
+    const addControls = document.getElementById('element-add-controls');
+    const modal = document.getElementById('edit-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalFormContent = document.getElementById('modal-form-content');
+    const projectTitleElement = document.getElementById('projectTitle');
+    const projectSubtitleElement = document.getElementById('projectSubtitle');
+    const projectHeaderImageElement = document.getElementById('projectHeaderImage');
+    const addTabButton = document.getElementById('add-tab-btn');
+    const editStylesButton = document.getElementById('edit-project-styles-btn');
+    const closeModalButton = document.getElementById('close-modal-btn');
+    const cancelModalButton = document.getElementById('cancel-modal-btn');
+    const saveModalButton = document.getElementById('save-modal-btn');
+
+    // --- STATE ---
+    let projectData = loadProjectData();
+    let currentTabId = null;
+    let currentSubTabId = null;
+    let editingContext = { type: null, id: null, parentId: null, isNew: false };
+
+    // --- INITIALIZATION ---
+    applyProjectStyles();
+    renderSidebar();
+    initContent();
+    setupEventListeners();
+    console.log("Project Editor Initialized (V4.1 - Challenges).");
+
+    // --- DATA HANDLING ---
+    function getDefaultProjectData() {
+        const firstTabId = generateId('tab_');
+        return {
+            title: "My Flexible Project", subtitle: "Editable Sections", headerImage: "https://via.placeholder.com/80/eee/ccc?text=P",
+            styles: { primaryColor: '#5E81F4', secondaryColor: '#FF7AC6', accentColor: '#FFB800', globalTextColor: DEFAULT_TEXT_COLOR, globalFontSize: DEFAULT_FONT_SIZE_NAME, globalFontFamily: DEFAULT_FONT_FAMILY },
+            tabs: [ { id: firstTabId, name: "Introduction", subTabs: null, content: [ { id: generateId('el_'), type: 'heading', data: { text: 'Welcome!' } }, { id: generateId('el_'), type: 'text', data: { text: 'Add elements below.' } } ] } ]
+        };
+    }
+    function loadProjectData() { const k='flexibleProjectData_v4.1'; const s = localStorage.getItem(k); if (s) { try { const d = JSON.parse(s); if (Array.isArray(d.tabs)) { console.log("Loaded v4.1 data."); if(!d.styles) d.styles={}; d.headerImage=d.headerImage||getDefaultProjectData().headerImage; d.styles.globalTextColor=d.styles.globalTextColor||DEFAULT_TEXT_COLOR; d.styles.globalFontSize=d.styles.globalFontSize||DEFAULT_FONT_SIZE_NAME; d.styles.globalFontFamily=d.styles.globalFontFamily||DEFAULT_FONT_FAMILY; d.styles.primaryColor=d.styles.primaryColor||'#5E81F4'; d.styles.secondaryColor=d.styles.secondaryColor||'#FF7AC6'; d.styles.accentColor=d.styles.accentColor||'#FFB800'; return d; } else throw new Error("Inv"); } catch (e) { console.error("Load fail:", e); localStorage.removeItem(k); } } console.log("Default v4.1 data."); return getDefaultProjectData(); }
+    function saveProjectData() { try { localStorage.setItem('flexibleProjectData_v4.1', JSON.stringify(projectData)); console.log("Data saved."); } catch (e) { console.error("Save fail:", e); alert("Error saving."); } }
+    function findTabData(id) { return projectData?.tabs?.find(t => t?.id === id) || null; }
+    function findSubTabData(pId, id) { return findTabData(pId)?.subTabs?.find(st => st?.id === id) || null; }
+    function getCurrentContentArray() { const t=findTabData(currentTabId); if(!t)return null; if(currentSubTabId && Array.isArray(t.subTabs)){const s=findSubTabData(currentTabId, currentSubTabId); if(s){if(!Array.isArray(s.content))s.content=[]; return s.content;}} else if(!t.subTabs){if(!Array.isArray(t.content))t.content=[]; return t.content;} return null; }
+    function findElementData(id) { if(!projectData?.tabs)return null; for(const t of projectData.tabs){if(!t)continue; if(!t.subTabs && Array.isArray(t.content)){const i=t.content.findIndex(el=>el?.id===id); if(i!==-1)return{element:t.content[i],parentArray:t.content,parentType:'tab',parentId:t.id,index:i};} if(Array.isArray(t.subTabs)){for(const s of t.subTabs){if(!s)continue; if(!Array.isArray(s.content))s.content=[]; const i=s.content.findIndex(el=>el?.id===id); if(i!==-1)return{element:s.content[i],parentArray:s.content,parentType:'subtab',parentId:s.id,grandparentTabId:t.id,index:i};}}} console.warn("Elem NF:", id); return null; }
+    function getDefaultElementData(type) { switch (type) { case 'heading': return { text: 'New Heading'}; case 'text': return { text: 'New text block...'}; case 'image': return { url:'', alt:'', width:'auto', height:'auto', heading:'', description:''}; case 'video': return { url:'', heading:'', description:''}; case 'presentation': return { url:'', heading:'', description:''}; case 'challenges': return { heading: 'Challenges', description: '', challenges: []}; case 'quiz': return { questions: []}; default: return {}; } }
+
+
+    // --- RENDERING ---
+    function applyProjectStyles() { const s=projectData.styles||{}; const r=document.documentElement; r.style.setProperty('--primary',s.primaryColor||'#5E81F4'); r.style.setProperty('--secondary',s.secondaryColor||'#FF7AC6'); r.style.setProperty('--accent',s.accentColor||'#FFB800'); r.style.setProperty('--global-text-color',s.globalTextColor||DEFAULT_TEXT_COLOR); r.style.setProperty('--global-font-family',s.globalFontFamily||DEFAULT_FONT_FAMILY); const sizeMap={small:'14px',medium:'16px',large:'18px',xlarge:'20px'}; const sizeName=s.globalFontSize||DEFAULT_FONT_SIZE_NAME; const cssFontSize=sizeMap[sizeName]||sizeName||DEFAULT_FONT_SIZE_CSS; r.style.setProperty('--global-font-size',cssFontSize); projectTitleElement.textContent=projectData.title||'Project'; projectSubtitleElement.textContent=projectData.subtitle||''; projectHeaderImageElement.src=projectData.headerImage||getDefaultProjectData().headerImage; projectHeaderImageElement.onerror=()=>{projectHeaderImageElement.src='https://via.placeholder.com/80/eee/ccc?text=Err';}; }
+    function renderSidebar() { tabsContainer.innerHTML=''; if(!projectData.tabs?.length){tabsContainer.innerHTML='<p style="text-align:center;color:#888;font-style:italic;">No tabs.</p>';return;} projectData.tabs.forEach(t=>{if(!t?.id)return; const tEl=document.createElement('div');tEl.className='tab';tEl.dataset.tabId=t.id; let isPActive=(t.id===currentTabId&&!currentSubTabId); const nSpan=document.createElement('span');nSpan.className='tab-name';nSpan.textContent=t.name||'...';nSpan.dataset.tabId=t.id; tEl.appendChild(nSpan); tEl.appendChild(createControlsDiv('tab',t.id)); tabsContainer.appendChild(tEl); if(Array.isArray(t.subTabs)){if(t.id===currentTabId&&currentSubTabId&&t.subTabs.some(st=>st?.id===currentSubTabId))isPActive=false; t.subTabs.forEach(st=>{if(!st?.id)return; const sEl=document.createElement('div');sEl.className='sub-tab';sEl.dataset.subTabId=st.id;sEl.dataset.parentTabId=t.id; if(st.id===currentSubTabId&&t.id===currentTabId)sEl.classList.add('active'); const sName=document.createElement('span');sName.className='sub-tab-name';sName.textContent=st.name||'...';sName.dataset.parentTabId=t.id;sName.dataset.subTabId=st.id; sEl.appendChild(sName); sEl.appendChild(createControlsDiv('subtab',t.id,st.id)); tabsContainer.appendChild(sEl);});} if(isPActive)tEl.classList.add('active');}); }
+    function createControlsDiv(type, tId, sId=null) { const d=document.createElement('div');d.className=type==='tab'?'tab-controls':'sub-tab-controls'; let h=''; if(type==='tab'){h+=`<button class="add-btn action-btn" title="+Sub" data-action="add-subtab" data-tab-id="${tId}">+ Sub</button><button class="edit-btn action-btn" title="Edit" data-action="edit-tab" data-tab-id="${tId}">✏️</button><button class="remove-btn action-btn" title="Remove" data-action="remove-tab" data-tab-id="${tId}">&times;</button>`;} else {h+=`<button class="edit-btn action-btn" title="Edit" data-action="edit-subtab" data-parent-tab-id="${tId}" data-sub-tab-id="${sId}">✏️</button><button class="remove-btn action-btn" title="Remove" data-action="remove-subtab" data-parent-tab-id="${tId}" data-sub-tab-id="${sId}">&times;</button>`;} d.innerHTML=h; return d; }
+    function renderContentArea() { contentArea.innerHTML=''; addControls.style.display='none'; const arr=getCurrentContentArray(); if(arr===null){const t=findTabData(currentTabId); if(t&&Array.isArray(t.subTabs)&&t.subTabs.length>0&&!currentSubTabId)contentArea.innerHTML='<p>Select sub-tab.</p>'; else if(t&&Array.isArray(t.subTabs)&&t.subTabs.length===0)contentArea.innerHTML='<p>Tab has no sub-tabs.</p>'; else if(currentTabId)contentArea.innerHTML='<p>Select valid section.</p>'; else contentArea.innerHTML='<p>Select tab.</p>'; return;} addControls.style.display='block'; if(arr.length===0){contentArea.innerHTML='<p>Empty section.</p>';}else{arr.forEach(el=>{if(el?.id&&el.type)renderElement(el,contentArea);});}}
+
+    function renderElement(elData, container) { const wrap=document.createElement('div');wrap.className='content-element';wrap.dataset.elementId=elData.id; wrap.appendChild(createStandardActions(elData.id,elData.type)); let html=''; try {const d=elData.data||{}; if(['image','video','presentation','challenges'].includes(elData.type)){if(d.heading)html+=`<h3 class="media-heading">${escapeHtml(d.heading)}</h3>`; if(d.description)html+=`<p class="media-description">${escapeHtml(d.description)}</p>`;} switch(elData.type){ case 'heading':html+=`<h2 class="element-heading">${escapeHtml(d.text||'H')}</h2>`;break; case 'text':html+=`<p class="element-text">${escapeHtml(d.text||'...')}</p>`;break; case 'image':const iUrl=d.url||'#', iAlt=escapeHtml(d.alt||''), iW=escapeHtml(d.width||'auto'), iH=escapeHtml(d.height||'auto'); html+=`<div class="element-image-wrapper"><img src="${escapeHtml(iUrl)}" alt="${iAlt}" style="width:${iW};height:${iH};" onerror="this.src='https://via.placeholder.com/150?text=ERR'"></div>`;break; case 'video':case 'presentation':const eUrl=d.url||'about:blank'; if(!eUrl.startsWith('https')&&!eUrl.startsWith('http')&&eUrl!=='about:blank')throw new Error("Bad URL"); const fUrl=getEmbedUrlWithOptions(eUrl); const eTitle=escapeHtml(elData.type[0]==='v'?'Vid':'Pres'); html+=`<div class="media-wrapper-16-9"><iframe src="${escapeHtml(fUrl)}" title="${eTitle}" frameborder="0" allow="accelerometer;clipboard-write;encrypted-media;gyroscope;picture-in-picture;web-share;fullscreen" allowfullscreen></iframe></div>`;break; case 'quiz':renderQuizElement(elData,wrap); html=null; break; case 'challenges':renderChallengesElement(elData,wrap); html=null; break; default: html=`<p>Unknown:${escapeHtml(elData.type)}</p>`; } if(html!==null)wrap.insertAdjacentHTML('beforeend',html); } catch(e){console.error("Render err:",elData,e); wrap.insertAdjacentHTML('beforeend',`<p style="color:red;">Render error.</p>`);} container.appendChild(wrap); }
+    function createStandardActions(id,type){const el=document.createElement('div'); el.className='element-actions'; el.innerHTML=`<button class="edit-btn action-btn" title="Edit" data-action="edit-element" data-element-id="${id}">✏️</button><button class="remove-btn action-btn" title="Remove" data-action="remove-element" data-element-id="${id}">&times;</button>`; return el;}
+    function renderQuizElement(quizData, wrap) { wrap.classList.add('element-quiz'); const cont=document.createElement('div'); cont.className='quiz-container-inner'; cont.dataset.quizId=quizData.id; const qs=quizData.data?.questions||[]; if(qs.length===0){cont.innerHTML='<p>No Qs.</p>';}else{qs.forEach((q,i)=>{if(!q)return; const qDiv=document.createElement('div'); qDiv.className='quiz-question'; qDiv.dataset.questionIndex=i; const qCont=document.createElement('div'); qCont.className='quiz-question-content'; if(q.questionImageUrl)qCont.innerHTML+=`<img class="quiz-question-image" src="${escapeHtml(q.questionImageUrl)}" alt="Q ${i+1}" onerror="this.style.display='none'">`; qCont.innerHTML+=`<p class="quiz-question-text">${i+1}. ${escapeHtml(q.questionText||'...')}</p>`; qDiv.appendChild(qCont); const optsDiv=document.createElement('div'); optsDiv.className='quiz-options'; const cAns=String(q.correctAnswer||'').trim(); const iAns=Array.isArray(q.incorrectAnswers)?q.incorrectAnswers:[]; const iImgs=Array.isArray(q.incorrectAnswersImageUrls)?q.incorrectAnswersImageUrls:[]; const iOpts=iAns.map((t,idx)=>({text:String(t||'').trim(),img:iImgs[idx]||null})).filter(o=>o.text!==''); const allOptsData=[{text:cAns,img:q.correctAnswerImageUrl||null,isC:true}, ...iOpts.map(o=>({...o,isC:false}))].filter(o=>o.text!==''); if(allOptsData.length>0){[...allOptsData].sort(()=>Math.random()-0.5).forEach(oD=>{ const oEl=document.createElement('div'); oEl.className='quiz-option'; oEl.dataset.isCorrect=oD.isC.toString(); if(oD.img) oEl.innerHTML+=`<img class="quiz-option-image" src="${escapeHtml(oD.img)}" alt="Opt" onerror="this.style.display='none'">`; oEl.innerHTML+=`<span class="quiz-option-text">${escapeHtml(oD.text)}</span>`; optsDiv.appendChild(oEl);});} else {optsDiv.innerHTML='<p style="font-size:0.9em;color:red;">No options.</p>';} qDiv.appendChild(optsDiv); qDiv.innerHTML+=`<div class="quiz-feedback correct" style="display:none;">Correct!</div><div class="quiz-feedback incorrect" style="display:none;">Incorrect</div>`; cont.appendChild(qDiv);});} cont.innerHTML+=`<button class="quiz-submit-btn" data-action="submit-quiz" data-quiz-id="${quizData.id}" ${qs.length===0?'disabled':''}>Submit</button><div class="final-quiz-result" style="display:none;"></div>`; wrap.appendChild(cont); }
+    function renderChallengesElement(elData, wrap) { wrap.classList.add('element-challenges'); const chs=elData.data?.challenges||[]; const list=document.createElement('ul'); list.className='challenges-list'; if(chs.length===0){list.innerHTML='<p>No challenges.</p>';}else{chs.forEach(c=>{if(!c?.id||!c.heading)return; const item=document.createElement('li'); item.className='challenge-item'; item.dataset.challengeId=c.id; item.innerHTML=`<img class="challenge-icon" src="${escapeHtml(c.iconUrl||'https://via.placeholder.com/40?text=C')}" alt="C" onerror="this.src='https://via.placeholder.com/40?text=?'"><div class="challenge-content"><h4>${escapeHtml(c.heading)}</h4>${c.description?`<p>${escapeHtml(c.description)}</p>`:''}${c.imageUrl?`<img src="${escapeHtml(c.imageUrl)}" alt="Challenge" onerror="this.style.display='none'">`:''}</div>`; list.appendChild(item);});} wrap.appendChild(list); }
+
+    // --- NAVIGATION & STATE ---
+    function setActiveTab(tId, sId=null) { const tData=findTabData(tId); if(!tData){initContent(); return;} const oldT=currentTabId, oldS=currentSubTabId; currentTabId=tId; currentSubTabId=null; if(Array.isArray(tData.subTabs)&&tData.subTabs.length>0){if(sId&&findSubTabData(tId,sId))currentSubTabId=sId; else if(tData.subTabs[0]?.id)currentSubTabId=tData.subTabs[0].id;} if(currentTabId!==oldT||currentSubTabId!==oldS){ console.log(`Active: T=${currentTabId}, S=${currentSubTabId}`); updateURLHash(); renderSidebar(); renderContentArea(); } }
+    function initContent() { const h=window.location.hash.substring(1); let iT=null,iS=null; if(h){[iT,iS]=h.split('/');} let tT=null,tS=null; if(iT&&findTabData(iT)){tT=iT; if(iS&&findSubTabData(tT,iS))tS=iS;} else if(projectData.tabs?.length>0&&projectData.tabs[0]?.id)tT=projectData.tabs[0].id; if(tT)setActiveTab(tT,tS); else {renderSidebar();renderContentArea();} }
+    function updateURLHash() { let h=''; if(currentTabId){h=`#${currentTabId}`;if(currentSubTabId)h+=`/${currentSubTabId}`;} const c=window.location.href.split('#')[0]; const n=h?c+h:c; try{if(window.location.hash!==h)history.pushState({tabId:currentTabId,subTabId:currentSubTabId},'',n);}catch(e){if(e.name==='SecurityError')console.warn("History restricted.");else console.error("Hash update err:",e);} }
+    window.onpopstate=(e)=>{console.log("Popstate:",e.state);if(e.state?.tabId){currentTabId=e.state.tabId;currentSubTabId=e.state.subTabId;renderSidebar();renderContentArea();}else initContent();};
+
+    // --- ACTIONS ---
+    function addTabAction() { const id=generateId('tab_'); const t={id,name:`Tab ${projectData.tabs.length+1}`,subTabs:null,content:[]}; if(!Array.isArray(projectData.tabs))projectData.tabs=[]; projectData.tabs.push(t); saveProjectData(); setActiveTab(id); openEditModal('tab',id); }
+    function addSubTabAction(pId) { const pTab=findTabData(pId); if(!pTab)return; const id=generateId('sub_'); const st={id,name:`Sub ${pTab.subTabs?.length?pTab.subTabs.length+1:1}`,content:[]}; if(!Array.isArray(pTab.subTabs)){if(pTab.content?.length){if(!confirm("Add sub & remove direct content?"))return;} pTab.content=undefined; pTab.subTabs=[];} pTab.subTabs.push(st); saveProjectData(); setActiveTab(pId,id); openEditModal('subtab',id,pId); }
+    function addElementAction(type) { if(!currentTabId){alert("Select section."); return;} const arr=getCurrentContentArray(); if(arr===null){alert(findTabData(currentTabId)?.subTabs?"Select sub-tab.":"Select valid section."); return;} const id=generateId(type+'_'); openEditModal('element',id,null,true); } // Open modal first
+    function removeTabAction(id) { const i=projectData.tabs?.findIndex(t=>t?.id===id); if(i===-1)return; if(!confirm(`Remove tab "${escapeHtml(projectData.tabs[i].name)}"?`))return; projectData.tabs.splice(i,1); saveProjectData(); if(currentTabId===id){currentTabId=null;currentSubTabId=null;initContent();}else renderSidebar(); }
+    function removeSubTabAction(pId,id) { const pTab=findTabData(pId); const i=pTab?.subTabs?.findIndex(st=>st?.id===id); if(!pTab||i===-1)return; if(!confirm(`Remove sub "${escapeHtml(pTab.subTabs[i].name)}"?`))return; pTab.subTabs.splice(i,1); saveProjectData(); if(currentSubTabId===id&&currentTabId===pId){currentSubTabId=null;setActiveTab(pId);}else renderSidebar(); }
+    function removeElementAction(id) { const res=findElementData(id); if(!res){alert("Cannot find element.");return;} if(!confirm(`Remove ${res.element.type}?`))return; res.parentArray.splice(res.index,1); saveProjectData(); renderContentArea(); }
+
+    // --- MODAL & EDITING ---
+    function openEditModal(type, id=null, parentId=null, isNew=false) { if(!modalFormContent){console.error("MFC NF!");return;} editingContext={type,id,parentId,isNew}; modalFormContent.innerHTML=''; let title='Edit', formHtml=''; try { let el=null; if(type==='element'&&!isNew){const res=findElementData(id); if(!res)throw new Error("Elem NF"); el=res.element;} switch(type){ case 'tab':const t=findTabData(id);if(!t)throw new Error("TNF"); title='Edit Tab'; formHtml=`<label>Name:</label><input id="edit-generic-name" value="${escapeHtml(t.name||'')}" required>`; break; case 'subtab':const st=findSubTabData(parentId,id);if(!st)throw new Error("STNF"); title='Edit Sub-Tab'; formHtml=`<label>Name:</label><input id="edit-generic-name" value="${escapeHtml(st.name||'')}" required>`; break; case 'element':const elType=isNew?id.split('_')[0]:el.type; title=`${isNew?'Add':'Edit'} ${elType.charAt(0).toUpperCase()+elType.slice(1)}`; formHtml=generateElementForm(isNew?{type:elType, data:getDefaultElementData(elType)}:el); break; case 'styles':title='Edit Project Info & Styles'; formHtml=generateStyleForm(projectData); break; default: throw new Error(`Unknown type: ${type}`); } modalTitle.textContent=title; modalFormContent.innerHTML=formHtml; modal.style.display='flex'; const firstInput=modalFormContent.querySelector('input:not([type=color]), textarea, select'); if(firstInput)setTimeout(()=>firstInput.focus(),50); } catch(e){ console.error("Open modal err:",e); alert(`Err: ${e.message}`); closeModal(); } }
+    function generateElementForm(elData) { const d=elData.data||{}; const type=elData.type; let h=''; switch(type){ case 'heading':h=`<label>Heading:</label><input id="edit-element-text" value="${escapeHtml(d.text||'')}">`; break; case 'text':h=`<label>Text:</label><textarea id="edit-element-text" rows="6">${escapeHtml(d.text||'')}</textarea>`; break; case 'image':case 'video':case 'presentation':const isImg=type==='image'; const tName=type[0].toUpperCase()+type.slice(1); h=`<fieldset><legend>${tName}</legend><label>URL:</label><input type="url" id="edit-element-url" value="${escapeHtml(d.url||'')}" required>${isImg?`<label>Alt:</label><input id="edit-element-alt" value="${escapeHtml(d.alt||'')}">`:''} ${isImg?`<div class="input-group"><div><label>W:</label><input id="edit-element-width" value="${escapeHtml(d.width||'auto')}"></div><div><label>H:</label><input id="edit-element-height" value="${escapeHtml(d.height||'auto')}"></div></div>`:''}</fieldset><fieldset><legend>Opt. H/D</legend><label>H:</label><input id="edit-media-heading" value="${escapeHtml(d.heading||'')}"><label>D:</label><textarea id="edit-media-description" r="3">${escapeHtml(d.description||'')}</textarea></fieldset>`; break; case 'quiz':h=generateQuizEditForm(d); break; case 'challenges':h=generateChallengesEditForm(d); break; default: h='<p>Cannot edit.</p>'; } return h; }
+    function generateGlobalTextStyleFormControls(styles={}) { const cF=styles.globalFontFamily||DEFAULT_FONT_FAMILY; const cS=styles.globalFontSize||DEFAULT_FONT_SIZE_NAME; const cC=styles.globalTextColor||DEFAULT_TEXT_COLOR; let fOpts=FONT_FAMILIES.map(f=>`<option value="${escapeHtml(f.value)}" ${cF===f.value?'selected':''}>${escapeHtml(f.name)}</option>`).join(''); let sOpts=FONT_SIZES.map(s=>{let iS=cS===s;if(s==='custom'&&cS&&!FONT_SIZES.includes(cS))iS=true; return `<option value="${s}" ${iS?'selected':''}>${s==='custom'?'Custom...':s[0].toUpperCase()+s.slice(1)}</option>`;}).join(''); const isCustom=(cS&&!FONT_SIZES.slice(0,-1).includes(cS)); const customVal=isCustom?cS:''; return `<div class="global-text-style-options"><label>Font:</label><select id="edit-global-style-font">${fOpts}</select><br><label>Size:</label><select id="edit-global-style-size">${sOpts}</select><input id="edit-global-style-size-custom" placeholder="17px" value="${escapeHtml(customVal)}" style="display:${isCustom?'inline-block':'none'};width:100px;"><br><label>Color:</label><input type="color" id="edit-global-style-color" value="${cC}"></div>`; }
+    document.addEventListener('change',(e)=>{if(e.target?.id==='edit-global-style-size'){const c=document.getElementById('edit-global-style-size-custom'); if(c)c.style.display=e.target.value==='custom'?'inline-block':'none'; if(e.target.value!=='custom'&&c)c.value='';}});
+    function generateQuizEditForm(quizData){let h='<fieldset><legend>Qs</legend><div id="quiz-editor-questions-container">'; const qs=quizData.questions||[]; qs.forEach((q,i)=>{h+=renderSingleQuizQuestionForm(q,i);}); if(qs.length===0)h+='<p id="quiz-editor-no-questions-msg">No Qs.</p>'; h+='</div></fieldset><button type="button" id="quiz-editor-add-question-btn" class="add-btn quiz-edit-add-question-btn">+Q</button>'; return h;}
+    function renderSingleQuizQuestionForm(q={},i){const inc=Array.isArray(q.incorrectAnswers)?q.incorrectAnswers:[]; const incImgs=Array.isArray(q.incorrectAnswersImageUrls)?q.incorrectAnswersImageUrls:[]; let h=`<div class="quiz-edit-question" data-question-index="${i}"><h4>Q ${i+1}<button type="button" class="remove-btn action-btn quiz-editor-remove-question-btn" data-index="${i}">&times;</button></h4><label>Txt:</label><textarea id="quiz-q-text-${i}" rows="2" required>${escapeHtml(q.questionText||'')}</textarea><div class="quiz-image-input"><label>Q Img:</label><input type="url" id="quiz-q-image-${i}" value="${escapeHtml(q.questionImageUrl||'')}"></div><label style="color:green;">Correct:</label><input id="quiz-q-correct-${i}" value="${escapeHtml(q.correctAnswer||'')}" required><div class="quiz-image-input"><label>Correct Img:</label><input id="quiz-q-correct-image-${i}" value="${escapeHtml(q.correctAnswerImageUrl||'')}"></div><label>Incorrect:</label>`; for(let j=0;j<3;j++){h+=`<div style="border-left:2px solid #eee;padding-left:10px;margin-bottom:10px;"><input class="quiz-q-incorrect" value="${escapeHtml(inc[j]||'')}"><div class="quiz-image-input"><label>Inc ${j+1} Img:</label><input class="quiz-q-incorrect-image" id="quiz-q-incorrect-image-${i}-${j}" value="${escapeHtml(incImgs[j]||'')}"></div></div>`;} h+=`</div>`; return h;}
+    function generateChallengesEditForm(chData){const d=chData||{challenges:[]}; let h=`<fieldset><legend>Challenges Section</legend><label>Heading:</label><input id="edit-challenges-heading" value="${escapeHtml(d.heading||'')}"><label>Desc:</label><textarea id="edit-challenges-description" rows="2">${escapeHtml(d.description||'')}</textarea></fieldset><fieldset><legend>Items</legend><div id="challenges-editor-list">`; const chs=d.challenges||[]; if(chs.length===0)h+='<p id="challenges-editor-no-items-msg">No items.</p>'; else chs.forEach((c,i)=>h+=renderSingleChallengeForm(c,i)); h+=`</div></fieldset><button type="button" id="challenges-editor-add-btn" class="add-btn" ${chs.length>=MAX_CHALLENGES?'disabled':''}>+Challenge</button>${chs.length>=MAX_CHALLENGES?`<p style="color:var(--danger);font-size:0.9em;">Max ${MAX_CHALLENGES}.</p>`:''}`; return h;}
+    function renderSingleChallengeForm(c={},i){return `<div class="challenge-edit-item" data-challenge-index="${i}" data-challenge-id="${c.id || ''}"><h5>Challenge ${i+1}<button type="button" class="remove-btn action-btn challenges-editor-remove-btn" data-index="${i}">&times;</button></h5><label>Heading:</label><input class="challenge-heading-input" value="${escapeHtml(c.heading||'')}" required><label>Icon URL:</label><input class="challenge-icon-input" value="${escapeHtml(c.iconUrl||'')}"><label>Desc:</label><textarea class="challenge-desc-input" rows="2">${escapeHtml(c.description||'')}</textarea><label>Img URL:</label><input class="challenge-image-input" value="${escapeHtml(c.imageUrl||'')}" ></div>`;}
+    function generateStyleForm(data){const s=data.styles||{}; return `<fieldset><legend>Info&Header</legend><label>Title:</label><input id="edit-style-title" value="${escapeHtml(data.title||'')}"><label>Subtitle:</label><input id="edit-style-subtitle" value="${escapeHtml(data.subtitle||'')}"><label>Hdr Img:</label><input type="url" id="edit-style-headerimg" value="${escapeHtml(data.headerImage||'')}"></fieldset><fieldset><legend>Theme Colors</legend><div class="color-picker"><label>1ry:</label><input type="color" id="edit-style-primary" value="${s.primaryColor||'#5E81F4'}"><label>2ry:</label><input type="color" id="edit-style-secondary" value="${s.secondaryColor||'#FF7AC6'}"><label>Acc:</label><input type="color" id="edit-style-accent" value="${s.accentColor||'#FFB800'}"></div></fieldset><fieldset><legend>Global Text</legend>${generateGlobalTextStyleFormControls(s)}</fieldset>`;}
+    function closeModal(){ if(modal)modal.style.display='none'; if(modalFormContent)modalFormContent.innerHTML=''; editingContext={type:null,id:null,parentId:null,isNew:false}; }
+
+    // --- SAVING EDITS ---
+    function saveEditAction(){const{type,id,parentId,isNew}=editingContext; if(!type||!modalFormContent){closeModal();return;} try{let needsSidebar=false,needsContent=false,needsStyle=false; let newElementData=null; switch(type){case 'tab':case 'subtab':const nameIn=getModalValue('#edit-generic-name'); if(!nameIn)throw new Error("Name empty."); if(type==='tab'){const t=findTabData(id);if(!t)throw new Error("TNF");t.name=nameIn;}else{const st=findSubTabData(parentId,id);if(!st)throw new Error("STNF");st.name=nameIn;} needsSidebar=true; break; case 'element':newElementData=saveElementEdit(id,isNew); if(isNew&&newElementData){const arr=getCurrentContentArray();if(arr)arr.push(newElementData);else throw new Error("Cannot add.");} needsContent=true; break; case 'styles':projectData.title=getModalValue('#edit-style-title')||projectData.title; projectData.subtitle=getModalValue('#edit-style-subtitle')||projectData.subtitle; projectData.headerImage=getModalValue('#edit-style-headerimg')||projectData.headerImage; if(!projectData.styles)projectData.styles={}; projectData.styles.primaryColor=getModalValue('#edit-style-primary','#5E81F4',false); projectData.styles.secondaryColor=getModalValue('#edit-style-secondary','#FF7AC6',false); projectData.styles.accentColor=getModalValue('#edit-style-accent','#FFB800',false); projectData.styles.globalFontFamily=getModalValue('#edit-global-style-font',DEFAULT_FONT_FAMILY,false); const sizeSel=modalFormContent.querySelector('#edit-global-style-size'); if(sizeSel?.value==='custom'){projectData.styles.globalFontSize=getModalValue('#edit-global-style-size-custom',DEFAULT_FONT_SIZE_NAME)||DEFAULT_FONT_SIZE_NAME;}else{projectData.styles.globalFontSize=sizeSel?.value||DEFAULT_FONT_SIZE_NAME;} projectData.styles.globalTextColor=getModalValue('#edit-global-style-color',DEFAULT_TEXT_COLOR,false); needsStyle=true; break; default: throw new Error(`Unknown save type:${type}`); } saveProjectData(); if(needsStyle)applyProjectStyles(); if(needsSidebar)renderSidebar(); if(needsContent||(isNew&&newElementData))renderContentArea(); closeModal();}catch(e){console.error("Save err:",e);alert(`Save fail:${e.message}`);}}
+    function getModalValue(sel,def='',trim=true){const i=modalFormContent?.querySelector(sel); if(!i)return def; const v=i.value; return trim?v.trim():v;}
+
+    function saveElementEdit(elementId, isNew) { let elementData = isNew ? { id: elementId, type: elementId.split('_')[0], data: getDefaultElementData(elementId.split('_')[0]) } : findElementData(elementId)?.element; if (!elementData) throw new Error(`Element ${elementId} NF for saving.`); if (!elementData.data) elementData.data = {}; const getVal = (sel, trim = true) => getModalValue(sel, '', trim); switch (elementData.type) { case 'heading': case 'text': elementData.data.text = getVal('#edit-element-text', elementData.type === 'heading'); break; case 'image': case 'video': case 'presentation': elementData.data.url=getVal('#edit-element-url'); if(!elementData.data.url) throw new Error("URL required."); elementData.data.heading=getVal('#edit-media-heading'); elementData.data.description=getVal('#edit-media-description', false); if (elementData.type === 'image') { elementData.data.alt=getVal('#edit-element-alt'); elementData.data.width=getVal('#edit-element-width')||'auto'; elementData.data.height=getVal('#edit-element-height')||'auto'; if (!elementData.data.width.match(/^(auto|\d+(\s*(px|%)?)?)$/i)) elementData.data.width='auto'; if (!elementData.data.height.match(/^(auto|\d+(\s*(px|%)?)?)$/i)) elementData.data.height='auto'; } else { delete elementData.data.width; delete elementData.data.height; delete elementData.data.alt; } break; case 'quiz': saveQuizEditFromModal(elementData.data); break; case 'challenges': saveChallengesEditFromModal(elementData.data); break; default: throw new Error(`Cannot save type: ${elementData.type}`); } return elementData; }
+    function saveQuizEditFromModal(quizData) { if (!modalFormContent) throw new Error("MFC NF saving quiz."); quizData.questions = []; modalFormContent.querySelectorAll('.quiz-edit-question').forEach((qForm, i) => { const qTxt=qForm.querySelector(`#quiz-q-text-${i}`)?.value.trim(); const qImg=qForm.querySelector(`#quiz-q-image-${i}`)?.value.trim(); const cAns=qForm.querySelector(`#quiz-q-correct-${i}`)?.value.trim(); const cImg=qForm.querySelector(`#quiz-q-correct-image-${i}`)?.value.trim(); const iAns=[], iImgs=[]; qForm.querySelectorAll('.quiz-q-incorrect').forEach((inp, idx)=>{const iTxt=inp.value.trim(); const iImgUrl=qForm.querySelector(`#quiz-q-incorrect-image-${i}-${idx}`)?.value.trim(); if(iTxt){iAns.push(iTxt); iImgs.push(iImgUrl||null);}}); if(qTxt&&cAns){quizData.questions.push({questionText:qTxt,questionImageUrl:qImg||null,correctAnswer:cAns,correctAnswerImageUrl:cImg||null,incorrectAnswers:iAns,incorrectAnswersImageUrls:iImgs});}else{console.warn(`Skip Q ${i+1}`);} }); console.log("Quiz saved:", quizData.questions); }
+    function saveChallengesEditFromModal(chData) { if(!modalFormContent)throw new Error("MFC NF saving C."); chData.heading=getModalValue('#edit-challenges-heading'); chData.description=getModalValue('#edit-challenges-description', '', false); chData.challenges=[]; modalFormContent.querySelectorAll('.challenge-edit-item').forEach(item => { const head=item.querySelector('.challenge-heading-input')?.value.trim(); if(!head)return; chData.challenges.push({ id:item.dataset.challengeId||generateId('chal_'), heading:head, iconUrl:item.querySelector('.challenge-icon-input')?.value.trim()||null, description:item.querySelector('.challenge-desc-input')?.value||'', imageUrl:item.querySelector('.challenge-image-input')?.value.trim()||null }); }); console.log("Challenges saved:", chData.challenges); }
+
+    // --- QUIZ INTERACTION ---
+    function selectQuizOption(optEl) { const qDiv=optEl.closest('.quiz-question'); if(!qDiv||qDiv.classList.contains('answered'))return; qDiv.querySelectorAll('.quiz-option').forEach(o=>o.classList.remove('selected')); optEl.classList.add('selected'); }
+    function submitQuizAction(quizId) { const qEl=document.querySelector(`.content-element[data-element-id="${quizId}"]`); const cont=qEl?.querySelector('.quiz-container-inner'); if(!cont)return; const qs=cont.querySelectorAll('.quiz-question'); let score=0, answered=0; const total=qs.length; let firstUnanswered=null; if(total===0){alert("No Qs!");return;} qs.forEach(q=>{const sel=q.querySelector('.quiz-option.selected'); q.querySelectorAll('.quiz-feedback').forEach(fb=>fb.style.display='none'); q.classList.remove('answered'); q.querySelectorAll('.quiz-option').forEach(o=>o.classList.remove('correct','incorrect')); if(sel){answered++; q.classList.add('answered'); const isC=sel.dataset.isCorrect==='true'; q.querySelectorAll('.quiz-option').forEach(o=>{if(o.dataset.isCorrect==='true')o.classList.add('correct'); if(o===sel&&!isC)o.classList.add('incorrect');}); if(isC){score++; const fb=q.querySelector('.quiz-feedback.correct'); if(fb)fb.style.display='block';}else{const fb=q.querySelector('.quiz-feedback.incorrect'); if(fb){const cOpt=q.querySelector('.quiz-option.correct .quiz-option-text'); const cTxt=cOpt?cOpt.textContent:'N/A'; fb.innerHTML=`Incorrect. Correct: <strong>${escapeHtml(cTxt)}</strong>`; fb.style.display='block';}}}else{if(!firstUnanswered)firstUnanswered=q;}}); const btn=cont.querySelector('.quiz-submit-btn'); const resDiv=cont.querySelector('.final-quiz-result'); if(answered<total){alert(`Answer all ${total} Qs.`); if(firstUnanswered){firstUnanswered.scrollIntoView({behavior:'smooth',block:'center'}); firstUnanswered.style.outline='2px solid var(--danger)'; setTimeout(()=>{if(firstUnanswered)firstUnanswered.style.outline='none';},2500);}}else{const perc=total>0?Math.round((score/total)*100):0; if(resDiv){resDiv.textContent=`Complete! ${score}/${total} (${perc}%)`; resDiv.className=`final-quiz-result ${perc>=70?'success':'fail'}`; resDiv.style.display='block'; resDiv.scrollIntoView({behavior:'smooth',block:'nearest'});} if(btn)btn.disabled=true; qs.forEach(q=>q.classList.add('answered'));} }
+
+    // --- EVENT LISTENERS ---
+    function setupEventListeners() {
+        addTabButton?.addEventListener('click', addTabAction);
+        editStylesButton?.addEventListener('click', ()=>openEditModal('styles'));
+        tabsContainer?.addEventListener('click', (e)=>{const t=e.target; const btn=t.closest('button[data-action]'); const name=t.closest('.tab-name,.sub-tab-name'); if(btn){e.stopPropagation(); const act=btn.dataset.action; const tId=btn.dataset.tabId||btn.dataset.parentTabId; const sId=btn.dataset.subTabId; if(!tId&&['edit-subtab','remove-subtab','add-subtab'].includes(act))return; switch(act){ case 'edit-tab':openEditModal('tab',tId);break; case 'remove-tab':removeTabAction(tId);break; case 'add-subtab':addSubTabAction(tId);break; case 'edit-subtab':openEditModal('subtab',sId,tId);break; case 'remove-subtab':removeSubTabAction(tId,sId);break; }} else if(name?.classList.contains('sub-tab-name')){setActiveTab(name.dataset.parentTabId,name.dataset.subTabId);} else if(name?.classList.contains('tab-name')){setActiveTab(name.dataset.tabId);}});
+        addControls?.addEventListener('click', (e)=>{if(e.target.tagName==='BUTTON'&&e.target.dataset.type)addElementAction(e.target.dataset.type);});
+        contentArea?.addEventListener('click', (e)=>{const t=e.target; const actBtn=t.closest('button[data-action]'); const qOpt=t.closest('.quiz-option'); if(actBtn){const act=actBtn.dataset.action; const elId=actBtn.dataset.elementId||t.closest('.content-element')?.dataset.elementId; const qId=actBtn.dataset.quizId||t.closest('.quiz-container-inner')?.dataset.quizId; switch(act){ case 'edit-element':if(elId)openEditModal('element',elId); break; case 'remove-element':if(elId)removeElementAction(elId); break; case 'submit-quiz':if(qId)submitQuizAction(qId); break;}} else if(qOpt){selectQuizOption(qOpt);}});
+        closeModalButton?.addEventListener('click', closeModal); cancelModalButton?.addEventListener('click', closeModal); saveModalButton?.addEventListener('click', saveEditAction);
+        modalFormContent?.addEventListener('click', (e)=>{const target=e.target; if(target.matches('#quiz-editor-add-question-btn')){const cont=modalFormContent.querySelector('#quiz-editor-questions-container'); const msg=modalFormContent.querySelector('#quiz-editor-no-questions-msg'); if(cont){if(msg)msg.remove(); const idx=cont.children.length; cont.insertAdjacentHTML('beforeend',renderSingleQuizQuestionForm({},idx));}} else if(target.matches('.quiz-editor-remove-question-btn')){const idx=parseInt(target.dataset.index,10); if(!isNaN(idx)&&confirm(`Remove Q ${idx+1}?`)){const qDiv=target.closest('.quiz-edit-question'); if(qDiv)qDiv.remove();}} else if(target.matches('#challenges-editor-add-btn')){const list=modalFormContent.querySelector('#challenges-editor-list'); const msg=modalFormContent.querySelector('#challenges-editor-no-items-msg'); const count=list?list.children.length:0; if(list&&count<MAX_CHALLENGES){if(msg)msg.remove(); const idx=count; list.insertAdjacentHTML('beforeend',renderSingleChallengeForm({},idx)); if(count+1>=MAX_CHALLENGES)target.disabled=true;}} else if(target.matches('.challenges-editor-remove-btn')){const idx=parseInt(target.dataset.index,10); if(!isNaN(idx)&&confirm(`Remove Challenge ${idx+1}?`)){const cDiv=target.closest('.challenge-edit-item'); if(cDiv)cDiv.remove(); const addBtn=modalFormContent.querySelector('#challenges-editor-add-btn'); if(addBtn)addBtn.disabled=false;}} });
+        document.addEventListener('keydown', (e)=>{if(e.key==='Escape'&&modal?.style.display==='flex')closeModal();});
+    } // End setupEventListeners
+
+}); // End DOMContentLoaded
+</script>
+
+</body>
+</html>
