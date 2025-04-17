@@ -90,16 +90,56 @@
         .item-card .item-image { width: 100%; height: 150px; object-fit: cover; background-color: #eee; border-bottom: 1px solid #eee; }
         .item-card .item-image[data-error="true"] { content: var(--error-image-fallback); object-fit: contain; padding: 10px; }
         .item-card .item-content { padding: var(--card-padding); flex-grow: 1; display: flex; flex-direction: column;}
-        .item-card h4 { margin-bottom: 8px; word-break: break-word; color: var(--primary); font-size: 1.15rem; }
+        
+.item-card h4,
+ .item-row h4 {
+     margin-bottom: 0; /* Remove bottom margin from h4 itself */
+     flex-grow: 1; /* Allow title to take remaining space */
+     word-break: break-word; /* Keep word break */
+     /* Font size adjustments already in place are fine */
+ }
+
         .item-card p { font-size: 0.9rem; color: #555; margin-bottom: 15px; word-break: break-word; flex-grow: 1; /* Pushes actions down */ display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
         .item-card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
         .item-card-actions .action-btn { padding: 6px; font-size: 1.1rem;} /* Make icons slightly bigger */
 
+ .item-heading-container {
+     display: flex;
+     align-items: center; /* Vertically align buttons and text */
+     gap: 8px; /* Space between buttons and title */
+     margin-bottom: 8px; /* Space below heading block */
+     flex-wrap: nowrap; /* Prevent wrapping */
+ }
+
+ .item-inline-actions {
+     display: flex;
+     gap: 4px; /* Space between edit/remove buttons */
+     flex-shrink: 0; /* Prevent buttons from shrinking */
+ }
+
+ .item-inline-actions .action-btn {
+     padding: 4px; /* Slightly smaller padding */
+     font-size: 1rem; /* Adjust icon size */
+     background-color: transparent; /* Make them less prominent */
+     border: 1px solid transparent; /* Add border space */
+     opacity: 0.6;
+ }
+ .item-inline-actions .action-btn:hover {
+     opacity: 1;
+     background-color: rgba(0,0,0,0.08);
+     border-color: #ccc;
+ }
+
+        
  /* List View */
+
  .item-list.list-view {
      display: flex;
      flex-direction: column;
-     gap: 10px; /* Slightly reduced gap for list */
+     gap: 10px;
+     max-width: 800px; /* <<<--- ADD: Constrain max width */
+     margin-left: auto; /* <<<--- ADD: Center the list */
+     margin-right: auto; /* <<<--- ADD: Center the list */
  }
  .item-row {
      display: flex;
@@ -787,7 +827,6 @@ function setItemViewMode(container, mode, gridBtn, listBtn) {
     }
 }
 
-
 function renderDashboardView() {
     courseListContainer.innerHTML = '';
     if (appData.courses.length === 0) {
@@ -795,43 +834,51 @@ function renderDashboardView() {
     } else {
         appData.courses.forEach(course => {
             const itemElement = document.createElement('div');
-            // Choose class based on current view mode for the container
             itemElement.className = courseListContainer.classList.contains('list-view') ? 'item-row item-container' : 'item-card item-container';
             itemElement.dataset.courseId = course.id;
 
             const defaultImage = 'https://via.placeholder.com/300x150/eee/ccc?text=Course';
             const imageUrl = course.imageUrl || defaultImage;
-            const descriptionHtml = course.description
-                ? `<p>${escapeHtml(course.description)}</p>`
-                : '<p class="no-description" style="display:none;"></p>'; // Hidden placeholder for grid or completely omit for list
+            const descriptionHtml = course.description ? `<p>${escapeHtml(course.description)}</p>` : '';
 
-            // Different structure for card vs row
+            // --- NEW Structure ---
+            const inlineActionsHtml = `
+                <div class="item-inline-actions">
+                    <button class="edit-btn action-btn" data-action="edit-course" title="Edit Course">✏️</button>
+                    <button class="remove-btn action-btn" data-action="remove-course" title="Remove Course">×</button>
+                </div>`;
+
+            const headingHtml = `
+                <div class="item-heading-container">
+                    ${inlineActionsHtml}
+                    <h4>${escapeHtml(course.name)}</h4>
+                </div>`;
+            // --- End NEW Structure ---
+
+
             if (courseListContainer.classList.contains('list-view')) {
+                 // List View: Image, Content (Heading+Actions, Desc)
                  itemElement.innerHTML = `
                     <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(course.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
                     <div class="item-content">
                          <div class="item-text-details">
-                             <h4>${escapeHtml(course.name)}</h4>
-                             ${course.description ? `<p>${escapeHtml(course.description)}</p>` : ''}
+                             ${headingHtml}
+                             ${descriptionHtml}
                          </div>
-                         <div class="item-card-actions">
-                            <!-- View button is implicit by clicking row -->
-                            <button class="edit-btn action-btn" data-action="edit-course" title="Edit Course">✏️</button>
-                            <button class="remove-btn action-btn" data-action="remove-course" title="Remove Course">×</button>
-                        </div>
+                         <!-- Actions container removed/hidden by CSS -->
                     </div>`;
-            } else { // Grid view
+            } else {
+                // Grid View: Image, Content (Heading+Actions, Desc, Bottom Actions)
                 itemElement.innerHTML = `
                     <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(course.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
                     <div class="item-content">
-                        <h4>${escapeHtml(course.name)}</h4>
-                        ${descriptionHtml}
+                        ${headingHtml}
+                        ${descriptionHtml || '<p style="display:none;"></p>'}
                         <div class="item-card-actions">
                              <button class="view-btn action-btn" data-action="view-projects" title="View Projects">
                                 ▶ Projects (${course.projects?.length || 0})
                              </button>
-                            <button class="edit-btn action-btn" data-action="edit-course" title="Edit Course">✏️</button>
-                            <button class="remove-btn action-btn" data-action="remove-course" title="Remove Course">×</button>
+                             <!-- Edit/Remove buttons moved -->
                         </div>
                     </div>
                 `;
@@ -842,7 +889,7 @@ function renderDashboardView() {
             if (img && img.complete && img.naturalWidth === 0 && !img.dataset.error) { handleImageError(img); }
         });
     }
-    // Update add button state (same as before)
+    // Update add button state
     addCourseButton.disabled = appData.courses.length >= MAX_COURSES;
     document.getElementById('max-courses-msg')?.remove();
     if(addCourseButton.disabled) addCourseButton.insertAdjacentHTML('afterend', `<p id="max-courses-msg" style="color:var(--danger); font-size:0.9em;">Maximum courses (${MAX_COURSES}) reached.</p>`);
@@ -862,42 +909,49 @@ function renderCourseView(courseId) {
     } else {
         projects.forEach(project => {
             const itemElement = document.createElement('div');
-            // Choose class based on view mode
             itemElement.className = projectListContainer.classList.contains('list-view') ? 'item-row item-container' : 'item-card item-container';
             itemElement.dataset.projectId = project.id;
             itemElement.dataset.courseId = courseId; // Keep course ID for context
 
             const defaultImage = 'https://via.placeholder.com/300x150/eee/ccc?text=Project';
             const imageUrl = project.imageUrl || defaultImage;
-            const descriptionHtml = project.description
-                ? `<p>${escapeHtml(project.description)}</p>`
-                : '<p class="no-description" style="display:none;"></p>'; // Hidden placeholder for grid
+            const descriptionHtml = project.description ? `<p>${escapeHtml(project.description)}</p>` : '';
 
-            // Different structure for card vs row
+             // --- NEW Structure ---
+             const inlineActionsHtml = `
+                <div class="item-inline-actions">
+                    <button class="edit-btn action-btn" data-action="edit-project" title="Edit Project">✏️</button>
+                    <button class="remove-btn action-btn" data-action="remove-project" title="Remove Project">×</button>
+                </div>`;
+
+            const headingHtml = `
+                <div class="item-heading-container">
+                    ${inlineActionsHtml}
+                    <h4>${escapeHtml(project.name)}</h4>
+                </div>`;
+             // --- End NEW Structure ---
+
+
             if (projectListContainer.classList.contains('list-view')) {
+                 // List View: Image, Content (Heading+Actions, Desc)
                  itemElement.innerHTML = `
                     <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(project.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
                      <div class="item-content">
                          <div class="item-text-details">
-                            <h4>${escapeHtml(project.name)}</h4>
-                            ${project.description ? `<p>${escapeHtml(project.description)}</p>` : ''}
+                            ${headingHtml}
+                            ${descriptionHtml}
                          </div>
-                         <div class="item-card-actions">
-                            <!-- REMOVED Open button -->
-                            <button class="edit-btn action-btn" data-action="edit-project" title="Edit Project">✏️</button>
-                            <button class="remove-btn action-btn" data-action="remove-project" title="Remove Project">×</button>
-                        </div>
+                          <!-- Actions container removed/hidden by CSS -->
                      </div>`;
-            } else { // Grid View
-                itemElement.innerHTML = `
+            } else {
+                // Grid View: Image, Content (Heading+Actions, Desc, Bottom Actions - now empty)
+                 itemElement.innerHTML = `
                     <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(project.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
                     <div class="item-content">
-                        <h4>${escapeHtml(project.name)}</h4>
-                        ${descriptionHtml}
+                        ${headingHtml}
+                        ${descriptionHtml || '<p style="display:none;"></p>'}
                         <div class="item-card-actions">
-                            <!-- REMOVED Open button -->
-                            <button class="edit-btn action-btn" data-action="edit-project" title="Edit Project">✏️</button>
-                            <button class="remove-btn action-btn" data-action="remove-project" title="Remove Project">×</button>
+                            <!-- No actions here anymore -->
                         </div>
                     </div>
                 `;
@@ -908,7 +962,7 @@ function renderCourseView(courseId) {
             if (img && img.complete && img.naturalWidth === 0 && !img.dataset.error) { handleImageError(img); }
         });
     }
-    // Update add button state (same as before)
+    // Update add button state
     addProjectButton.disabled = projects.length >= MAX_PROJECTS_PER_COURSE;
      document.getElementById('max-projects-msg')?.remove();
      if(addProjectButton.disabled) addProjectButton.insertAdjacentHTML('afterend', `<p id="max-projects-msg" style="color:var(--danger); font-size:0.9em;">Maximum projects (${MAX_PROJECTS_PER_COURSE}) reached.</p>`);
