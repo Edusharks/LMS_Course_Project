@@ -95,17 +95,80 @@
         .item-card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
         .item-card-actions .action-btn { padding: 6px; font-size: 1.1rem;} /* Make icons slightly bigger */
 
-        /* List View */
-        .item-list.list-view { display: flex; flex-direction: column; gap: 15px; }
-        .item-row { display: flex; align-items: center; gap: 20px; background-color: var(--card-bg); border-radius: var(--card-border-radius); box-shadow: var(--card-shadow); padding: var(--list-item-padding); transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
-        .item-row:hover { transform: translateY(-2px); box-shadow: var(--card-hover-shadow); }
-        .item-row .item-image { width: 100px; height: 75px; object-fit: cover; background-color: #eee; border-radius: 6px; flex-shrink: 0; }
-        .item-row .item-image[data-error="true"] { content: var(--error-image-fallback); object-fit: contain; padding: 5px;}
-        .item-row .item-content { flex-grow: 1; }
-        .item-row h4 { margin-bottom: 4px; color: var(--primary); font-size: 1.1rem; }
-        .item-row p { font-size: 0.9rem; color: #555; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
-        .item-row .item-card-actions { border-top: none; padding-top: 0; margin-top: 5px; justify-content: flex-start; gap: 5px; }
-        .item-row .item-card-actions .view-btn { display: none; /* Hide view button in list view, click row instead */ }
+ /* List View */
+ .item-list.list-view {
+     display: flex;
+     flex-direction: column;
+     gap: 10px; /* Slightly reduced gap for list */
+ }
+ .item-row {
+     display: flex;
+     align-items: flex-start; /* Align items to the top */
+     gap: 15px; /* Gap between image and content */
+     background-color: var(--card-bg);
+     border-radius: 8px; /* Slightly smaller radius for rows */
+     box-shadow: 0 2px 5px rgba(0,0,0,0.06); /* Softer shadow */
+     padding: var(--list-item-padding);
+     transition: transform 0.2s ease, box-shadow 0.2s ease;
+     cursor: pointer;
+     border: 1px solid #eee; /* Subtle border */
+ }
+ .item-row:hover {
+     transform: translateY(-2px);
+     box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+     border-color: #ddd;
+ }
+ .item-row .item-image {
+     width: 80px;  /* Adjust size as needed */
+     height: 60px; /* Maintain aspect ratio */
+     object-fit: cover;
+     background-color: #eee;
+     border-radius: 6px;
+     flex-shrink: 0;
+     margin-top: 3px; /* Align top of image roughly with top of text */
+ }
+ .item-row .item-image[data-error="true"] {
+     content: var(--error-image-fallback);
+     object-fit: contain;
+     padding: 5px;
+ }
+ .item-row .item-content {
+     flex-grow: 1;
+     display: flex; /* Use flex to align actions to the right */
+     justify-content: space-between;
+     align-items: flex-start; /* Align text block and actions */
+     gap: 15px; /* Gap between text content and actions */
+ }
+ .item-row .item-text-details { /* New wrapper for text */
+     flex-grow: 1; /* Allow text to take up space */
+ }
+ .item-row h4 {
+     margin-bottom: 4px;
+     color: var(--primary);
+     font-size: 1.05rem; /* Slightly smaller */
+     word-break: break-word;
+ }
+ .item-row p {
+     font-size: 0.9rem;
+     color: #555;
+     margin-bottom: 0; /* Remove bottom margin if description is last */
+     line-height: 1.4;
+     display: -webkit-box;
+     -webkit-line-clamp: 2;
+     -webkit-box-orient: vertical;
+     overflow: hidden;
+     text-overflow: ellipsis;
+ }
+ .item-row .item-card-actions {
+     border-top: none;
+     padding-top: 0;
+     margin-top: 0; /* Remove top margin */
+     gap: 5px;
+     flex-shrink: 0; /* Prevent actions from wrapping */
+     align-self: flex-start; /* Align actions to top */
+ }
+ /* Remove specific buttons if desired for list view */
+ /* .item-row .item-card-actions .view-btn { display: none; } */
 
         .add-item-container { text-align: center; margin-top: 30px; }
 
@@ -703,20 +766,28 @@ function showView(viewName, courseId = null, projectId = null) { /* ... (keep pr
     if (window.location.hash !== hash) { history.replaceState({ view: viewName, courseId: activeCourseId, projectId: activeProjectId }, '', hash); }
 }
 
+
 function setItemViewMode(container, mode, gridBtn, listBtn) {
     if (!container || !gridBtn || !listBtn) return;
     currentItemViewMode = mode;
     localStorage.setItem(VIEW_PREFERENCE_KEY, mode); // Save preference
 
+    // Apply class immediately for CSS transition, but then re-render content
     container.classList.remove('grid-view', 'list-view');
     container.classList.add(mode === 'list' ? 'list-view' : 'grid-view');
 
     gridBtn.classList.toggle('active', mode === 'grid');
     listBtn.classList.toggle('active', mode === 'list');
+
+    // Re-render the content to apply the correct HTML structure (card vs row)
+    if (container.id === 'course-list') {
+        renderDashboardView();
+    } else if (container.id === 'project-list') {
+        renderCourseView(activeCourseId); // Need the active course ID
+    }
 }
 
 
-// --- Rendering Functions ---
 function renderDashboardView() {
     courseListContainer.innerHTML = '';
     if (appData.courses.length === 0) {
@@ -724,34 +795,56 @@ function renderDashboardView() {
     } else {
         appData.courses.forEach(course => {
             const itemElement = document.createElement('div');
-            itemElement.className = 'item-card item-container'; // Use common class for listener
-            itemElement.dataset.courseId = course.id; // For click listener
+            // Choose class based on current view mode for the container
+            itemElement.className = courseListContainer.classList.contains('list-view') ? 'item-row item-container' : 'item-card item-container';
+            itemElement.dataset.courseId = course.id;
 
             const defaultImage = 'https://via.placeholder.com/300x150/eee/ccc?text=Course';
             const imageUrl = course.imageUrl || defaultImage;
+            const descriptionHtml = course.description
+                ? `<p>${escapeHtml(course.description)}</p>`
+                : '<p class="no-description" style="display:none;"></p>'; // Hidden placeholder for grid or completely omit for list
 
-            itemElement.innerHTML = `
-                <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(course.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
-                <div class="item-content">
-                    <h4>${escapeHtml(course.name)}</h4>
-                    <p>${escapeHtml(course.description || 'No description')}</p>
-                    <div class="item-card-actions">
-                        <button class="view-btn action-btn" data-action="view-projects" title="View Projects">
-                           ▶ Projects (${course.projects?.length || 0})
-                        </button>
-                        <button class="edit-btn action-btn" data-action="edit-course" title="Edit Course">✏️</button>
-                        <button class="remove-btn action-btn" data-action="remove-course" title="Remove Course">&times;</button>
+            // Different structure for card vs row
+            if (courseListContainer.classList.contains('list-view')) {
+                 itemElement.innerHTML = `
+                    <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(course.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
+                    <div class="item-content">
+                         <div class="item-text-details">
+                             <h4>${escapeHtml(course.name)}</h4>
+                             ${course.description ? `<p>${escapeHtml(course.description)}</p>` : ''}
+                         </div>
+                         <div class="item-card-actions">
+                            <!-- View button is implicit by clicking row -->
+                            <button class="edit-btn action-btn" data-action="edit-course" title="Edit Course">✏️</button>
+                            <button class="remove-btn action-btn" data-action="remove-course" title="Remove Course">×</button>
+                        </div>
+                    </div>`;
+            } else { // Grid view
+                itemElement.innerHTML = `
+                    <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(course.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
+                    <div class="item-content">
+                        <h4>${escapeHtml(course.name)}</h4>
+                        ${descriptionHtml}
+                        <div class="item-card-actions">
+                             <button class="view-btn action-btn" data-action="view-projects" title="View Projects">
+                                ▶ Projects (${course.projects?.length || 0})
+                             </button>
+                            <button class="edit-btn action-btn" data-action="edit-course" title="Edit Course">✏️</button>
+                            <button class="remove-btn action-btn" data-action="remove-course" title="Remove Course">×</button>
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+            }
+
             courseListContainer.appendChild(itemElement);
-            // Check image load status after appending
-             const img = itemElement.querySelector('.item-image');
-             if (img && img.complete && img.naturalWidth === 0 && !img.dataset.error) { handleImageError(img); }
+            const img = itemElement.querySelector('.item-image');
+            if (img && img.complete && img.naturalWidth === 0 && !img.dataset.error) { handleImageError(img); }
         });
     }
+    // Update add button state (same as before)
     addCourseButton.disabled = appData.courses.length >= MAX_COURSES;
-    document.getElementById('max-courses-msg')?.remove(); // Remove previous msg if exists
+    document.getElementById('max-courses-msg')?.remove();
     if(addCourseButton.disabled) addCourseButton.insertAdjacentHTML('afterend', `<p id="max-courses-msg" style="color:var(--danger); font-size:0.9em;">Maximum courses (${MAX_COURSES}) reached.</p>`);
 }
 
@@ -759,7 +852,7 @@ function renderCourseView(courseId) {
     projectListContainer.innerHTML = '';
     const course = findCourse(courseId);
 
-    if (!course) { /* ... (keep error handling) ... */ console.error(`Course not found: ${courseId}`); courseViewTitle.textContent = 'Error: Course Not Found'; projectListContainer.innerHTML = '<p style="text-align: center; color: var(--danger);">Could not load projects.</p>'; return; }
+    if (!course) { /* ... (keep error handling) ... */ return; }
 
     courseViewTitle.textContent = `${escapeHtml(course.name)} Projects`;
     const projects = course.projects || [];
@@ -769,33 +862,53 @@ function renderCourseView(courseId) {
     } else {
         projects.forEach(project => {
             const itemElement = document.createElement('div');
-             itemElement.className = 'item-card item-container'; // Common class
-             itemElement.dataset.projectId = project.id; // For click listener
-             itemElement.dataset.courseId = courseId;
+            // Choose class based on view mode
+            itemElement.className = projectListContainer.classList.contains('list-view') ? 'item-row item-container' : 'item-card item-container';
+            itemElement.dataset.projectId = project.id;
+            itemElement.dataset.courseId = courseId; // Keep course ID for context
 
             const defaultImage = 'https://via.placeholder.com/300x150/eee/ccc?text=Project';
             const imageUrl = project.imageUrl || defaultImage;
+            const descriptionHtml = project.description
+                ? `<p>${escapeHtml(project.description)}</p>`
+                : '<p class="no-description" style="display:none;"></p>'; // Hidden placeholder for grid
 
-             itemElement.innerHTML = `
-                <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(project.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
-                <div class="item-content">
-                    <h4>${escapeHtml(project.name)}</h4>
-                    <p>${escapeHtml(project.description || 'No description')}</p>
-                    <div class="item-card-actions">
-                        <button class="view-btn action-btn" data-action="open-project" title="Open Project">
-                            ▶ Open
-                        </button>
-                        <button class="edit-btn action-btn" data-action="edit-project" title="Edit Project">✏️</button>
-                        <button class="remove-btn action-btn" data-action="remove-project" title="Remove Project">&times;</button>
+            // Different structure for card vs row
+            if (projectListContainer.classList.contains('list-view')) {
+                 itemElement.innerHTML = `
+                    <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(project.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
+                     <div class="item-content">
+                         <div class="item-text-details">
+                            <h4>${escapeHtml(project.name)}</h4>
+                            ${project.description ? `<p>${escapeHtml(project.description)}</p>` : ''}
+                         </div>
+                         <div class="item-card-actions">
+                            <!-- REMOVED Open button -->
+                            <button class="edit-btn action-btn" data-action="edit-project" title="Edit Project">✏️</button>
+                            <button class="remove-btn action-btn" data-action="remove-project" title="Remove Project">×</button>
+                        </div>
+                     </div>`;
+            } else { // Grid View
+                itemElement.innerHTML = `
+                    <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(project.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
+                    <div class="item-content">
+                        <h4>${escapeHtml(project.name)}</h4>
+                        ${descriptionHtml}
+                        <div class="item-card-actions">
+                            <!-- REMOVED Open button -->
+                            <button class="edit-btn action-btn" data-action="edit-project" title="Edit Project">✏️</button>
+                            <button class="remove-btn action-btn" data-action="remove-project" title="Remove Project">×</button>
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+            }
+
             projectListContainer.appendChild(itemElement);
-            // Check image load status
             const img = itemElement.querySelector('.item-image');
             if (img && img.complete && img.naturalWidth === 0 && !img.dataset.error) { handleImageError(img); }
         });
     }
+    // Update add button state (same as before)
     addProjectButton.disabled = projects.length >= MAX_PROJECTS_PER_COURSE;
      document.getElementById('max-projects-msg')?.remove();
      if(addProjectButton.disabled) addProjectButton.insertAdjacentHTML('afterend', `<p id="max-projects-msg" style="color:var(--danger); font-size:0.9em;">Maximum projects (${MAX_PROJECTS_PER_COURSE}) reached.</p>`);
