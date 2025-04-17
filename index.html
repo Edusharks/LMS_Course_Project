@@ -91,33 +91,50 @@
         .item-card .item-image[data-error="true"] { content: var(--error-image-fallback); object-fit: contain; padding: 10px; }
         .item-card .item-content { padding: var(--card-padding); flex-grow: 1; display: flex; flex-direction: column;}
         
+
+ /* Adjust h4 margin and allow it to shrink */
  .item-card h4,
  .item-row h4 {
      margin-bottom: 0;
-     flex-grow: 1; /* Allow title to take space */
-     flex-shrink: 1; /* <<< ADD: Allow title to shrink if actions need space */
+     flex-grow: 1;
+     flex-shrink: 1;
      word-break: break-word;
-     overflow: hidden; /* Optional: Hide overflow if title is very long */
-     text-overflow: ellipsis; /* Optional: Add ellipsis */
-     white-space: nowrap; /* Optional: Prevent title wrapping if desired */
+     overflow: hidden;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+     color: var(--dark); /* Ensure title uses standard text color */
  }
-        .item-card p { font-size: 0.9rem; color: #555; margin-bottom: 15px; word-break: break-word; flex-grow: 1; /* Pushes actions down */ display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
-        .item-card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
-        .item-card-actions .action-btn { padding: 6px; font-size: 1.1rem;} /* Make icons slightly bigger */
+  .item-card p { font-size: 0.9rem; color: #555; margin-bottom: 15px; word-break: break-word; flex-grow: 1; /* Pushes actions down */ display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+         /* Adjust original item-card-actions for grid view project count button */
+ .item-card .item-card-actions {
+     justify-content: flex-end; /* Push remaining buttons right */
+     padding-top: 10px; /* Restore some padding */
+     margin-top: auto; /* Push to bottom */
+     border-top: 1px solid #eee; /* Restore border */
+ }
+ /* Ensure bottom actions are hidden in list view */
+ .item-row .item-card-actions {
+     display: none;
+ }
+ /* Ensure bottom actions hidden in project grid view */
+ #project-list.grid-view .item-card .item-card-actions {
+      display: none; /* Projects don't need the bottom action bar */
+  }
+ .item-card-actions .action-btn { padding: 6px; font-size: 1.1rem;} /* Make icons slightly bigger */
 
  .item-heading-container {
      display: flex;
-     align-items: center; /* Vertically align buttons and text */
-     justify-content: space-between; /* <<< CHANGED: Push title left, actions right */
-     gap: 15px; /* Space between title and actions */
-     margin-bottom: 8px; /* Space below heading block */
-     flex-wrap: nowrap; /* Prevent wrapping */
+     align-items: center;
+     justify-content: space-between; /* Title left, actions right */
+     gap: 15px;
+     margin-bottom: 8px;
+     flex-wrap: nowrap;
  }
 
  .item-inline-actions {
      display: flex;
-     gap: 4px; /* Space between edit/remove buttons */
-     flex-shrink: 0; /* <<< ENSURE: Prevent buttons from shrinking */
+     gap: 4px;
+     flex-shrink: 0;
  }
 
  .item-inline-actions .action-btn {
@@ -126,12 +143,37 @@
      background-color: transparent;
      border: 1px solid transparent;
      opacity: 0.6;
+     transition: all 0.2s ease; /* Add transition */
  }
  .item-inline-actions .action-btn:hover {
      opacity: 1;
      background-color: rgba(0,0,0,0.08);
      border-color: #ccc;
  }
+ /* Style remove button specifically in this context */
+ .item-inline-actions .remove-btn.action-btn {
+     color: var(--danger); /* Set base color */
+     opacity: 0.7; /* Slightly more visible */
+ }
+ .item-inline-actions .remove-btn.action-btn:hover {
+     color: white; /* Text color on hover */
+     background-color: var(--danger); /* Background on hover */
+     border-color: var(--danger);
+     opacity: 1;
+ }
+ /* Keep edit button subtle */
+  .item-inline-actions .edit-btn.action-btn {
+      color: var(--accent); /* Or use a neutral color like #555 */
+  }
+  .item-inline-actions .edit-btn.action-btn:hover {
+      color: var(--dark); /* Text color on hover */
+      background-color: var(--accent); /* Background on hover */
+      border-color: var(--accent);
+      opacity: 1;
+ }
+
+
+        
         
  /* List View */
 
@@ -843,7 +885,6 @@ function renderDashboardView() {
             const imageUrl = course.imageUrl || defaultImage;
             const descriptionHtml = course.description ? `<p>${escapeHtml(course.description)}</p>` : '';
 
-            // --- Structure with Actions on Right ---
             const inlineActionsHtml = `
                 <div class="item-inline-actions">
                     <button class="edit-btn action-btn" data-action="edit-course" title="Edit Course">✏️</button>
@@ -855,8 +896,6 @@ function renderDashboardView() {
                     <h4>${escapeHtml(course.name)}</h4>
                     ${inlineActionsHtml}
                 </div>`;
-            // --- End Structure ---
-
 
             if (courseListContainer.classList.contains('list-view')) {
                  itemElement.innerHTML = `
@@ -866,18 +905,19 @@ function renderDashboardView() {
                              ${headingHtml}
                              ${descriptionHtml}
                          </div>
-                         <!-- Bottom actions hidden -->
                     </div>`;
             } else { // Grid view
                 itemElement.innerHTML = `
                     <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(course.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
                     <div class="item-content">
                         ${headingHtml}
-                        ${descriptionHtml || '<p style="display:none;"></p>'}
+                        ${descriptionHtml || '<p style="flex-grow: 1;"></p>'} <!-- Placeholder pushes actions down -->
                         <div class="item-card-actions">
+                             <!-- ADDED View Projects Button BACK for GRID VIEW -->
                              <button class="view-btn action-btn" data-action="view-projects" title="View Projects">
                                 ▶ Projects (${course.projects?.length || 0})
                              </button>
+                             <!-- Edit/Remove buttons are now inline -->
                         </div>
                     </div>
                 `;
@@ -894,7 +934,7 @@ function renderDashboardView() {
     if(addCourseButton.disabled) addCourseButton.insertAdjacentHTML('afterend', `<p id="max-courses-msg" style="color:var(--danger); font-size:0.9em;">Maximum courses (${MAX_COURSES}) reached.</p>`);
 }
 
-function renderCourseView(courseId) {
+function renderCourseView(courseId) { // For Projects List
     projectListContainer.innerHTML = '';
     const course = findCourse(courseId);
 
@@ -923,6 +963,7 @@ function renderCourseView(courseId) {
                     <button class="remove-btn action-btn" data-action="remove-project" title="Remove Project">×</button>
                 </div>`;
 
+            // ENSURE H4 is first for title left, actions right layout
             const headingHtml = `
                 <div class="item-heading-container">
                      <h4>${escapeHtml(project.name)}</h4>
@@ -939,16 +980,16 @@ function renderCourseView(courseId) {
                             ${headingHtml}
                             ${descriptionHtml}
                          </div>
-                         <!-- Bottom actions hidden -->
+                         <!-- No bottom actions needed -->
                      </div>`;
             } else { // Grid View
                  itemElement.innerHTML = `
                     <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(project.name)}" class="item-image" onerror="handleImageError(this)" data-error="false">
                     <div class="item-content">
                         ${headingHtml}
-                        ${descriptionHtml || '<p style="display:none;"></p>'}
+                        ${descriptionHtml || '<p style="flex-grow: 1;"></p>'} <!-- Placeholder pushes actions down -->
                         <div class="item-card-actions">
-                            <!-- No bottom actions needed -->
+                            <!-- No bottom actions needed for projects -->
                         </div>
                     </div>
                 `;
