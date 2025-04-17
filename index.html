@@ -441,6 +441,16 @@ function hexToRgb(hex) { // Helper to update --primary-rgb if color changes
     let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : null;
 }
+// Helper to get value from modal input, with default and trimming option
+function getModalValue(selector, defaultValue = '', trimValue = true) {
+    const inputElement = modalFormContent?.querySelector(selector);
+    if (!inputElement) {
+        // console.warn(`getModalValue: Element not found for selector "${selector}"`);
+        return defaultValue;
+    }
+    const value = inputElement.value;
+    return trimValue ? value.trim() : value;
+}
 
 // --- Application State ---
 let appData = {
