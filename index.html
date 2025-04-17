@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Editor & Viewer V3 - Fixed Hoisting</title>
+    <title>Project Editor & Viewer V4.1 - Stable</title>
     <style>
         /* Global Variables & Basic Styles */
         :root {
@@ -24,6 +24,7 @@
             --sidebar-width: 270px;
             --header-image-size: 80px;
             --challenge-icon-size: 40px;
+            --error-image-fallback: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23cccccc'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23666666' font-size='12' font-family='sans-serif'%3EError%3C/text%3E%3C/svg%3E");
         }
 
         html { scroll-behavior: smooth; box-sizing: border-box; font-size: var(--global-font-size); }
@@ -61,6 +62,8 @@
         .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); transition: background var(--transition-speed) ease; }
         .header-content { display: flex; align-items: center; gap: 20px; flex-grow: 1; }
         #projectHeaderImage { width: var(--header-image-size); height: var(--header-image-size); object-fit: cover; border-radius: 8px; border: 3px solid rgba(255, 255, 255, 0.5); background-color: rgba(255, 255, 255, 0.2); flex-shrink: 0; }
+        /* Add error style for header image */
+        #projectHeaderImage[data-error="true"] { background-image: var(--error-image-fallback); background-size: contain; background-repeat: no-repeat; background-position: center; }
         .header-title-container { flex-grow: 1; }
         .page-header .header-title { margin: 0 0 5px 0; color: white; font-size: 1.8rem;}
         .page-header .header-subtitle { margin: 0; color: rgba(255,255,255,0.9); font-size: 1rem; }
@@ -98,6 +101,7 @@
         .element-text { white-space: pre-wrap; line-height: 1.7; margin: 0; color: inherit; font-family: inherit;}
         .media-description { font-size: 0.95rem; color: #555; margin-top: 5px; margin-bottom: 15px; white-space: pre-wrap; }
         .element-image img { display: block; max-width: 100%; height: auto; border-radius: 8px; border: none; background-color: #eee; box-shadow: 0 3px 8px rgba(0,0,0,0.1); }
+        .element-image img[data-error="true"] { content: var(--error-image-fallback); min-height: 80px; /* Give fallback some space */ }
         .element-image-wrapper { margin-top: 10px; overflow: hidden; position: relative; max-width: 100%; }
         .media-wrapper-16-9 { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 1000px; margin: 10px auto 0 auto; border-radius: 12px; background-color: #eee; box-shadow: 0 5px 12px rgba(0,0,0,.1); }
         .media-wrapper-16-9 iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 12px; }
@@ -109,10 +113,12 @@
         .quiz-question:last-child { border-bottom: none; margin-bottom: 0; }
         .quiz-question-content { display: flex; gap: 15px; align-items: flex-start; margin-bottom: 10px;}
         .quiz-question-image { order: -1; max-width: 150px; max-height: 120px; border-radius: 4px; object-fit: contain; flex-shrink: 0;}
+        .quiz-question-image[data-error="true"] { content: var(--error-image-fallback); }
         .quiz-question-text { flex-grow: 1; font-weight: bold; color: var(--dark); margin: 0; }
         .quiz-options { display: flex; flex-direction: column; gap: 8px; }
         .quiz-option { display: flex; gap: 10px; align-items: center; padding: 10px 15px; background-color: #fff; border: 1px solid #d8dde6; border-radius: 6px; cursor: pointer; transition: all .2s ease; }
         .quiz-option-image { max-width: 100px; max-height: 75px; border-radius: 4px; object-fit: contain; flex-shrink: 0;}
+        .quiz-option-image[data-error="true"] { content: var(--error-image-fallback); }
         .quiz-option-text { flex-grow: 1; }
         .quiz-question:not(.answered) .quiz-option:hover { background-color: #e8ecf3; border-color: #c4cde0; }
         .quiz-option.selected { border-color: var(--primary) !important; background-color: #e8f0fe; font-weight: 500; }
@@ -136,10 +142,12 @@
          .challenge-item { display: flex; align-items: flex-start; gap: 15px; padding: 15px 0; border-bottom: 1px dotted #ccc; }
          .challenge-item:last-child { border-bottom: none; }
          .challenge-icon { width: var(--challenge-icon-size); height: var(--challenge-icon-size); flex-shrink: 0; border-radius: 50%; object-fit: contain; background-color: #eee;}
+         .challenge-icon[data-error="true"] { content: var(--error-image-fallback); }
          .challenge-content { flex-grow: 1; }
          .challenge-content h4 { margin: 0 0 5px 0; font-size: 1.1rem; color: var(--dark); }
          .challenge-content p { margin: 0 0 10px 0; font-size: 0.95rem; color: #444; white-space: pre-wrap;}
          .challenge-content img { display: block; max-width: 250px; max-height: 180px; height: auto; margin-top: 10px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+         .challenge-content img[data-error="true"] { content: var(--error-image-fallback); min-height: 50px; }
 
         /* Element Add Controls */
         #element-add-controls { margin-top: 20px; padding-top: 20px; border-top: 2px solid #eee; }
@@ -213,12 +221,12 @@
             #project-tabs { display: flex; overflow-x: auto; padding-bottom: 10px; white-space: nowrap; border-bottom: 1px solid #eee;}
             #project-tabs p { text-align: left !important; }
             .tab, .sub-tab { flex-shrink: 0; margin-right: 8px; margin-bottom: 0; }
-            .tab-controls, .sub-tab-controls { display: none !important; }
+            .tab-controls, .sub-tab-controls { display: none !important; /* Hide controls on mobile for simplicity */ }
             .tab-name, .sub-tab-name { margin-right: 0; }
             .sub-tab { margin-left: 5px; }
         }
         @media (max-width: 600px) {
-             :root { --base-font-size: 15px; --header-image-size: 60px; --challenge-icon-size: 30px;}
+             :root { --global-font-size: 15px; --header-image-size: 60px; --challenge-icon-size: 30px;} /* Adjusted base font size */
              .container { padding: 10px; }
              .page-header { flex-direction: column; align-items: stretch; gap: 10px;}
              .header-content { gap: 15px;}
@@ -243,7 +251,8 @@
     <div class="container">
         <header class="page-header">
             <div class="header-content">
-                <img id="projectHeaderImage" src="https://via.placeholder.com/80/cccccc/ffffff?text=P" alt="Project Header Image">
+                <!-- Added data-error attribute possibility -->
+                <img id="projectHeaderImage" src="https://via.placeholder.com/80/cccccc/ffffff?text=P" alt="Project Header Image" data-error="false">
                 <div class="header-title-container">
                     <h1 class="header-title" id="projectTitle">My Awesome Project</h1>
                     <p class="header-subtitle" id="projectSubtitle">Building things step-by-step</p>
@@ -263,7 +272,8 @@
             <main id="project-main-content">
                 <div id="tab-content-area"></div>
                 <div id="element-add-controls" class="element-controls" style="display: none;">
-                    <hr><p>Add to this section:</p>
+                    <!-- Removed hr, cleaner look -->
+                    <p>Add to this section:</p>
                     <button data-type="heading">Heading</button>
                     <button data-type="text">Text Block</button>
                     <button data-type="image">Image/GIF</button>
@@ -297,11 +307,66 @@ const DEFAULT_FONT_SIZE_CSS = '16px';
 const DEFAULT_FONT_FAMILY = "'Segoe UI', sans-serif";
 const DEFAULT_TEXT_COLOR = '#1A1D28';
 const MAX_CHALLENGES = 25;
+// Stable fallback image using Data URI (SVG)
+const IMAGE_FALLBACK_SRC = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23cccccc'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23666666' font-size='12' font-family='sans-serif'%3EError%3C/text%3E%3C/svg%3E";
+const STORAGE_KEY = 'flexibleProjectData_v4.1_stable'; // Use a distinct key if needed
 
 // --- Utility Functions ---
-function escapeHtml(unsafe) { if (typeof unsafe !== 'string') return unsafe; return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
-function generateId(prefix = 'id_') { return prefix + Date.now() + '_' + Math.random().toString(36).substring(2, 9); }
-function getEmbedUrlWithOptions(url) { if (!url || typeof url !== 'string') return 'about:blank'; try { let pUrl = new URL(url); if (url.includes('youtube.com') || url.includes('youtu.be')) { pUrl.searchParams.set('autoplay', '0'); pUrl.searchParams.set('mute', '1'); pUrl.searchParams.set('playsinline', '1'); } else if (url.includes('vimeo.com')) { pUrl.searchParams.set('autoplay', '0'); pUrl.searchParams.set('dnt', '1'); } else { pUrl.searchParams.set('autoplay', '0'); } return pUrl.toString(); } catch (e) { return url; } }
+function escapeHtml(unsafe) {
+    if (typeof unsafe !== 'string') return unsafe;
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+}
+function generateId(prefix = 'id_') {
+    return prefix + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+}
+function getEmbedUrlWithOptions(url) {
+    if (!url || typeof url !== 'string') return 'about:blank';
+    try {
+        // Only parse if it looks like a valid URL structure
+        if (!url.startsWith('http:') && !url.startsWith('https:') && !url.startsWith('//')) {
+            if (url !== 'about:blank') {
+               console.warn(`Invalid URL format for embedding: ${url}`);
+               return 'about:blank'; // Prevent trying to parse invalid strings
+            } else {
+                return url; // Allow 'about:blank'
+            }
+        }
+        let pUrl = new URL(url);
+        // Add parameters carefully, avoiding modification if not applicable
+        if (pUrl.hostname.includes('youtube.com') || pUrl.hostname.includes('youtu.be')) {
+            pUrl.searchParams.set('autoplay', '0');
+            pUrl.searchParams.set('mute', '1'); // Mute often needed for autoplay policies
+            pUrl.searchParams.set('playsinline', '1');
+        } else if (pUrl.hostname.includes('vimeo.com')) {
+            pUrl.searchParams.set('autoplay', '0');
+            pUrl.searchParams.set('dnt', '1'); // Do Not Track
+        } else {
+            // Generic attempt for other platforms, might not work
+             pUrl.searchParams.set('autoplay', '0');
+        }
+        return pUrl.toString();
+    } catch (e) {
+        console.error(`Error processing embed URL "${url}":`, e);
+        return 'about:blank'; // Return blank page on error
+    }
+}
+
+// --- Image Error Handling Utility ---
+function handleImageError(imgElement) {
+    if (imgElement && imgElement.src !== IMAGE_FALLBACK_SRC) {
+        console.warn(`Image failed to load: ${imgElement.currentSrc || imgElement.src}. Applying fallback.`);
+        imgElement.src = IMAGE_FALLBACK_SRC;
+        imgElement.dataset.error = "true"; // Mark as errored for potential styling
+        // Optional: Remove alt text if fallback is just a generic error image
+        // imgElement.alt = "Image failed to load";
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- DOM Element Lookups ---
@@ -331,85 +396,1807 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSidebar();
     initContent();
     setupEventListeners();
-    console.log("Project Editor Initialized (V4.1 - Challenges).");
+    console.log("Project Editor Initialized (V4.1 - Stable).");
 
     // --- DATA HANDLING ---
     function getDefaultProjectData() {
         const firstTabId = generateId('tab_');
         return {
-            title: "My Flexible Project", subtitle: "Editable Sections", headerImage: "https://via.placeholder.com/80/eee/ccc?text=P",
-            styles: { primaryColor: '#5E81F4', secondaryColor: '#FF7AC6', accentColor: '#FFB800', globalTextColor: DEFAULT_TEXT_COLOR, globalFontSize: DEFAULT_FONT_SIZE_NAME, globalFontFamily: DEFAULT_FONT_FAMILY },
-            tabs: [ { id: firstTabId, name: "Introduction", subTabs: null, content: [ { id: generateId('el_'), type: 'heading', data: { text: 'Welcome!' } }, { id: generateId('el_'), type: 'text', data: { text: 'Add elements below.' } } ] } ]
+            title: "My Flexible Project",
+            subtitle: "Editable Sections",
+            headerImage: "https://via.placeholder.com/80/eee/ccc?text=P", // Keep placeholder for default, rely on onerror
+            styles: {
+                primaryColor: '#5E81F4',
+                secondaryColor: '#FF7AC6',
+                accentColor: '#FFB800',
+                globalTextColor: DEFAULT_TEXT_COLOR,
+                globalFontSize: DEFAULT_FONT_SIZE_NAME,
+                globalFontFamily: DEFAULT_FONT_FAMILY
+            },
+            tabs: [
+                {
+                    id: firstTabId,
+                    name: "Introduction",
+                    subTabs: null, // Explicitly null when no subtabs initially
+                    content: [
+                        { id: generateId('el_'), type: 'heading', data: { text: 'Welcome!' } },
+                        { id: generateId('el_'), type: 'text', data: { text: 'Use the sidebar to navigate or add tabs. Add content elements using the controls below.' } }
+                    ]
+                }
+            ]
         };
     }
-    function loadProjectData() { const k='flexibleProjectData_v4.1'; const s = localStorage.getItem(k); if (s) { try { const d = JSON.parse(s); if (Array.isArray(d.tabs)) { console.log("Loaded v4.1 data."); if(!d.styles) d.styles={}; d.headerImage=d.headerImage||getDefaultProjectData().headerImage; d.styles.globalTextColor=d.styles.globalTextColor||DEFAULT_TEXT_COLOR; d.styles.globalFontSize=d.styles.globalFontSize||DEFAULT_FONT_SIZE_NAME; d.styles.globalFontFamily=d.styles.globalFontFamily||DEFAULT_FONT_FAMILY; d.styles.primaryColor=d.styles.primaryColor||'#5E81F4'; d.styles.secondaryColor=d.styles.secondaryColor||'#FF7AC6'; d.styles.accentColor=d.styles.accentColor||'#FFB800'; return d; } else throw new Error("Inv"); } catch (e) { console.error("Load fail:", e); localStorage.removeItem(k); } } console.log("Default v4.1 data."); return getDefaultProjectData(); }
-    function saveProjectData() { try { localStorage.setItem('flexibleProjectData_v4.1', JSON.stringify(projectData)); console.log("Data saved."); } catch (e) { console.error("Save fail:", e); alert("Error saving."); } }
-    function findTabData(id) { return projectData?.tabs?.find(t => t?.id === id) || null; }
-    function findSubTabData(pId, id) { return findTabData(pId)?.subTabs?.find(st => st?.id === id) || null; }
-    function getCurrentContentArray() { const t=findTabData(currentTabId); if(!t)return null; if(currentSubTabId && Array.isArray(t.subTabs)){const s=findSubTabData(currentTabId, currentSubTabId); if(s){if(!Array.isArray(s.content))s.content=[]; return s.content;}} else if(!t.subTabs){if(!Array.isArray(t.content))t.content=[]; return t.content;} return null; }
-    function findElementData(id) { if(!projectData?.tabs)return null; for(const t of projectData.tabs){if(!t)continue; if(!t.subTabs && Array.isArray(t.content)){const i=t.content.findIndex(el=>el?.id===id); if(i!==-1)return{element:t.content[i],parentArray:t.content,parentType:'tab',parentId:t.id,index:i};} if(Array.isArray(t.subTabs)){for(const s of t.subTabs){if(!s)continue; if(!Array.isArray(s.content))s.content=[]; const i=s.content.findIndex(el=>el?.id===id); if(i!==-1)return{element:s.content[i],parentArray:s.content,parentType:'subtab',parentId:s.id,grandparentTabId:t.id,index:i};}}} console.warn("Elem NF:", id); return null; }
-    function getDefaultElementData(type) { switch (type) { case 'heading': return { text: 'New Heading'}; case 'text': return { text: 'New text block...'}; case 'image': return { url:'', alt:'', width:'auto', height:'auto', heading:'', description:''}; case 'video': return { url:'', heading:'', description:''}; case 'presentation': return { url:'', heading:'', description:''}; case 'challenges': return { heading: 'Challenges', description: '', challenges: []}; case 'quiz': return { questions: []}; default: return {}; } }
+
+    function loadProjectData() {
+        const storedData = localStorage.getItem(STORAGE_KEY);
+        if (storedData) {
+            try {
+                const parsedData = JSON.parse(storedData);
+                // Basic validation: Check if it has a 'tabs' array
+                if (parsedData && Array.isArray(parsedData.tabs)) {
+                    console.log(`Loaded data from localStorage (${STORAGE_KEY}).`);
+                    // --- Data Migration/Defaulting ---
+                    // Ensure top-level properties exist
+                    parsedData.title = parsedData.title || "Untitled Project";
+                    parsedData.subtitle = parsedData.subtitle || "";
+                    parsedData.headerImage = parsedData.headerImage || getDefaultProjectData().headerImage;
+                    // Ensure styles object and its properties exist
+                    parsedData.styles = parsedData.styles || {};
+                    const defaultStyles = getDefaultProjectData().styles;
+                    parsedData.styles.primaryColor = parsedData.styles.primaryColor || defaultStyles.primaryColor;
+                    parsedData.styles.secondaryColor = parsedData.styles.secondaryColor || defaultStyles.secondaryColor;
+                    parsedData.styles.accentColor = parsedData.styles.accentColor || defaultStyles.accentColor;
+                    parsedData.styles.globalTextColor = parsedData.styles.globalTextColor || defaultStyles.globalTextColor;
+                    parsedData.styles.globalFontSize = parsedData.styles.globalFontSize || defaultStyles.globalFontSize;
+                    parsedData.styles.globalFontFamily = parsedData.styles.globalFontFamily || defaultStyles.globalFontFamily;
+
+                    // Optional: Could add deeper validation/migration for tabs/elements here if needed
+                    // e.g., ensure all elements have IDs, default data structure, etc.
+
+                    return parsedData;
+                } else {
+                    console.warn("Stored data format is invalid. Loading defaults.");
+                    localStorage.removeItem(STORAGE_KEY); // Clear invalid data
+                }
+            } catch (e) {
+                console.error("Failed to parse stored project data. Loading defaults.", e);
+                localStorage.removeItem(STORAGE_KEY); // Clear corrupted data
+            }
+        }
+        console.log("No valid stored data found. Loading default project data.");
+        return getDefaultProjectData();
+    }
+
+    function saveProjectData() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(projectData));
+            console.log(`Project data saved to localStorage (${STORAGE_KEY}).`);
+        } catch (e) {
+            console.error("Failed to save project data to localStorage:", e);
+            alert("Error: Could not save project data. LocalStorage might be full or unavailable.");
+        }
+    }
+
+    function findTabData(tabId) {
+        return projectData?.tabs?.find(t => t?.id === tabId) || null;
+    }
+
+    function findSubTabData(parentTabId, subTabId) {
+        const parentTab = findTabData(parentTabId);
+        return parentTab?.subTabs?.find(st => st?.id === subTabId) || null;
+    }
+
+    function getCurrentContentArray() {
+        const tab = findTabData(currentTabId);
+        if (!tab) return null; // No active tab
+
+        if (currentSubTabId) {
+            // If a sub-tab is active, find it
+            const subTab = findSubTabData(currentTabId, currentSubTabId);
+            if (subTab) {
+                // Ensure content array exists
+                if (!Array.isArray(subTab.content)) {
+                    subTab.content = [];
+                }
+                return subTab.content;
+            }
+            // Invalid sub-tab selected, but parent tab exists
+            return null;
+        } else {
+            // No sub-tab selected. Content is only valid if the tab *doesn't* have sub-tabs
+            if (tab.subTabs === null || (Array.isArray(tab.subTabs) && tab.subTabs.length === 0)) {
+                 // Ensure content array exists
+                if (!Array.isArray(tab.content)) {
+                    tab.content = [];
+                }
+                return tab.content;
+            }
+            // Tab has sub-tabs, but none are selected
+            return null;
+        }
+    }
+
+    function findElementData(elementId) {
+        if (!projectData?.tabs || !elementId) return null;
+
+        for (const tab of projectData.tabs) {
+            if (!tab) continue; // Skip potentially null entries if data is weird
+
+            // Check direct tab content (only if it doesn't have subTabs)
+            if ((!tab.subTabs || tab.subTabs.length === 0) && Array.isArray(tab.content)) {
+                const index = tab.content.findIndex(el => el?.id === elementId);
+                if (index !== -1) {
+                    return {
+                        element: tab.content[index],
+                        parentArray: tab.content,
+                        parentType: 'tab',
+                        parentId: tab.id,
+                        index: index
+                    };
+                }
+            }
+            // Check sub-tab content
+            else if (Array.isArray(tab.subTabs)) {
+                for (const subTab of tab.subTabs) {
+                    if (!subTab) continue; // Skip potentially null sub-tabs
+                    if (!Array.isArray(subTab.content)) subTab.content = []; // Ensure content array exists
+
+                    const index = subTab.content.findIndex(el => el?.id === elementId);
+                    if (index !== -1) {
+                        return {
+                            element: subTab.content[index],
+                            parentArray: subTab.content,
+                            parentType: 'subtab',
+                            parentId: subTab.id,
+                            grandparentTabId: tab.id,
+                            index: index
+                        };
+                    }
+                }
+            }
+        }
+        console.warn("Element data not found for ID:", elementId);
+        return null;
+    }
+
+    function getDefaultElementData(type) {
+        switch (type) {
+            case 'heading': return { text: 'New Heading' };
+            case 'text': return { text: 'New text block...' };
+            case 'image': return { url: '', alt: '', width: 'auto', height: 'auto', heading: '', description: '' };
+            case 'video': return { url: '', heading: '', description: '' };
+            case 'presentation': return { url: '', heading: '', description: '' };
+            case 'challenges': return { heading: 'Challenges', description: '', challenges: [] }; // Default challenges structure
+            case 'quiz': return { questions: [] }; // Default quiz structure
+            default: return {};
+        }
+    }
 
 
     // --- RENDERING ---
-    function applyProjectStyles() { const s=projectData.styles||{}; const r=document.documentElement; r.style.setProperty('--primary',s.primaryColor||'#5E81F4'); r.style.setProperty('--secondary',s.secondaryColor||'#FF7AC6'); r.style.setProperty('--accent',s.accentColor||'#FFB800'); r.style.setProperty('--global-text-color',s.globalTextColor||DEFAULT_TEXT_COLOR); r.style.setProperty('--global-font-family',s.globalFontFamily||DEFAULT_FONT_FAMILY); const sizeMap={small:'14px',medium:'16px',large:'18px',xlarge:'20px'}; const sizeName=s.globalFontSize||DEFAULT_FONT_SIZE_NAME; const cssFontSize=sizeMap[sizeName]||sizeName||DEFAULT_FONT_SIZE_CSS; r.style.setProperty('--global-font-size',cssFontSize); projectTitleElement.textContent=projectData.title||'Project'; projectSubtitleElement.textContent=projectData.subtitle||''; projectHeaderImageElement.src=projectData.headerImage||getDefaultProjectData().headerImage; projectHeaderImageElement.onerror=()=>{projectHeaderImageElement.src='https://via.placeholder.com/80/eee/ccc?text=Err';}; }
-    function renderSidebar() { tabsContainer.innerHTML=''; if(!projectData.tabs?.length){tabsContainer.innerHTML='<p style="text-align:center;color:#888;font-style:italic;">No tabs.</p>';return;} projectData.tabs.forEach(t=>{if(!t?.id)return; const tEl=document.createElement('div');tEl.className='tab';tEl.dataset.tabId=t.id; let isPActive=(t.id===currentTabId&&!currentSubTabId); const nSpan=document.createElement('span');nSpan.className='tab-name';nSpan.textContent=t.name||'...';nSpan.dataset.tabId=t.id; tEl.appendChild(nSpan); tEl.appendChild(createControlsDiv('tab',t.id)); tabsContainer.appendChild(tEl); if(Array.isArray(t.subTabs)){if(t.id===currentTabId&&currentSubTabId&&t.subTabs.some(st=>st?.id===currentSubTabId))isPActive=false; t.subTabs.forEach(st=>{if(!st?.id)return; const sEl=document.createElement('div');sEl.className='sub-tab';sEl.dataset.subTabId=st.id;sEl.dataset.parentTabId=t.id; if(st.id===currentSubTabId&&t.id===currentTabId)sEl.classList.add('active'); const sName=document.createElement('span');sName.className='sub-tab-name';sName.textContent=st.name||'...';sName.dataset.parentTabId=t.id;sName.dataset.subTabId=st.id; sEl.appendChild(sName); sEl.appendChild(createControlsDiv('subtab',t.id,st.id)); tabsContainer.appendChild(sEl);});} if(isPActive)tEl.classList.add('active');}); }
-    function createControlsDiv(type, tId, sId=null) { const d=document.createElement('div');d.className=type==='tab'?'tab-controls':'sub-tab-controls'; let h=''; if(type==='tab'){h+=`<button class="add-btn action-btn" title="+Sub" data-action="add-subtab" data-tab-id="${tId}">+ Sub</button><button class="edit-btn action-btn" title="Edit" data-action="edit-tab" data-tab-id="${tId}">✏️</button><button class="remove-btn action-btn" title="Remove" data-action="remove-tab" data-tab-id="${tId}">&times;</button>`;} else {h+=`<button class="edit-btn action-btn" title="Edit" data-action="edit-subtab" data-parent-tab-id="${tId}" data-sub-tab-id="${sId}">✏️</button><button class="remove-btn action-btn" title="Remove" data-action="remove-subtab" data-parent-tab-id="${tId}" data-sub-tab-id="${sId}">&times;</button>`;} d.innerHTML=h; return d; }
-    function renderContentArea() { contentArea.innerHTML=''; addControls.style.display='none'; const arr=getCurrentContentArray(); if(arr===null){const t=findTabData(currentTabId); if(t&&Array.isArray(t.subTabs)&&t.subTabs.length>0&&!currentSubTabId)contentArea.innerHTML='<p>Select sub-tab.</p>'; else if(t&&Array.isArray(t.subTabs)&&t.subTabs.length===0)contentArea.innerHTML='<p>Tab has no sub-tabs.</p>'; else if(currentTabId)contentArea.innerHTML='<p>Select valid section.</p>'; else contentArea.innerHTML='<p>Select tab.</p>'; return;} addControls.style.display='block'; if(arr.length===0){contentArea.innerHTML='<p>Empty section.</p>';}else{arr.forEach(el=>{if(el?.id&&el.type)renderElement(el,contentArea);});}}
+    function applyProjectStyles() {
+        const styles = projectData.styles || {};
+        const root = document.documentElement;
 
-    function renderElement(elData, container) { const wrap=document.createElement('div');wrap.className='content-element';wrap.dataset.elementId=elData.id; wrap.appendChild(createStandardActions(elData.id,elData.type)); let html=''; try {const d=elData.data||{}; if(['image','video','presentation','challenges'].includes(elData.type)){if(d.heading)html+=`<h3 class="media-heading">${escapeHtml(d.heading)}</h3>`; if(d.description)html+=`<p class="media-description">${escapeHtml(d.description)}</p>`;} switch(elData.type){ case 'heading':html+=`<h2 class="element-heading">${escapeHtml(d.text||'H')}</h2>`;break; case 'text':html+=`<p class="element-text">${escapeHtml(d.text||'...')}</p>`;break; case 'image':const iUrl=d.url||'#', iAlt=escapeHtml(d.alt||''), iW=escapeHtml(d.width||'auto'), iH=escapeHtml(d.height||'auto'); html+=`<div class="element-image-wrapper"><img src="${escapeHtml(iUrl)}" alt="${iAlt}" style="width:${iW};height:${iH};" onerror="this.src='https://via.placeholder.com/150?text=ERR'"></div>`;break; case 'video':case 'presentation':const eUrl=d.url||'about:blank'; if(!eUrl.startsWith('https')&&!eUrl.startsWith('http')&&eUrl!=='about:blank')throw new Error("Bad URL"); const fUrl=getEmbedUrlWithOptions(eUrl); const eTitle=escapeHtml(elData.type[0]==='v'?'Vid':'Pres'); html+=`<div class="media-wrapper-16-9"><iframe src="${escapeHtml(fUrl)}" title="${eTitle}" frameborder="0" allow="accelerometer;clipboard-write;encrypted-media;gyroscope;picture-in-picture;web-share;fullscreen" allowfullscreen></iframe></div>`;break; case 'quiz':renderQuizElement(elData,wrap); html=null; break; case 'challenges':renderChallengesElement(elData,wrap); html=null; break; default: html=`<p>Unknown:${escapeHtml(elData.type)}</p>`; } if(html!==null)wrap.insertAdjacentHTML('beforeend',html); } catch(e){console.error("Render err:",elData,e); wrap.insertAdjacentHTML('beforeend',`<p style="color:red;">Render error.</p>`);} container.appendChild(wrap); }
-    function createStandardActions(id,type){const el=document.createElement('div'); el.className='element-actions'; el.innerHTML=`<button class="edit-btn action-btn" title="Edit" data-action="edit-element" data-element-id="${id}">✏️</button><button class="remove-btn action-btn" title="Remove" data-action="remove-element" data-element-id="${id}">&times;</button>`; return el;}
-    function renderQuizElement(quizData, wrap) { wrap.classList.add('element-quiz'); const cont=document.createElement('div'); cont.className='quiz-container-inner'; cont.dataset.quizId=quizData.id; const qs=quizData.data?.questions||[]; if(qs.length===0){cont.innerHTML='<p>No Qs.</p>';}else{qs.forEach((q,i)=>{if(!q)return; const qDiv=document.createElement('div'); qDiv.className='quiz-question'; qDiv.dataset.questionIndex=i; const qCont=document.createElement('div'); qCont.className='quiz-question-content'; if(q.questionImageUrl)qCont.innerHTML+=`<img class="quiz-question-image" src="${escapeHtml(q.questionImageUrl)}" alt="Q ${i+1}" onerror="this.style.display='none'">`; qCont.innerHTML+=`<p class="quiz-question-text">${i+1}. ${escapeHtml(q.questionText||'...')}</p>`; qDiv.appendChild(qCont); const optsDiv=document.createElement('div'); optsDiv.className='quiz-options'; const cAns=String(q.correctAnswer||'').trim(); const iAns=Array.isArray(q.incorrectAnswers)?q.incorrectAnswers:[]; const iImgs=Array.isArray(q.incorrectAnswersImageUrls)?q.incorrectAnswersImageUrls:[]; const iOpts=iAns.map((t,idx)=>({text:String(t||'').trim(),img:iImgs[idx]||null})).filter(o=>o.text!==''); const allOptsData=[{text:cAns,img:q.correctAnswerImageUrl||null,isC:true}, ...iOpts.map(o=>({...o,isC:false}))].filter(o=>o.text!==''); if(allOptsData.length>0){[...allOptsData].sort(()=>Math.random()-0.5).forEach(oD=>{ const oEl=document.createElement('div'); oEl.className='quiz-option'; oEl.dataset.isCorrect=oD.isC.toString(); if(oD.img) oEl.innerHTML+=`<img class="quiz-option-image" src="${escapeHtml(oD.img)}" alt="Opt" onerror="this.style.display='none'">`; oEl.innerHTML+=`<span class="quiz-option-text">${escapeHtml(oD.text)}</span>`; optsDiv.appendChild(oEl);});} else {optsDiv.innerHTML='<p style="font-size:0.9em;color:red;">No options.</p>';} qDiv.appendChild(optsDiv); qDiv.innerHTML+=`<div class="quiz-feedback correct" style="display:none;">Correct!</div><div class="quiz-feedback incorrect" style="display:none;">Incorrect</div>`; cont.appendChild(qDiv);});} cont.innerHTML+=`<button class="quiz-submit-btn" data-action="submit-quiz" data-quiz-id="${quizData.id}" ${qs.length===0?'disabled':''}>Submit</button><div class="final-quiz-result" style="display:none;"></div>`; wrap.appendChild(cont); }
-    function renderChallengesElement(elData, wrap) { wrap.classList.add('element-challenges'); const chs=elData.data?.challenges||[]; const list=document.createElement('ul'); list.className='challenges-list'; if(chs.length===0){list.innerHTML='<p>No challenges.</p>';}else{chs.forEach(c=>{if(!c?.id||!c.heading)return; const item=document.createElement('li'); item.className='challenge-item'; item.dataset.challengeId=c.id; item.innerHTML=`<img class="challenge-icon" src="${escapeHtml(c.iconUrl||'https://via.placeholder.com/40?text=C')}" alt="C" onerror="this.src='https://via.placeholder.com/40?text=?'"><div class="challenge-content"><h4>${escapeHtml(c.heading)}</h4>${c.description?`<p>${escapeHtml(c.description)}</p>`:''}${c.imageUrl?`<img src="${escapeHtml(c.imageUrl)}" alt="Challenge" onerror="this.style.display='none'">`:''}</div>`; list.appendChild(item);});} wrap.appendChild(list); }
+        root.style.setProperty('--primary', styles.primaryColor || '#5E81F4');
+        root.style.setProperty('--secondary', styles.secondaryColor || '#FF7AC6');
+        root.style.setProperty('--accent', styles.accentColor || '#FFB800');
+        root.style.setProperty('--global-text-color', styles.globalTextColor || DEFAULT_TEXT_COLOR);
+        root.style.setProperty('--global-font-family', styles.globalFontFamily || DEFAULT_FONT_FAMILY);
+
+        const sizeMap = { small: '14px', medium: '16px', large: '18px', xlarge: '20px' };
+        const sizeName = styles.globalFontSize || DEFAULT_FONT_SIZE_NAME;
+        // Use mapped size, or the custom value if it's not a standard name, or the default CSS size
+        const cssFontSize = sizeMap[sizeName] || sizeName || DEFAULT_FONT_SIZE_CSS;
+        root.style.setProperty('--global-font-size', cssFontSize);
+
+        projectTitleElement.textContent = projectData.title || 'Project';
+        projectSubtitleElement.textContent = projectData.subtitle || '';
+
+        // Set header image source and add error handler
+        projectHeaderImageElement.src = projectData.headerImage || IMAGE_FALLBACK_SRC; // Use fallback if no URL
+        projectHeaderImageElement.dataset.error = "false"; // Reset error state
+        // Ensure the onerror handler is attached *before* src potentially fails
+        projectHeaderImageElement.onerror = () => handleImageError(projectHeaderImageElement);
+        // In case src is already set and cached as bad, re-check:
+        if (projectHeaderImageElement.complete && projectHeaderImageElement.naturalWidth === 0) {
+             handleImageError(projectHeaderImageElement);
+        }
+    }
+
+    function renderSidebar() {
+        tabsContainer.innerHTML = ''; // Clear previous tabs
+        if (!projectData.tabs?.length) {
+            tabsContainer.innerHTML = '<p style="text-align:center;color:#888;font-style:italic;">No tabs yet. Add one!</p>';
+            return;
+        }
+
+        projectData.tabs.forEach(tab => {
+            if (!tab?.id) {
+                 console.warn("Skipping tab with missing ID:", tab);
+                 return; // Skip invalid tab data
+            }
+
+            const tabElement = document.createElement('div');
+            tabElement.className = 'tab';
+            tabElement.dataset.tabId = tab.id;
+
+            // Determine if this tab (or one of its children) is active
+            let isParentActive = (tab.id === currentTabId);
+            let isDirectlyActive = (isParentActive && !currentSubTabId && (tab.subTabs === null || tab.subTabs?.length === 0));
+
+
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'tab-name';
+            nameSpan.textContent = tab.name || 'Unnamed Tab';
+            nameSpan.dataset.tabId = tab.id; // Make name clickable
+            tabElement.appendChild(nameSpan);
+
+            tabElement.appendChild(createControlsDiv('tab', tab.id));
+            tabsContainer.appendChild(tabElement);
+
+            // Render Sub-tabs if they exist
+            if (Array.isArray(tab.subTabs) && tab.subTabs.length > 0) {
+                 // If a subtab is active, the parent tab itself isn't marked active directly
+                if (isParentActive && currentSubTabId) {
+                     isDirectlyActive = false;
+                }
+
+                tab.subTabs.forEach(subTab => {
+                    if (!subTab?.id) {
+                         console.warn("Skipping sub-tab with missing ID:", subTab);
+                         return; // Skip invalid sub-tab data
+                    }
+                    const subTabElement = document.createElement('div');
+                    subTabElement.className = 'sub-tab';
+                    subTabElement.dataset.subTabId = subTab.id;
+                    subTabElement.dataset.parentTabId = tab.id; // Store parent ID
+
+                    if (isParentActive && subTab.id === currentSubTabId) {
+                        subTabElement.classList.add('active');
+                    }
+
+                    const subNameSpan = document.createElement('span');
+                    subNameSpan.className = 'sub-tab-name';
+                    subNameSpan.textContent = subTab.name || 'Unnamed Sub-Tab';
+                    subNameSpan.dataset.parentTabId = tab.id; // For click handling
+                    subNameSpan.dataset.subTabId = subTab.id; // For click handling
+                    subTabElement.appendChild(subNameSpan);
+
+                    subTabElement.appendChild(createControlsDiv('subtab', tab.id, subTab.id));
+                    tabsContainer.appendChild(subTabElement);
+                });
+            }
+
+             // Add active class to the main tab if it's directly active
+            if (isDirectlyActive) {
+                 tabElement.classList.add('active');
+            }
+        });
+    }
+
+    function createControlsDiv(type, tabId, subTabId = null) {
+        const controlsDiv = document.createElement('div');
+        controlsDiv.className = type === 'tab' ? 'tab-controls' : 'sub-tab-controls';
+
+        let buttonsHtml = '';
+        if (type === 'tab') {
+            buttonsHtml += `<button class="add-btn action-btn" title="Add Sub-Tab" data-action="add-subtab" data-tab-id="${tabId}">+ Sub</button>`;
+            buttonsHtml += `<button class="edit-btn action-btn" title="Edit Tab Name" data-action="edit-tab" data-tab-id="${tabId}">✏️</button>`;
+            buttonsHtml += `<button class="remove-btn action-btn" title="Remove Tab" data-action="remove-tab" data-tab-id="${tabId}">&times;</button>`;
+        } else { // type === 'subtab'
+            buttonsHtml += `<button class="edit-btn action-btn" title="Edit Sub-Tab Name" data-action="edit-subtab" data-parent-tab-id="${tabId}" data-sub-tab-id="${subTabId}">✏️</button>`;
+            buttonsHtml += `<button class="remove-btn action-btn" title="Remove Sub-Tab" data-action="remove-subtab" data-parent-tab-id="${tabId}" data-sub-tab-id="${subTabId}">&times;</button>`;
+        }
+        controlsDiv.innerHTML = buttonsHtml;
+        return controlsDiv;
+    }
+
+    function renderContentArea() {
+        contentArea.innerHTML = ''; // Clear previous content
+        addControls.style.display = 'none'; // Hide add controls initially
+
+        const contentArray = getCurrentContentArray();
+
+        if (contentArray === null) {
+            // Determine why contentArray is null to show a relevant message
+            const tab = findTabData(currentTabId);
+            if (!currentTabId) {
+                contentArea.innerHTML = '<p>Please select a tab from the sidebar.</p>';
+            } else if (tab && Array.isArray(tab.subTabs) && tab.subTabs.length > 0 && !currentSubTabId) {
+                contentArea.innerHTML = '<p>Please select a sub-tab to view its content.</p>';
+            } else if (tab && Array.isArray(tab.subTabs) && tab.subTabs.length === 0) {
+                // This case shouldn't happen if getCurrentContentArray is correct, means tab.content should be used
+                 contentArea.innerHTML = '<p>This tab has no sub-tabs and no direct content.</p>';
+                 addControls.style.display = 'block'; // Allow adding content here
+            }
+             else {
+                contentArea.innerHTML = '<p>Select a valid section from the sidebar.</p>'; // Generic message
+            }
+            return; // Stop rendering if no valid content array
+        }
+
+        // Valid content array exists, show add controls
+        addControls.style.display = 'block';
+
+        if (contentArray.length === 0) {
+            contentArea.innerHTML = '<p>This section is currently empty. Add some content using the controls below!</p>';
+        } else {
+            contentArray.forEach(elementData => {
+                if (elementData?.id && elementData.type) {
+                    renderElement(elementData, contentArea);
+                } else {
+                    console.warn("Skipping invalid element data in content array:", elementData);
+                }
+            });
+        }
+    }
+
+    function renderElement(elementData, container) {
+        const elementWrapper = document.createElement('div');
+        elementWrapper.className = `content-element element-${elementData.type}`; // Add type class
+        elementWrapper.dataset.elementId = elementData.id;
+
+        // Add standard Edit/Remove actions
+        elementWrapper.appendChild(createStandardActions(elementData.id, elementData.type));
+
+        let elementHtml = ''; // Use innerHTML for simplicity, ensure data is escaped
+        try {
+            const data = elementData.data || {}; // Ensure data object exists
+
+            // Common heading/description for media types
+            if (['image', 'video', 'presentation', 'challenges'].includes(elementData.type)) {
+                if (data.heading) {
+                    elementHtml += `<h3 class="media-heading">${escapeHtml(data.heading)}</h3>`;
+                }
+                if (data.description) {
+                    // Use pre-wrap for description to preserve line breaks
+                    elementHtml += `<p class="media-description">${escapeHtml(data.description)}</p>`;
+                }
+            }
+
+            switch (elementData.type) {
+                case 'heading':
+                    elementHtml += `<h2 class="element-heading">${escapeHtml(data.text || 'Default Heading')}</h2>`;
+                    break;
+                case 'text':
+                    // Use pre-wrap for text content as well
+                    elementHtml += `<p class="element-text">${escapeHtml(data.text || 'Default text...')}</p>`;
+                    break;
+                case 'image':
+                    const imageUrl = data.url || ''; // Default to empty string if no URL
+                    const imageAlt = escapeHtml(data.alt || '');
+                    const imageWidth = escapeHtml(data.width || 'auto');
+                    const imageHeight = escapeHtml(data.height || 'auto');
+                    // Add onerror directly here, pointing to the utility function
+                    elementHtml += `<div class="element-image-wrapper">
+                                      <img src="${escapeHtml(imageUrl)}"
+                                           alt="${imageAlt}"
+                                           style="width:${imageWidth}; height:${imageHeight};"
+                                           onerror="handleImageError(this)"
+                                           data-error="false">
+                                    </div>`;
+                    break;
+                case 'video':
+                case 'presentation':
+                    const embedUrl = data.url || 'about:blank';
+                    const safeEmbedUrl = getEmbedUrlWithOptions(embedUrl); // Process URL for embedding options
+                    const embedTitle = escapeHtml(elementData.type === 'video' ? 'Embedded Video' : 'Embedded Presentation');
+                    // Ensure the final URL is escaped
+                    elementHtml += `<div class="media-wrapper-16-9">
+                                      <iframe src="${escapeHtml(safeEmbedUrl)}"
+                                              title="${embedTitle}"
+                                              frameborder="0"
+                                              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                              allowfullscreen></iframe>
+                                    </div>`;
+                    break;
+                case 'quiz':
+                    // Quiz rendering is complex, handle in its own function to avoid polluting innerHTML
+                    renderQuizElement(elementData, elementWrapper);
+                    elementHtml = null; // Signal that innerHTML shouldn't be used
+                    break;
+                case 'challenges':
+                    // Challenges rendering also handled separately
+                    renderChallengesElement(elementData, elementWrapper);
+                    elementHtml = null; // Signal that innerHTML shouldn't be used
+                    break;
+                default:
+                    console.warn(`Unknown element type: ${elementData.type}`);
+                    elementHtml = `<p style="color: var(--danger);">Unknown element type: ${escapeHtml(elementData.type)}</p>`;
+            }
+
+            if (elementHtml !== null) {
+                // Append the generated HTML (already escaped)
+                 elementWrapper.insertAdjacentHTML('beforeend', elementHtml);
+                 // Re-check images added via innerHTML in case they load instantly and fail
+                 const img = elementWrapper.querySelector('img');
+                 if (img && img.complete && img.naturalWidth === 0 && img.src !== IMAGE_FALLBACK_SRC) {
+                     handleImageError(img);
+                 }
+            }
+
+        } catch (e) {
+            console.error("Error rendering element:", elementData, e);
+            elementWrapper.innerHTML = '<p style="color: var(--danger); border: 1px solid var(--danger); padding: 10px;">Error rendering this element.</p>';
+            // Append standard actions even if rendering fails, so it can be removed/edited
+            elementWrapper.appendChild(createStandardActions(elementData.id, elementData.type));
+        }
+
+        container.appendChild(elementWrapper);
+    }
+
+    function createStandardActions(elementId, elementType) {
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'element-actions';
+        actionsDiv.innerHTML = `
+            <button class="edit-btn action-btn" title="Edit ${elementType}" data-action="edit-element" data-element-id="${elementId}">✏️</button>
+            <button class="remove-btn action-btn" title="Remove ${elementType}" data-action="remove-element" data-element-id="${elementId}">&times;</button>
+        `;
+        return actionsDiv;
+    }
+
+    function renderQuizElement(quizData, wrapperElement) {
+        // wrapperElement already created in renderElement, just add content
+        const quizContainer = document.createElement('div');
+        quizContainer.className = 'quiz-container-inner';
+        quizContainer.dataset.quizId = quizData.id;
+
+        const questions = quizData.data?.questions || [];
+
+        if (questions.length === 0) {
+            quizContainer.innerHTML = '<p><i>No questions have been added to this quiz yet.</i></p>';
+        } else {
+            questions.forEach((question, index) => {
+                if (!question) {
+                     console.warn(`Skipping invalid question at index ${index} for quiz ${quizData.id}`);
+                     return;
+                }
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'quiz-question';
+                questionDiv.dataset.questionIndex = index;
+
+                const questionContentDiv = document.createElement('div');
+                questionContentDiv.className = 'quiz-question-content';
+
+                // Question Image (Optional)
+                if (question.questionImageUrl) {
+                    const img = document.createElement('img');
+                    img.className = 'quiz-question-image';
+                    img.src = escapeHtml(question.questionImageUrl);
+                    img.alt = `Question ${index + 1} Image`;
+                    img.onerror = () => handleImageError(img);
+                     img.dataset.error = "false";
+                    questionContentDiv.appendChild(img);
+                }
+
+                // Question Text
+                const textP = document.createElement('p');
+                textP.className = 'quiz-question-text';
+                textP.innerHTML = `${index + 1}. ${escapeHtml(question.questionText || 'Missing question text')}`; // Use innerHTML for numbering boldness potentially
+                questionContentDiv.appendChild(textP);
+
+                questionDiv.appendChild(questionContentDiv);
+
+                // Options
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'quiz-options';
+
+                const correctAnswer = String(question.correctAnswer || '').trim();
+                const incorrectAnswers = Array.isArray(question.incorrectAnswers) ? question.incorrectAnswers : [];
+                const incorrectAnswerImages = Array.isArray(question.incorrectAnswersImageUrls) ? question.incorrectAnswersImageUrls : [];
+
+                // Combine correct and incorrect options into one list for shuffling
+                let allOptionsData = [];
+                if (correctAnswer) {
+                    allOptionsData.push({
+                        text: correctAnswer,
+                        imgUrl: question.correctAnswerImageUrl || null,
+                        isCorrect: true
+                    });
+                }
+                incorrectAnswers.forEach((text, i) => {
+                    const trimmedText = String(text || '').trim();
+                    if (trimmedText) {
+                        allOptionsData.push({
+                            text: trimmedText,
+                            imgUrl: incorrectAnswerImages[i] || null,
+                            isCorrect: false
+                        });
+                    }
+                });
+
+                // Shuffle options
+                allOptionsData.sort(() => Math.random() - 0.5);
+
+                if (allOptionsData.length === 0) {
+                    optionsDiv.innerHTML = '<p style="font-size:0.9em; color:var(--danger);">Error: No valid options for this question.</p>';
+                } else {
+                    allOptionsData.forEach(optionData => {
+                        const optionElement = document.createElement('div');
+                        optionElement.className = 'quiz-option';
+                        optionElement.dataset.isCorrect = optionData.isCorrect.toString();
+
+                        // Option Image (Optional)
+                        if (optionData.imgUrl) {
+                            const optImg = document.createElement('img');
+                            optImg.className = 'quiz-option-image';
+                            optImg.src = escapeHtml(optionData.imgUrl);
+                            optImg.alt = "Option image";
+                            optImg.onerror = () => handleImageError(optImg);
+                            optImg.dataset.error = "false";
+                            optionElement.appendChild(optImg);
+                        }
+
+                        // Option Text
+                        const optText = document.createElement('span');
+                        optText.className = 'quiz-option-text';
+                        optText.textContent = escapeHtml(optionData.text);
+                        optionElement.appendChild(optText);
+
+                        optionsDiv.appendChild(optionElement);
+                    });
+                }
+                questionDiv.appendChild(optionsDiv);
+
+                // Feedback divs (hidden initially)
+                const feedbackCorrect = document.createElement('div');
+                feedbackCorrect.className = 'quiz-feedback correct';
+                feedbackCorrect.textContent = 'Correct!';
+                feedbackCorrect.style.display = 'none';
+                questionDiv.appendChild(feedbackCorrect);
+
+                const feedbackIncorrect = document.createElement('div');
+                feedbackIncorrect.className = 'quiz-feedback incorrect';
+                // Content set dynamically on submission
+                feedbackIncorrect.style.display = 'none';
+                questionDiv.appendChild(feedbackIncorrect);
+
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        // Submit Button & Result Area
+        const submitButton = document.createElement('button');
+        submitButton.className = 'quiz-submit-btn';
+        submitButton.dataset.action = 'submit-quiz';
+        submitButton.dataset.quizId = quizData.id;
+        submitButton.textContent = 'Submit Answers';
+        if (questions.length === 0) {
+            submitButton.disabled = true;
+        }
+        quizContainer.appendChild(submitButton);
+
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'final-quiz-result';
+        resultDiv.style.display = 'none';
+        quizContainer.appendChild(resultDiv);
+
+        wrapperElement.appendChild(quizContainer); // Append the built container
+    }
+
+    function renderChallengesElement(challengesData, wrapperElement) {
+        const challenges = challengesData.data?.challenges || [];
+        const list = document.createElement('ul');
+        list.className = 'challenges-list';
+
+        if (challenges.length === 0) {
+            list.innerHTML = '<p><i>No challenges defined yet.</i></p>';
+        } else {
+            challenges.forEach(challenge => {
+                if (!challenge?.id || !challenge.heading) {
+                    console.warn("Skipping invalid challenge item:", challenge);
+                    return;
+                }
+                const item = document.createElement('li');
+                item.className = 'challenge-item';
+                item.dataset.challengeId = challenge.id;
+
+                let itemHtml = '';
+                // Icon
+                const iconUrl = challenge.iconUrl || IMAGE_FALLBACK_SRC; // Use fallback if no URL
+                itemHtml += `<img class="challenge-icon" src="${escapeHtml(iconUrl)}" alt="Challenge Icon" onerror="handleImageError(this)" data-error="false">`;
+
+                // Content Div
+                itemHtml += '<div class="challenge-content">';
+                itemHtml += `<h4>${escapeHtml(challenge.heading)}</h4>`;
+                if (challenge.description) {
+                    itemHtml += `<p>${escapeHtml(challenge.description)}</p>`;
+                }
+                if (challenge.imageUrl) {
+                     const imgUrl = challenge.imageUrl;
+                     itemHtml += `<img src="${escapeHtml(imgUrl)}" alt="Challenge Image" onerror="handleImageError(this)" data-error="false">`;
+                }
+                itemHtml += '</div>'; // End challenge-content
+
+                item.innerHTML = itemHtml;
+                 // Re-check images added via innerHTML
+                 item.querySelectorAll('img').forEach(img => {
+                     if (img.complete && img.naturalWidth === 0 && img.src !== IMAGE_FALLBACK_SRC) {
+                         handleImageError(img);
+                     }
+                 });
+
+                list.appendChild(item);
+            });
+        }
+        wrapperElement.appendChild(list);
+    }
+
 
     // --- NAVIGATION & STATE ---
-    function setActiveTab(tId, sId=null) { const tData=findTabData(tId); if(!tData){initContent(); return;} const oldT=currentTabId, oldS=currentSubTabId; currentTabId=tId; currentSubTabId=null; if(Array.isArray(tData.subTabs)&&tData.subTabs.length>0){if(sId&&findSubTabData(tId,sId))currentSubTabId=sId; else if(tData.subTabs[0]?.id)currentSubTabId=tData.subTabs[0].id;} if(currentTabId!==oldT||currentSubTabId!==oldS){ console.log(`Active: T=${currentTabId}, S=${currentSubTabId}`); updateURLHash(); renderSidebar(); renderContentArea(); } }
-    function initContent() { const h=window.location.hash.substring(1); let iT=null,iS=null; if(h){[iT,iS]=h.split('/');} let tT=null,tS=null; if(iT&&findTabData(iT)){tT=iT; if(iS&&findSubTabData(tT,iS))tS=iS;} else if(projectData.tabs?.length>0&&projectData.tabs[0]?.id)tT=projectData.tabs[0].id; if(tT)setActiveTab(tT,tS); else {renderSidebar();renderContentArea();} }
-    function updateURLHash() { let h=''; if(currentTabId){h=`#${currentTabId}`;if(currentSubTabId)h+=`/${currentSubTabId}`;} const c=window.location.href.split('#')[0]; const n=h?c+h:c; try{if(window.location.hash!==h)history.pushState({tabId:currentTabId,subTabId:currentSubTabId},'',n);}catch(e){if(e.name==='SecurityError')console.warn("History restricted.");else console.error("Hash update err:",e);} }
-    window.onpopstate=(e)=>{console.log("Popstate:",e.state);if(e.state?.tabId){currentTabId=e.state.tabId;currentSubTabId=e.state.subTabId;renderSidebar();renderContentArea();}else initContent();};
+    function setActiveTab(tabId, subTabId = null) {
+        const targetTab = findTabData(tabId);
+        if (!targetTab) {
+            console.warn(`Attempted to activate non-existent tab: ${tabId}`);
+            initContent(); // Fallback to initial state or first available tab
+            return;
+        }
+
+        const oldTabId = currentTabId;
+        const oldSubTabId = currentSubTabId;
+
+        currentTabId = tabId;
+        currentSubTabId = null; // Reset sub-tab first
+
+        // If the target tab has sub-tabs, determine which one to activate
+        if (Array.isArray(targetTab.subTabs) && targetTab.subTabs.length > 0) {
+            if (subTabId && findSubTabData(tabId, subTabId)) {
+                // A valid sub-tab was provided
+                currentSubTabId = subTabId;
+            } else {
+                // No valid sub-tab provided, default to the first one
+                currentSubTabId = targetTab.subTabs[0]?.id || null; // Safely get first sub-tab ID
+                if (!currentSubTabId) {
+                     console.warn(`Tab ${tabId} has subTabs array but no valid sub-tabs inside.`);
+                     // Keep currentSubTabId as null, content area will show 'Select sub-tab'
+                }
+            }
+        }
+        // Else: Tab has no sub-tabs, currentSubTabId remains null
+
+        // Only re-render if the active state actually changed
+        if (currentTabId !== oldTabId || currentSubTabId !== oldSubTabId) {
+            console.log(`Setting active section: Tab=${currentTabId}, SubTab=${currentSubTabId}`);
+            updateURLHash();
+            renderSidebar(); // Update sidebar highlighting
+            renderContentArea(); // Update main content
+        }
+    }
+
+    function initContent() {
+        const hash = window.location.hash.substring(1); // Remove '#'
+        let initialTabId = null;
+        let initialSubTabId = null;
+
+        if (hash) {
+            const parts = hash.split('/');
+            initialTabId = parts[0];
+            initialSubTabId = parts[1] || null; // May not exist
+        }
+
+        let targetTabId = null;
+        let targetSubTabId = null;
+
+        // Validate the hash parts against actual data
+        if (initialTabId && findTabData(initialTabId)) {
+            targetTabId = initialTabId;
+            // If the tab has sub-tabs, validate the sub-tab ID from the hash
+            const tabData = findTabData(targetTabId);
+            if (Array.isArray(tabData?.subTabs) && tabData.subTabs.length > 0) {
+                if (initialSubTabId && findSubTabData(targetTabId, initialSubTabId)) {
+                    targetSubTabId = initialSubTabId;
+                } else {
+                    // Invalid sub-tab in hash, maybe default to first later in setActiveTab
+                    targetSubTabId = null;
+                     console.log(`Sub-tab '${initialSubTabId}' from hash not found for tab '${targetTabId}'. Will default.`);
+                }
+            } else {
+                 // Tab from hash has no sub-tabs, ignore any sub-tab ID from hash
+                 targetSubTabId = null;
+            }
+        } else {
+            // Hash was invalid or empty, try falling back to the first tab
+            if (projectData.tabs?.length > 0 && projectData.tabs[0]?.id) {
+                targetTabId = projectData.tabs[0].id;
+                 // If the first tab has sub-tabs, setActiveTab will handle defaulting to the first sub-tab
+            }
+        }
+
+        if (targetTabId) {
+            setActiveTab(targetTabId, targetSubTabId);
+        } else {
+            // No tabs exist at all
+            renderSidebar(); // Show empty sidebar message
+            renderContentArea(); // Show empty content message
+        }
+    }
+
+    function updateURLHash() {
+        let newHash = '';
+        if (currentTabId) {
+            newHash = `#${currentTabId}`;
+            if (currentSubTabId) {
+                newHash += `/${currentSubTabId}`;
+            }
+        }
+
+        // Avoid pushing the same state repeatedly
+        if (window.location.hash !== newHash) {
+             // Use replaceState to avoid polluting browser history too much on internal navigation
+             // Use pushState if you *want* back/forward to navigate between tabs/subtabs explicitly
+            try {
+                 // history.pushState({ tabId: currentTabId, subTabId: currentSubTabId }, '', newHash || window.location.pathname + window.location.search);
+                 history.replaceState({ tabId: currentTabId, subTabId: currentSubTabId }, '', newHash || window.location.pathname + window.location.search);
+             } catch (e) {
+                 // SecurityError can happen in sandboxed environments (like snippets)
+                 if (e.name === 'SecurityError') {
+                     console.warn("Browser history manipulation restricted in this environment.");
+                 } else {
+                     console.error("Error updating URL hash:", e);
+                 }
+             }
+        }
+    }
+
+    // Handle browser back/forward navigation
+    window.onpopstate = (event) => {
+        console.log("Popstate event:", event.state);
+        if (event.state && event.state.tabId) {
+            // Restore state from history
+            currentTabId = event.state.tabId;
+            currentSubTabId = event.state.subTabId; // Might be null
+            renderSidebar();
+            renderContentArea();
+        } else {
+            // No state object, might be initial load or manual hash change
+             initContent();
+        }
+    };
 
     // --- ACTIONS ---
-    function addTabAction() { const id=generateId('tab_'); const t={id,name:`Tab ${projectData.tabs.length+1}`,subTabs:null,content:[]}; if(!Array.isArray(projectData.tabs))projectData.tabs=[]; projectData.tabs.push(t); saveProjectData(); setActiveTab(id); openEditModal('tab',id); }
-    function addSubTabAction(pId) { const pTab=findTabData(pId); if(!pTab)return; const id=generateId('sub_'); const st={id,name:`Sub ${pTab.subTabs?.length?pTab.subTabs.length+1:1}`,content:[]}; if(!Array.isArray(pTab.subTabs)){if(pTab.content?.length){if(!confirm("Add sub & remove direct content?"))return;} pTab.content=undefined; pTab.subTabs=[];} pTab.subTabs.push(st); saveProjectData(); setActiveTab(pId,id); openEditModal('subtab',id,pId); }
-    function addElementAction(type) { if(!currentTabId){alert("Select section."); return;} const arr=getCurrentContentArray(); if(arr===null){alert(findTabData(currentTabId)?.subTabs?"Select sub-tab.":"Select valid section."); return;} const id=generateId(type+'_'); openEditModal('element',id,null,true); } // Open modal first
-    function removeTabAction(id) { const i=projectData.tabs?.findIndex(t=>t?.id===id); if(i===-1)return; if(!confirm(`Remove tab "${escapeHtml(projectData.tabs[i].name)}"?`))return; projectData.tabs.splice(i,1); saveProjectData(); if(currentTabId===id){currentTabId=null;currentSubTabId=null;initContent();}else renderSidebar(); }
-    function removeSubTabAction(pId,id) { const pTab=findTabData(pId); const i=pTab?.subTabs?.findIndex(st=>st?.id===id); if(!pTab||i===-1)return; if(!confirm(`Remove sub "${escapeHtml(pTab.subTabs[i].name)}"?`))return; pTab.subTabs.splice(i,1); saveProjectData(); if(currentSubTabId===id&&currentTabId===pId){currentSubTabId=null;setActiveTab(pId);}else renderSidebar(); }
-    function removeElementAction(id) { const res=findElementData(id); if(!res){alert("Cannot find element.");return;} if(!confirm(`Remove ${res.element.type}?`))return; res.parentArray.splice(res.index,1); saveProjectData(); renderContentArea(); }
+    function addTabAction() {
+        const newTabId = generateId('tab_');
+        const newTab = {
+            id: newTabId,
+            name: `New Tab ${projectData.tabs.length + 1}`,
+            subTabs: null, // Start with no sub-tabs
+            content: [] // Start with empty content
+        };
+        if (!Array.isArray(projectData.tabs)) { // Ensure tabs array exists
+            projectData.tabs = [];
+        }
+        projectData.tabs.push(newTab);
+        saveProjectData();
+        setActiveTab(newTabId); // Activate the new tab
+        openEditModal('tab', newTabId, null, true); // Open modal to edit name immediately
+    }
+
+    function addSubTabAction(parentTabId) {
+        const parentTab = findTabData(parentTabId);
+        if (!parentTab) {
+            alert("Error: Cannot add sub-tab to non-existent parent tab.");
+            return;
+        }
+
+        const newSubTabId = generateId('sub_');
+        const newSubTab = {
+            id: newSubTabId,
+            name: `New Sub ${parentTab.subTabs?.length ? parentTab.subTabs.length + 1 : 1}`,
+            content: []
+        };
+
+        // Check if parent tab currently has direct content
+        if (!Array.isArray(parentTab.subTabs)) {
+             // It had direct content (or was null)
+             if (parentTab.content?.length > 0) {
+                 if (!confirm("This tab has direct content. Adding a sub-tab will replace the direct content area with sub-tabs. Existing direct content will be preserved but hidden. Continue?")) {
+                     return;
+                 }
+                 // Keep parentTab.content data, but it won't be rendered while subTabs exist
+                 // Alternatively, could offer to move content to the first sub-tab:
+                 // newSubTab.content = parentTab.content;
+            }
+             // Initialize subTabs array and clear direct content rendering path
+            parentTab.subTabs = [];
+            // parentTab.content = undefined; // or keep content data, just don't render it
+        }
+
+        parentTab.subTabs.push(newSubTab);
+        saveProjectData();
+        setActiveTab(parentTabId, newSubTabId); // Activate the new sub-tab
+        openEditModal('subtab', newSubTabId, parentTabId, true); // Edit name
+    }
+
+    function addElementAction(elementType) {
+        if (!currentTabId) {
+            alert("Please select a tab or sub-tab section first.");
+            return;
+        }
+        const targetArray = getCurrentContentArray();
+        if (targetArray === null) {
+            alert("Cannot add element here. Select a tab without sub-tabs, or select a specific sub-tab.");
+            return;
+        }
+        // Generate ID but don't add to data yet, open modal first
+        const newElementId = generateId(elementType + '_');
+        openEditModal('element', newElementId, currentSubTabId || currentTabId, true, elementType);
+    }
+
+    function removeTabAction(tabId) {
+        const tabIndex = projectData.tabs?.findIndex(t => t?.id === tabId);
+        if (tabIndex === -1 || tabIndex === undefined) {
+            alert("Error: Tab not found for removal.");
+            return;
+        }
+        const tabName = projectData.tabs[tabIndex].name || 'this tab';
+        if (!confirm(`Are you sure you want to remove "${escapeHtml(tabName)}" and all its content (including sub-tabs)?`)) {
+            return;
+        }
+
+        projectData.tabs.splice(tabIndex, 1);
+        saveProjectData();
+
+        // If the removed tab was active, reset to initial state/first tab
+        if (currentTabId === tabId) {
+            currentTabId = null;
+            currentSubTabId = null;
+            initContent(); // Re-evaluate which tab should be active
+        } else {
+            renderSidebar(); // Just update the sidebar if a different tab was removed
+        }
+    }
+
+    function removeSubTabAction(parentTabId, subTabId) {
+        const parentTab = findTabData(parentTabId);
+        const subTabIndex = parentTab?.subTabs?.findIndex(st => st?.id === subTabId);
+
+        if (!parentTab || subTabIndex === -1 || subTabIndex === undefined) {
+            alert("Error: Sub-tab not found for removal.");
+            return;
+        }
+        const subTabName = parentTab.subTabs[subTabIndex].name || 'this sub-tab';
+        if (!confirm(`Are you sure you want to remove "${escapeHtml(subTabName)}"?`)) {
+            return;
+        }
+
+        parentTab.subTabs.splice(subTabIndex, 1);
+
+        // Optional: If this was the *last* sub-tab, revert parent tab to allow direct content?
+        // if (parentTab.subTabs.length === 0) {
+        //     parentTab.subTabs = null; // Or keep empty array? Decide consistency.
+        //     if (!parentTab.content) parentTab.content = []; // Restore direct content array
+        // }
+
+        saveProjectData();
+
+        // If the removed sub-tab was active, reset to the parent tab (which will select its first sub-tab or show content)
+        if (currentTabId === parentTabId && currentSubTabId === subTabId) {
+            currentSubTabId = null; // Clear sub-tab selection
+            setActiveTab(parentTabId); // Re-activate parent, logic will handle sub-tab selection/content display
+        } else {
+             renderSidebar(); // Just update sidebar if a different sub-tab was removed
+        }
+    }
+
+    function removeElementAction(elementId) {
+        const findResult = findElementData(elementId);
+        if (!findResult) {
+            alert("Error: Could not find the element to remove.");
+            return;
+        }
+        const elementType = findResult.element.type || 'this element';
+        if (!confirm(`Are you sure you want to remove this ${escapeHtml(elementType)}?`)) {
+            return;
+        }
+
+        findResult.parentArray.splice(findResult.index, 1);
+        saveProjectData();
+        renderContentArea(); // Re-render the content of the current section
+    }
 
     // --- MODAL & EDITING ---
-    function openEditModal(type, id=null, parentId=null, isNew=false) { if(!modalFormContent){console.error("MFC NF!");return;} editingContext={type,id,parentId,isNew}; modalFormContent.innerHTML=''; let title='Edit', formHtml=''; try { let el=null; if(type==='element'&&!isNew){const res=findElementData(id); if(!res)throw new Error("Elem NF"); el=res.element;} switch(type){ case 'tab':const t=findTabData(id);if(!t)throw new Error("TNF"); title='Edit Tab'; formHtml=`<label>Name:</label><input id="edit-generic-name" value="${escapeHtml(t.name||'')}" required>`; break; case 'subtab':const st=findSubTabData(parentId,id);if(!st)throw new Error("STNF"); title='Edit Sub-Tab'; formHtml=`<label>Name:</label><input id="edit-generic-name" value="${escapeHtml(st.name||'')}" required>`; break; case 'element':const elType=isNew?id.split('_')[0]:el.type; title=`${isNew?'Add':'Edit'} ${elType.charAt(0).toUpperCase()+elType.slice(1)}`; formHtml=generateElementForm(isNew?{type:elType, data:getDefaultElementData(elType)}:el); break; case 'styles':title='Edit Project Info & Styles'; formHtml=generateStyleForm(projectData); break; default: throw new Error(`Unknown type: ${type}`); } modalTitle.textContent=title; modalFormContent.innerHTML=formHtml; modal.style.display='flex'; const firstInput=modalFormContent.querySelector('input:not([type=color]), textarea, select'); if(firstInput)setTimeout(()=>firstInput.focus(),50); } catch(e){ console.error("Open modal err:",e); alert(`Err: ${e.message}`); closeModal(); } }
-    function generateElementForm(elData) { const d=elData.data||{}; const type=elData.type; let h=''; switch(type){ case 'heading':h=`<label>Heading:</label><input id="edit-element-text" value="${escapeHtml(d.text||'')}">`; break; case 'text':h=`<label>Text:</label><textarea id="edit-element-text" rows="6">${escapeHtml(d.text||'')}</textarea>`; break; case 'image':case 'video':case 'presentation':const isImg=type==='image'; const tName=type[0].toUpperCase()+type.slice(1); h=`<fieldset><legend>${tName}</legend><label>URL:</label><input type="url" id="edit-element-url" value="${escapeHtml(d.url||'')}" required>${isImg?`<label>Alt:</label><input id="edit-element-alt" value="${escapeHtml(d.alt||'')}">`:''} ${isImg?`<div class="input-group"><div><label>W:</label><input id="edit-element-width" value="${escapeHtml(d.width||'auto')}"></div><div><label>H:</label><input id="edit-element-height" value="${escapeHtml(d.height||'auto')}"></div></div>`:''}</fieldset><fieldset><legend>Opt. H/D</legend><label>H:</label><input id="edit-media-heading" value="${escapeHtml(d.heading||'')}"><label>D:</label><textarea id="edit-media-description" r="3">${escapeHtml(d.description||'')}</textarea></fieldset>`; break; case 'quiz':h=generateQuizEditForm(d); break; case 'challenges':h=generateChallengesEditForm(d); break; default: h='<p>Cannot edit.</p>'; } return h; }
-    function generateGlobalTextStyleFormControls(styles={}) { const cF=styles.globalFontFamily||DEFAULT_FONT_FAMILY; const cS=styles.globalFontSize||DEFAULT_FONT_SIZE_NAME; const cC=styles.globalTextColor||DEFAULT_TEXT_COLOR; let fOpts=FONT_FAMILIES.map(f=>`<option value="${escapeHtml(f.value)}" ${cF===f.value?'selected':''}>${escapeHtml(f.name)}</option>`).join(''); let sOpts=FONT_SIZES.map(s=>{let iS=cS===s;if(s==='custom'&&cS&&!FONT_SIZES.includes(cS))iS=true; return `<option value="${s}" ${iS?'selected':''}>${s==='custom'?'Custom...':s[0].toUpperCase()+s.slice(1)}</option>`;}).join(''); const isCustom=(cS&&!FONT_SIZES.slice(0,-1).includes(cS)); const customVal=isCustom?cS:''; return `<div class="global-text-style-options"><label>Font:</label><select id="edit-global-style-font">${fOpts}</select><br><label>Size:</label><select id="edit-global-style-size">${sOpts}</select><input id="edit-global-style-size-custom" placeholder="17px" value="${escapeHtml(customVal)}" style="display:${isCustom?'inline-block':'none'};width:100px;"><br><label>Color:</label><input type="color" id="edit-global-style-color" value="${cC}"></div>`; }
-    document.addEventListener('change',(e)=>{if(e.target?.id==='edit-global-style-size'){const c=document.getElementById('edit-global-style-size-custom'); if(c)c.style.display=e.target.value==='custom'?'inline-block':'none'; if(e.target.value!=='custom'&&c)c.value='';}});
-    function generateQuizEditForm(quizData){let h='<fieldset><legend>Qs</legend><div id="quiz-editor-questions-container">'; const qs=quizData.questions||[]; qs.forEach((q,i)=>{h+=renderSingleQuizQuestionForm(q,i);}); if(qs.length===0)h+='<p id="quiz-editor-no-questions-msg">No Qs.</p>'; h+='</div></fieldset><button type="button" id="quiz-editor-add-question-btn" class="add-btn quiz-edit-add-question-btn">+Q</button>'; return h;}
-    function renderSingleQuizQuestionForm(q={},i){const inc=Array.isArray(q.incorrectAnswers)?q.incorrectAnswers:[]; const incImgs=Array.isArray(q.incorrectAnswersImageUrls)?q.incorrectAnswersImageUrls:[]; let h=`<div class="quiz-edit-question" data-question-index="${i}"><h4>Q ${i+1}<button type="button" class="remove-btn action-btn quiz-editor-remove-question-btn" data-index="${i}">&times;</button></h4><label>Txt:</label><textarea id="quiz-q-text-${i}" rows="2" required>${escapeHtml(q.questionText||'')}</textarea><div class="quiz-image-input"><label>Q Img:</label><input type="url" id="quiz-q-image-${i}" value="${escapeHtml(q.questionImageUrl||'')}"></div><label style="color:green;">Correct:</label><input id="quiz-q-correct-${i}" value="${escapeHtml(q.correctAnswer||'')}" required><div class="quiz-image-input"><label>Correct Img:</label><input id="quiz-q-correct-image-${i}" value="${escapeHtml(q.correctAnswerImageUrl||'')}"></div><label>Incorrect:</label>`; for(let j=0;j<3;j++){h+=`<div style="border-left:2px solid #eee;padding-left:10px;margin-bottom:10px;"><input class="quiz-q-incorrect" value="${escapeHtml(inc[j]||'')}"><div class="quiz-image-input"><label>Inc ${j+1} Img:</label><input class="quiz-q-incorrect-image" id="quiz-q-incorrect-image-${i}-${j}" value="${escapeHtml(incImgs[j]||'')}"></div></div>`;} h+=`</div>`; return h;}
-    function generateChallengesEditForm(chData){const d=chData||{challenges:[]}; let h=`<fieldset><legend>Challenges Section</legend><label>Heading:</label><input id="edit-challenges-heading" value="${escapeHtml(d.heading||'')}"><label>Desc:</label><textarea id="edit-challenges-description" rows="2">${escapeHtml(d.description||'')}</textarea></fieldset><fieldset><legend>Items</legend><div id="challenges-editor-list">`; const chs=d.challenges||[]; if(chs.length===0)h+='<p id="challenges-editor-no-items-msg">No items.</p>'; else chs.forEach((c,i)=>h+=renderSingleChallengeForm(c,i)); h+=`</div></fieldset><button type="button" id="challenges-editor-add-btn" class="add-btn" ${chs.length>=MAX_CHALLENGES?'disabled':''}>+Challenge</button>${chs.length>=MAX_CHALLENGES?`<p style="color:var(--danger);font-size:0.9em;">Max ${MAX_CHALLENGES}.</p>`:''}`; return h;}
-    function renderSingleChallengeForm(c={},i){return `<div class="challenge-edit-item" data-challenge-index="${i}" data-challenge-id="${c.id || ''}"><h5>Challenge ${i+1}<button type="button" class="remove-btn action-btn challenges-editor-remove-btn" data-index="${i}">&times;</button></h5><label>Heading:</label><input class="challenge-heading-input" value="${escapeHtml(c.heading||'')}" required><label>Icon URL:</label><input class="challenge-icon-input" value="${escapeHtml(c.iconUrl||'')}"><label>Desc:</label><textarea class="challenge-desc-input" rows="2">${escapeHtml(c.description||'')}</textarea><label>Img URL:</label><input class="challenge-image-input" value="${escapeHtml(c.imageUrl||'')}" ></div>`;}
-    function generateStyleForm(data){const s=data.styles||{}; return `<fieldset><legend>Info&Header</legend><label>Title:</label><input id="edit-style-title" value="${escapeHtml(data.title||'')}"><label>Subtitle:</label><input id="edit-style-subtitle" value="${escapeHtml(data.subtitle||'')}"><label>Hdr Img:</label><input type="url" id="edit-style-headerimg" value="${escapeHtml(data.headerImage||'')}"></fieldset><fieldset><legend>Theme Colors</legend><div class="color-picker"><label>1ry:</label><input type="color" id="edit-style-primary" value="${s.primaryColor||'#5E81F4'}"><label>2ry:</label><input type="color" id="edit-style-secondary" value="${s.secondaryColor||'#FF7AC6'}"><label>Acc:</label><input type="color" id="edit-style-accent" value="${s.accentColor||'#FFB800'}"></div></fieldset><fieldset><legend>Global Text</legend>${generateGlobalTextStyleFormControls(s)}</fieldset>`;}
-    function closeModal(){ if(modal)modal.style.display='none'; if(modalFormContent)modalFormContent.innerHTML=''; editingContext={type:null,id:null,parentId:null,isNew:false}; }
+    // Added elementTypeForNew for clarity when adding new elements
+    function openEditModal(type, id = null, parentId = null, isNew = false, elementTypeForNew = null) {
+        if (!modal || !modalFormContent || !modalTitle) {
+            console.error("Modal elements not found!");
+            return;
+        }
+        editingContext = { type, id, parentId, isNew }; // Store context
+        modalFormContent.innerHTML = ''; // Clear previous form
+        let title = 'Edit';
+        let formHtml = '';
+
+        try {
+            let currentData = null; // Data for the item being edited
+
+            // Determine title and get data for editing
+            switch (type) {
+                case 'tab':
+                    currentData = findTabData(id);
+                    if (!currentData) throw new Error("Tab data not found.");
+                    title = isNew ? 'Add New Tab' : 'Edit Tab';
+                    break;
+                case 'subtab':
+                    currentData = findSubTabData(parentId, id); // parentId is the tab ID here
+                    if (!currentData) throw new Error("Sub-tab data not found.");
+                    title = isNew ? 'Add New Sub-Tab' : 'Edit Sub-Tab';
+                    break;
+                case 'element':
+                    title = isNew ? `Add New ${elementTypeForNew || 'Element'}` : 'Edit Element';
+                    if (!isNew) {
+                        const findResult = findElementData(id);
+                        if (!findResult) throw new Error("Element data not found.");
+                        currentData = findResult.element;
+                        title = `Edit ${currentData.type.charAt(0).toUpperCase() + currentData.type.slice(1)}`;
+                    } else {
+                        // For new elements, create default data based on type
+                        const elementType = elementTypeForNew || id?.split('_')[0]; // Get type from ID prefix or passed param
+                         if (!elementType) throw new Error("Element type not specified for new element.");
+                        currentData = { id: id, type: elementType, data: getDefaultElementData(elementType) };
+                         editingContext.elementType = elementType; // Store type explicitly for saving
+                    }
+                    break;
+                case 'styles':
+                    title = 'Edit Project Info & Styles';
+                    currentData = projectData; // Use the main project data object
+                    break;
+                default:
+                    throw new Error(`Unknown modal type: ${type}`);
+            }
+
+            // Generate the form HTML based on type and data
+            switch (type) {
+                case 'tab':
+                case 'subtab':
+                    formHtml = `<label for="edit-generic-name">Name:</label>
+                                <input type="text" id="edit-generic-name" value="${escapeHtml(currentData.name || '')}" required>`;
+                    break;
+                case 'element':
+                    formHtml = generateElementForm(currentData); // Pass the element data (new or existing)
+                    break;
+                case 'styles':
+                    formHtml = generateStyleForm(currentData); // Pass the project data
+                    break;
+            }
+
+            modalTitle.textContent = title;
+            modalFormContent.innerHTML = formHtml;
+            modal.style.display = 'flex'; // Show the modal
+
+            // Auto-focus the first input field for better UX
+            const firstInput = modalFormContent.querySelector('input:not([type=hidden]):not([type=color]), textarea, select');
+            if (firstInput) {
+                setTimeout(() => firstInput.focus(), 50); // Timeout helps ensure element is focusable
+            }
+
+        } catch (e) {
+            console.error("Error opening or preparing edit modal:", e);
+            alert(`Error: ${e.message}`);
+            closeModal(); // Close modal if setup failed
+        }
+    }
+
+     function generateElementForm(elementData) {
+        const data = elementData.data || {}; // Ensure data object exists
+        const type = elementData.type;
+        let formHtml = '';
+
+        switch (type) {
+            case 'heading':
+                formHtml = `<label for="edit-element-text">Heading Text:</label>
+                            <input type="text" id="edit-element-text" value="${escapeHtml(data.text || '')}" required>`;
+                break;
+            case 'text':
+                formHtml = `<label for="edit-element-text">Text Content:</label>
+                            <textarea id="edit-element-text" rows="8">${escapeHtml(data.text || '')}</textarea>`;
+                break;
+            case 'image':
+            case 'video':
+            case 'presentation':
+                const isImage = (type === 'image');
+                const typeName = type.charAt(0).toUpperCase() + type.slice(1);
+
+                formHtml = `<fieldset>
+                                <legend>${typeName} Source</legend>
+                                <label for="edit-element-url">URL:</label>
+                                <input type="url" id="edit-element-url" value="${escapeHtml(data.url || '')}" required placeholder="${isImage ? 'https://.../image.jpg' : 'https://youtube.com/... or https://...'}">`;
+                if (isImage) {
+                    formHtml += `<label for="edit-element-alt">Alternative Text (for accessibility):</label>
+                                 <input type="text" id="edit-element-alt" value="${escapeHtml(data.alt || '')}" placeholder="Describe the image">
+                                 <div class="input-group">
+                                     <div>
+                                         <label for="edit-element-width">Display Width:</label>
+                                         <input type="text" id="edit-element-width" value="${escapeHtml(data.width || 'auto')}" placeholder="auto, 100%, 300px">
+                                     </div>
+                                     <div>
+                                         <label for="edit-element-height">Display Height:</label>
+                                         <input type="text" id="edit-element-height" value="${escapeHtml(data.height || 'auto')}" placeholder="auto, 300px">
+                                     </div>
+                                 </div>`;
+                }
+                formHtml += `</fieldset>
+                             <fieldset>
+                                <legend>Optional Details</legend>
+                                <label for="edit-media-heading">Caption Heading:</label>
+                                <input type="text" id="edit-media-heading" value="${escapeHtml(data.heading || '')}">
+                                <label for="edit-media-description">Caption Description:</label>
+                                <textarea id="edit-media-description" rows="3">${escapeHtml(data.description || '')}</textarea>
+                             </fieldset>`;
+                break;
+            case 'quiz':
+                formHtml = generateQuizEditForm(data); // data is elementData.data
+                break;
+            case 'challenges':
+                formHtml = generateChallengesEditForm(data); // data is elementData.data
+                break;
+            default:
+                 formHtml = '<p><i>Editing for this element type is not supported.</i></p>';
+        }
+        return formHtml;
+    }
+
+     function generateGlobalTextStyleFormControls(styles = {}) {
+        const currentFontFamily = styles.globalFontFamily || DEFAULT_FONT_FAMILY;
+        const currentFontSize = styles.globalFontSize || DEFAULT_FONT_SIZE_NAME;
+        const currentTextColor = styles.globalTextColor || DEFAULT_TEXT_COLOR;
+
+        let fontFamilyOptions = FONT_FAMILIES.map(font =>
+            `<option value="${escapeHtml(font.value)}" ${currentFontFamily === font.value ? 'selected' : ''}>
+                ${escapeHtml(font.name)}
+            </option>`
+        ).join('');
+
+        let fontSizeOptions = FONT_SIZES.map(size => {
+            let isSelected = (currentFontSize === size);
+            // Check if current size is a custom value (not in the standard list except 'custom' itself)
+            if (size === 'custom' && currentFontSize && !FONT_SIZES.includes(currentFontSize)) {
+                isSelected = true;
+            }
+            return `<option value="${size}" ${isSelected ? 'selected' : ''}>
+                        ${size === 'custom' ? 'Custom...' : size.charAt(0).toUpperCase() + size.slice(1)}
+                    </option>`;
+        }).join('');
+
+        const isCustomSize = currentFontSize && !FONT_SIZES.slice(0, -1).includes(currentFontSize);
+        const customSizeValue = isCustomSize ? currentFontSize : '';
+
+        return `<div class="global-text-style-options">
+                    <label for="edit-global-style-font">Font Family:</label>
+                    <select id="edit-global-style-font">${fontFamilyOptions}</select>
+                    <br>
+                    <label for="edit-global-style-size">Font Size:</label>
+                    <select id="edit-global-style-size">${fontSizeOptions}</select>
+                    <input type="text" id="edit-global-style-size-custom"
+                           placeholder="e.g., 17px or 1.1em"
+                           value="${escapeHtml(customSizeValue)}"
+                           style="display:${isCustomSize ? 'inline-block' : 'none'}; width: 120px; margin-left: 5px;">
+                    <br>
+                    <label for="edit-global-style-color">Text Color:</label>
+                    <input type="color" id="edit-global-style-color" value="${currentTextColor}">
+                </div>`;
+    }
+
+    // Event listener for the font size dropdown to show/hide custom input
+    document.addEventListener('change', (e) => {
+        if (e.target && e.target.id === 'edit-global-style-size') {
+            const customInput = document.getElementById('edit-global-style-size-custom');
+            if (customInput) {
+                const showCustom = (e.target.value === 'custom');
+                customInput.style.display = showCustom ? 'inline-block' : 'none';
+                if (showCustom) {
+                    customInput.focus();
+                } else {
+                    customInput.value = ''; // Clear custom value if standard size selected
+                }
+            }
+        }
+    });
+
+    function generateQuizEditForm(quizData) {
+        let formHtml = `<fieldset>
+                            <legend>Quiz Questions</legend>
+                            <div id="quiz-editor-questions-container">`;
+
+        const questions = quizData.questions || [];
+        if (questions.length === 0) {
+            formHtml += '<p id="quiz-editor-no-questions-msg" style="text-align:center; font-style:italic;">No questions added yet.</p>';
+        } else {
+            questions.forEach((question, index) => {
+                formHtml += renderSingleQuizQuestionForm(question, index);
+            });
+        }
+
+        formHtml += `   </div>
+                     </fieldset>
+                     <button type="button" id="quiz-editor-add-question-btn" class="add-btn">+ Add Question</button>`;
+        return formHtml;
+    }
+
+    function renderSingleQuizQuestionForm(question = {}, index) {
+        const incorrectAnswers = Array.isArray(question.incorrectAnswers) ? question.incorrectAnswers : [];
+        const incorrectAnswerImages = Array.isArray(question.incorrectAnswersImageUrls) ? question.incorrectAnswersImageUrls : [];
+        // Ensure there are always 3 slots for incorrect answers in the form
+        const incorrectAnsInput = Array(3).fill('');
+        const incorrectImgInput = Array(3).fill('');
+        incorrectAnswers.slice(0, 3).forEach((ans, i) => incorrectAnsInput[i] = ans);
+        incorrectAnswerImages.slice(0, 3).forEach((img, i) => incorrectImgInput[i] = img);
+
+        let questionHtml = `
+            <div class="quiz-edit-question" data-question-index="${index}">
+                <h4>
+                    Question ${index + 1}
+                    <button type="button" class="remove-btn action-btn quiz-editor-remove-question-btn" data-index="${index}" title="Remove Question ${index + 1}">&times;</button>
+                </h4>
+                <label for="quiz-q-text-${index}">Question Text:</label>
+                <textarea id="quiz-q-text-${index}" rows="2" required placeholder="Enter the question here">${escapeHtml(question.questionText || '')}</textarea>
+                <div class="quiz-image-input">
+                    <label for="quiz-q-image-${index}">Question Image URL (Optional):</label>
+                    <input type="url" id="quiz-q-image-${index}" value="${escapeHtml(question.questionImageUrl || '')}" placeholder="https://...">
+                </div>
+
+                <label for="quiz-q-correct-${index}" style="color: var(--success); font-weight: bold;">Correct Answer:</label>
+                <input type="text" id="quiz-q-correct-${index}" value="${escapeHtml(question.correctAnswer || '')}" required placeholder="The one correct answer">
+                <div class="quiz-image-input">
+                    <label for="quiz-q-correct-image-${index}">Correct Answer Image URL (Optional):</label>
+                    <input type="url" id="quiz-q-correct-image-${index}" value="${escapeHtml(question.correctAnswerImageUrl || '')}" placeholder="https://...">
+                </div>
+
+                <label style="color: var(--danger);">Incorrect Answers (up to 3):</label>`;
+
+        for (let j = 0; j < 3; j++) {
+            questionHtml += `
+                <div style="border-left: 2px solid #eee; padding-left: 10px; margin-bottom: 10px;">
+                    <label for="quiz-q-incorrect-${index}-${j}">Incorrect Answer ${j + 1}:</label>
+                    <input type="text" class="quiz-q-incorrect" id="quiz-q-incorrect-${index}-${j}" value="${escapeHtml(incorrectAnsInput[j])}" placeholder="Wrong answer ${j + 1}">
+                    <div class="quiz-image-input">
+                         <label for="quiz-q-incorrect-image-${index}-${j}">Incorrect Answer ${j + 1} Image URL (Optional):</label>
+                         <input type="url" class="quiz-q-incorrect-image" id="quiz-q-incorrect-image-${index}-${j}" value="${escapeHtml(incorrectImgInput[j])}" placeholder="https://...">
+                    </div>
+                </div>`;
+        }
+        questionHtml += `</div>`; // Close quiz-edit-question
+        return questionHtml;
+    }
+
+    function generateChallengesEditForm(challengesData) {
+         const data = challengesData || { heading: '', description: '', challenges: [] };
+         let formHtml = `<fieldset>
+                            <legend>Challenges Section Details</legend>
+                            <label for="edit-challenges-heading">Overall Heading:</label>
+                            <input type="text" id="edit-challenges-heading" value="${escapeHtml(data.heading || 'Challenges')}" placeholder="e.g., Weekly Challenges">
+                            <label for="edit-challenges-description">Overall Description (Optional):</label>
+                            <textarea id="edit-challenges-description" rows="2" placeholder="Brief introduction to the challenges section">${escapeHtml(data.description || '')}</textarea>
+                         </fieldset>
+                         <fieldset>
+                            <legend>Challenge Items</legend>
+                            <div id="challenges-editor-list">`;
+
+        const challenges = data.challenges || [];
+        if (challenges.length === 0) {
+            formHtml += '<p id="challenges-editor-no-items-msg" style="text-align:center; font-style:italic;">No challenges added yet.</p>';
+        } else {
+            challenges.forEach((challenge, index) => {
+                formHtml += renderSingleChallengeForm(challenge, index);
+            });
+        }
+
+        formHtml += `       </div>
+                         </fieldset>
+                         <button type="button" id="challenges-editor-add-btn" class="add-btn" ${challenges.length >= MAX_CHALLENGES ? 'disabled' : ''}>+ Add Challenge</button>`;
+        if (challenges.length >= MAX_CHALLENGES) {
+            formHtml += `<p style="color:var(--danger); font-size:0.9em; margin-top: 5px;">Maximum number of challenges (${MAX_CHALLENGES}) reached.</p>`;
+        }
+        return formHtml;
+    }
+
+    function renderSingleChallengeForm(challenge = {}, index) {
+        const challengeId = challenge.id || ''; // Keep existing ID or leave empty for new
+        return `
+            <div class="challenge-edit-item" data-challenge-index="${index}" data-challenge-id="${challengeId}">
+                <h5>
+                    Challenge ${index + 1}
+                    <button type="button" class="remove-btn action-btn challenges-editor-remove-btn" data-index="${index}" title="Remove Challenge ${index + 1}">&times;</button>
+                </h5>
+                <label for="challenge-heading-${index}">Heading:</label>
+                <input type="text" class="challenge-heading-input" id="challenge-heading-${index}" value="${escapeHtml(challenge.heading || '')}" required placeholder="Challenge Title">
+
+                <label for="challenge-icon-${index}">Icon URL (Optional):</label>
+                <input type="url" class="challenge-icon-input" id="challenge-icon-${index}" value="${escapeHtml(challenge.iconUrl || '')}" placeholder="https://.../icon.png">
+
+                <label for="challenge-desc-${index}">Description (Optional):</label>
+                <textarea class="challenge-desc-input" id="challenge-desc-${index}" rows="2" placeholder="Details about the challenge">${escapeHtml(challenge.description || '')}</textarea>
+
+                <label for="challenge-image-${index}">Image URL (Optional):</label>
+                <input type="url" class="challenge-image-input" id="challenge-image-${index}" value="${escapeHtml(challenge.imageUrl || '')}" placeholder="https://.../image.jpg">
+            </div>`;
+    }
+
+    function generateStyleForm(projectData) {
+        const styles = projectData.styles || {};
+        return `
+            <fieldset>
+                <legend>Project Information & Header</legend>
+                <label for="edit-style-title">Project Title:</label>
+                <input type="text" id="edit-style-title" value="${escapeHtml(projectData.title || '')}">
+                <label for="edit-style-subtitle">Project Subtitle:</label>
+                <input type="text" id="edit-style-subtitle" value="${escapeHtml(projectData.subtitle || '')}">
+                <label for="edit-style-headerimg">Header Image URL:</label>
+                <input type="url" id="edit-style-headerimg" value="${escapeHtml(projectData.headerImage || '')}" placeholder="https://...">
+            </fieldset>
+            <fieldset>
+                <legend>Theme Colors</legend>
+                <div class="color-picker">
+                    <label for="edit-style-primary">Primary:</label>
+                    <input type="color" id="edit-style-primary" value="${styles.primaryColor || '#5E81F4'}">
+                    <label for="edit-style-secondary">Secondary:</label>
+                    <input type="color" id="edit-style-secondary" value="${styles.secondaryColor || '#FF7AC6'}">
+                    <label for="edit-style-accent">Accent:</label>
+                    <input type="color" id="edit-style-accent" value="${styles.accentColor || '#FFB800'}">
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Global Text Styles</legend>
+                ${generateGlobalTextStyleFormControls(styles)}
+            </fieldset>`;
+    }
+
+    function closeModal() {
+        if (modal) modal.style.display = 'none';
+        if (modalFormContent) modalFormContent.innerHTML = ''; // Clear content
+        editingContext = { type: null, id: null, parentId: null, isNew: false }; // Reset context
+    }
+
 
     // --- SAVING EDITS ---
-    function saveEditAction(){const{type,id,parentId,isNew}=editingContext; if(!type||!modalFormContent){closeModal();return;} try{let needsSidebar=false,needsContent=false,needsStyle=false; let newElementData=null; switch(type){case 'tab':case 'subtab':const nameIn=getModalValue('#edit-generic-name'); if(!nameIn)throw new Error("Name empty."); if(type==='tab'){const t=findTabData(id);if(!t)throw new Error("TNF");t.name=nameIn;}else{const st=findSubTabData(parentId,id);if(!st)throw new Error("STNF");st.name=nameIn;} needsSidebar=true; break; case 'element':newElementData=saveElementEdit(id,isNew); if(isNew&&newElementData){const arr=getCurrentContentArray();if(arr)arr.push(newElementData);else throw new Error("Cannot add.");} needsContent=true; break; case 'styles':projectData.title=getModalValue('#edit-style-title')||projectData.title; projectData.subtitle=getModalValue('#edit-style-subtitle')||projectData.subtitle; projectData.headerImage=getModalValue('#edit-style-headerimg')||projectData.headerImage; if(!projectData.styles)projectData.styles={}; projectData.styles.primaryColor=getModalValue('#edit-style-primary','#5E81F4',false); projectData.styles.secondaryColor=getModalValue('#edit-style-secondary','#FF7AC6',false); projectData.styles.accentColor=getModalValue('#edit-style-accent','#FFB800',false); projectData.styles.globalFontFamily=getModalValue('#edit-global-style-font',DEFAULT_FONT_FAMILY,false); const sizeSel=modalFormContent.querySelector('#edit-global-style-size'); if(sizeSel?.value==='custom'){projectData.styles.globalFontSize=getModalValue('#edit-global-style-size-custom',DEFAULT_FONT_SIZE_NAME)||DEFAULT_FONT_SIZE_NAME;}else{projectData.styles.globalFontSize=sizeSel?.value||DEFAULT_FONT_SIZE_NAME;} projectData.styles.globalTextColor=getModalValue('#edit-global-style-color',DEFAULT_TEXT_COLOR,false); needsStyle=true; break; default: throw new Error(`Unknown save type:${type}`); } saveProjectData(); if(needsStyle)applyProjectStyles(); if(needsSidebar)renderSidebar(); if(needsContent||(isNew&&newElementData))renderContentArea(); closeModal();}catch(e){console.error("Save err:",e);alert(`Save fail:${e.message}`);}}
-    function getModalValue(sel,def='',trim=true){const i=modalFormContent?.querySelector(sel); if(!i)return def; const v=i.value; return trim?v.trim():v;}
+    function saveEditAction() {
+        const { type, id, parentId, isNew } = editingContext;
+        if (!type || !modalFormContent) {
+             console.warn("Save action called with invalid context or missing modal form.");
+             closeModal();
+             return;
+        }
 
-    function saveElementEdit(elementId, isNew) { let elementData = isNew ? { id: elementId, type: elementId.split('_')[0], data: getDefaultElementData(elementId.split('_')[0]) } : findElementData(elementId)?.element; if (!elementData) throw new Error(`Element ${elementId} NF for saving.`); if (!elementData.data) elementData.data = {}; const getVal = (sel, trim = true) => getModalValue(sel, '', trim); switch (elementData.type) { case 'heading': case 'text': elementData.data.text = getVal('#edit-element-text', elementData.type === 'heading'); break; case 'image': case 'video': case 'presentation': elementData.data.url=getVal('#edit-element-url'); if(!elementData.data.url) throw new Error("URL required."); elementData.data.heading=getVal('#edit-media-heading'); elementData.data.description=getVal('#edit-media-description', false); if (elementData.type === 'image') { elementData.data.alt=getVal('#edit-element-alt'); elementData.data.width=getVal('#edit-element-width')||'auto'; elementData.data.height=getVal('#edit-element-height')||'auto'; if (!elementData.data.width.match(/^(auto|\d+(\s*(px|%)?)?)$/i)) elementData.data.width='auto'; if (!elementData.data.height.match(/^(auto|\d+(\s*(px|%)?)?)$/i)) elementData.data.height='auto'; } else { delete elementData.data.width; delete elementData.data.height; delete elementData.data.alt; } break; case 'quiz': saveQuizEditFromModal(elementData.data); break; case 'challenges': saveChallengesEditFromModal(elementData.data); break; default: throw new Error(`Cannot save type: ${elementData.type}`); } return elementData; }
-    function saveQuizEditFromModal(quizData) { if (!modalFormContent) throw new Error("MFC NF saving quiz."); quizData.questions = []; modalFormContent.querySelectorAll('.quiz-edit-question').forEach((qForm, i) => { const qTxt=qForm.querySelector(`#quiz-q-text-${i}`)?.value.trim(); const qImg=qForm.querySelector(`#quiz-q-image-${i}`)?.value.trim(); const cAns=qForm.querySelector(`#quiz-q-correct-${i}`)?.value.trim(); const cImg=qForm.querySelector(`#quiz-q-correct-image-${i}`)?.value.trim(); const iAns=[], iImgs=[]; qForm.querySelectorAll('.quiz-q-incorrect').forEach((inp, idx)=>{const iTxt=inp.value.trim(); const iImgUrl=qForm.querySelector(`#quiz-q-incorrect-image-${i}-${idx}`)?.value.trim(); if(iTxt){iAns.push(iTxt); iImgs.push(iImgUrl||null);}}); if(qTxt&&cAns){quizData.questions.push({questionText:qTxt,questionImageUrl:qImg||null,correctAnswer:cAns,correctAnswerImageUrl:cImg||null,incorrectAnswers:iAns,incorrectAnswersImageUrls:iImgs});}else{console.warn(`Skip Q ${i+1}`);} }); console.log("Quiz saved:", quizData.questions); }
-    function saveChallengesEditFromModal(chData) { if(!modalFormContent)throw new Error("MFC NF saving C."); chData.heading=getModalValue('#edit-challenges-heading'); chData.description=getModalValue('#edit-challenges-description', '', false); chData.challenges=[]; modalFormContent.querySelectorAll('.challenge-edit-item').forEach(item => { const head=item.querySelector('.challenge-heading-input')?.value.trim(); if(!head)return; chData.challenges.push({ id:item.dataset.challengeId||generateId('chal_'), heading:head, iconUrl:item.querySelector('.challenge-icon-input')?.value.trim()||null, description:item.querySelector('.challenge-desc-input')?.value||'', imageUrl:item.querySelector('.challenge-image-input')?.value.trim()||null }); }); console.log("Challenges saved:", chData.challenges); }
+        try {
+            let needsSidebarUpdate = false;
+            let needsContentUpdate = false;
+            let needsStyleUpdate = false;
+
+            switch (type) {
+                case 'tab':
+                case 'subtab':
+                    const nameInput = getModalValue('#edit-generic-name');
+                    if (!nameInput) throw new Error("Name cannot be empty.");
+
+                    let itemToUpdate;
+                    if (type === 'tab') {
+                        itemToUpdate = findTabData(id);
+                        if (!itemToUpdate) throw new Error("Tab not found during save.");
+                    } else { // subtab
+                        itemToUpdate = findSubTabData(parentId, id); // parentId = tabId
+                        if (!itemToUpdate) throw new Error("Sub-tab not found during save.");
+                    }
+                    itemToUpdate.name = nameInput;
+                    needsSidebarUpdate = true;
+                    break;
+
+                case 'element':
+                    const savedElementData = saveElementEditFromModal(id, isNew, editingContext.elementType);
+                    if (isNew) {
+                        // If it was a new element, add it to the correct content array
+                        const targetArray = getCurrentContentArray();
+                        if (!targetArray) throw new Error("Could not find target content array to add new element.");
+                        targetArray.push(savedElementData);
+                    } // If editing existing, data is updated by reference via findElementData in saveElementEditFromModal
+                    needsContentUpdate = true;
+                    break;
+
+                case 'styles':
+                    projectData.title = getModalValue('#edit-style-title') || projectData.title;
+                    projectData.subtitle = getModalValue('#edit-style-subtitle') || projectData.subtitle;
+                    projectData.headerImage = getModalValue('#edit-style-headerimg') || projectData.headerImage;
+
+                    if (!projectData.styles) projectData.styles = {}; // Ensure styles object exists
+                    projectData.styles.primaryColor = getModalValue('#edit-style-primary', '#5E81F4', false);
+                    projectData.styles.secondaryColor = getModalValue('#edit-style-secondary', '#FF7AC6', false);
+                    projectData.styles.accentColor = getModalValue('#edit-style-accent', '#FFB800', false);
+                    projectData.styles.globalFontFamily = getModalValue('#edit-global-style-font', DEFAULT_FONT_FAMILY, false);
+                    projectData.styles.globalTextColor = getModalValue('#edit-global-style-color', DEFAULT_TEXT_COLOR, false);
+
+                    // Handle font size (standard or custom)
+                    const sizeSelect = modalFormContent.querySelector('#edit-global-style-size');
+                    if (sizeSelect?.value === 'custom') {
+                        const customSizeValue = getModalValue('#edit-global-style-size-custom', '').trim();
+                         // Basic validation for custom size (e.g., must contain 'px' or 'em' or '%')
+                        if (customSizeValue && (customSizeValue.includes('px') || customSizeValue.includes('em') || customSizeValue.includes('%') || /^\d+$/.test(customSizeValue))) {
+                             projectData.styles.globalFontSize = customSizeValue;
+                        } else {
+                             console.warn(`Invalid custom font size '${customSizeValue}', reverting to default.`);
+                             projectData.styles.globalFontSize = DEFAULT_FONT_SIZE_NAME;
+                             // Optionally alert the user
+                             // alert(`Invalid custom font size entered: "${customSizeValue}". Please use formats like '17px', '1.1em', etc. Reverted to default.`);
+                        }
+                    } else {
+                        projectData.styles.globalFontSize = sizeSelect?.value || DEFAULT_FONT_SIZE_NAME;
+                    }
+
+                    needsStyleUpdate = true;
+                    break;
+
+                default:
+                    throw new Error(`Unknown save type: ${type}`);
+            }
+
+            saveProjectData(); // Save the updated projectData
+
+            // Apply updates to the UI
+            if (needsStyleUpdate) applyProjectStyles();
+            if (needsSidebarUpdate) renderSidebar();
+            // Content update needed if element added/edited OR if sidebar change might affect content (e.g., renaming active tab)
+            if (needsContentUpdate || needsSidebarUpdate) renderContentArea();
+
+            closeModal(); // Close modal on successful save
+
+        } catch (e) {
+            console.error("Error saving edit:", e);
+            alert(`Save failed: ${e.message}`);
+            // Keep modal open for user to correct the error
+        }
+    }
+
+    // Helper to get value from modal input, with default and trimming option
+    function getModalValue(selector, defaultValue = '', trimValue = true) {
+        const inputElement = modalFormContent?.querySelector(selector);
+        if (!inputElement) return defaultValue;
+        const value = inputElement.value;
+        return trimValue ? value.trim() : value;
+    }
+
+    // Specific function to handle saving element data from the modal form
+    function saveElementEditFromModal(elementId, isNew, elementTypeFromContext = null) {
+        let elementData;
+        let originalElementRef = null; // Reference to the element in projectData if editing existing
+
+        if (isNew) {
+            const elementType = elementTypeFromContext || elementId?.split('_')[0];
+            if (!elementType) throw new Error("Cannot determine element type for new element.");
+            elementData = { id: elementId, type: elementType, data: getDefaultElementData(elementType) };
+        } else {
+            const findResult = findElementData(elementId);
+            if (!findResult) throw new Error(`Element data not found for ID: ${elementId}`);
+            // Work directly on the reference in projectData
+            elementData = findResult.element;
+            originalElementRef = elementData; // Keep track if needed
+            if (!elementData.data) elementData.data = {}; // Ensure data object exists
+        }
+
+        const getVal = (sel, trim = true) => getModalValue(sel, '', trim);
+
+        // Update elementData.data based on type
+        switch (elementData.type) {
+            case 'heading':
+            case 'text':
+                elementData.data.text = getVal('#edit-element-text', elementData.type === 'heading'); // Textareas usually don't need trimming? User decision. Let's not trim text blocks.
+                 if (elementData.type === 'heading' && !elementData.data.text) {
+                    throw new Error("Heading text cannot be empty.");
+                 }
+                break;
+            case 'image':
+            case 'video':
+            case 'presentation':
+                elementData.data.url = getVal('#edit-element-url');
+                if (!elementData.data.url) throw new Error("URL is required for this element type.");
+                // Simple URL validation (starts with http/https or is placeholder-like)
+                 if (!elementData.data.url.startsWith('http') && !elementData.data.url.startsWith('//') && !elementData.data.url.startsWith('data:')) {
+                     // Allow relative URLs? For now, let's warn or restrict.
+                     console.warn(`URL "${elementData.data.url}" might not be valid. Ensure it starts with http://, https://, or data:`);
+                     // Could throw an error here if strict validation needed:
+                     // throw new Error("Invalid URL format. Must start with http:// or https://.");
+                 }
+
+                elementData.data.heading = getVal('#edit-media-heading');
+                elementData.data.description = getVal('#edit-media-description', false); // Don't trim description
+
+                if (elementData.type === 'image') {
+                    elementData.data.alt = getVal('#edit-element-alt');
+                    let width = getVal('#edit-element-width') || 'auto';
+                    let height = getVal('#edit-element-height') || 'auto';
+                    // Basic validation for CSS size values (allow auto, px, %)
+                    const sizeRegex = /^(auto|(\d+(\.\d+)?(px|%|em|rem|vw|vh)?))$/i;
+                    elementData.data.width = sizeRegex.test(width) ? width : 'auto';
+                    elementData.data.height = sizeRegex.test(height) ? height : 'auto';
+                } else {
+                    // Remove image-specific properties if type changed or for video/presentation
+                    delete elementData.data.alt;
+                    delete elementData.data.width;
+                    delete elementData.data.height;
+                }
+                break;
+            case 'quiz':
+                saveQuizEditFromModal(elementData.data); // Pass the data part to be updated
+                break;
+            case 'challenges':
+                saveChallengesEditFromModal(elementData.data); // Pass the data part
+                break;
+            default:
+                console.warn(`Saving not implemented for element type: ${elementData.type}`);
+                // Don't throw error, just skip saving unknown types? Or throw?
+                 throw new Error(`Cannot save element of unknown type: ${elementData.type}`);
+        }
+
+        // If editing existing, originalElementRef is already updated.
+        // If new, return the newly constructed elementData object.
+        return elementData;
+    }
+
+    function saveQuizEditFromModal(quizData) {
+        if (!modalFormContent) throw new Error("Modal form content not found while saving quiz.");
+        if (!quizData) throw new Error("Quiz data object is missing.");
+
+        quizData.questions = []; // Reset questions array, rebuild from form
+        const questionForms = modalFormContent.querySelectorAll('.quiz-edit-question');
+
+        questionForms.forEach((qForm, index) => {
+            const questionText = qForm.querySelector(`#quiz-q-text-${index}`)?.value.trim();
+            const correctAnswer = qForm.querySelector(`#quiz-q-correct-${index}`)?.value.trim();
+
+            // Basic validation: Question and Correct Answer text are required
+            if (!questionText) {
+                 console.warn(`Skipping Question ${index + 1}: Question text is missing.`);
+                 // alert(`Error: Question ${index + 1} text cannot be empty.`); // Or show warning
+                 return; // Skip this question
+            }
+             if (!correctAnswer) {
+                 console.warn(`Skipping Question ${index + 1}: Correct answer text is missing.`);
+                 // alert(`Error: Question ${index + 1} must have a correct answer.`);
+                 return; // Skip this question
+             }
+
+            const questionImageUrl = qForm.querySelector(`#quiz-q-image-${index}`)?.value.trim() || null;
+            const correctAnswerImageUrl = qForm.querySelector(`#quiz-q-correct-image-${index}`)?.value.trim() || null;
+
+            const incorrectAnswers = [];
+            const incorrectAnswersImageUrls = [];
+            for (let j = 0; j < 3; j++) {
+                const incorrectText = qForm.querySelector(`#quiz-q-incorrect-${index}-${j}`)?.value.trim();
+                if (incorrectText) { // Only add incorrect answers that have text
+                    incorrectAnswers.push(incorrectText);
+                    incorrectAnswersImageUrls.push(qForm.querySelector(`#quiz-q-incorrect-image-${index}-${j}`)?.value.trim() || null);
+                } else {
+                    // Ensure corresponding image URL is also null if text is empty
+                     incorrectAnswersImageUrls.push(null);
+                }
+            }
+            // Ensure the arrays have consistent length, even if some are null
+            while (incorrectAnswersImageUrls.length < incorrectAnswers.length) {
+                incorrectAnswersImageUrls.push(null);
+            }
+
+
+            quizData.questions.push({
+                questionText,
+                questionImageUrl,
+                correctAnswer,
+                correctAnswerImageUrl,
+                incorrectAnswers,
+                incorrectAnswersImageUrls
+            });
+        });
+        console.log("Quiz questions saved:", quizData.questions);
+    }
+
+    function saveChallengesEditFromModal(challengesData) {
+        if (!modalFormContent) throw new Error("Modal form content not found while saving challenges.");
+        if (!challengesData) throw new Error("Challenges data object is missing.");
+
+        challengesData.heading = getModalValue('#edit-challenges-heading', 'Challenges');
+        challengesData.description = getModalValue('#edit-challenges-description', '', false); // Don't trim desc
+        challengesData.challenges = []; // Reset challenges array
+
+        modalFormContent.querySelectorAll('.challenge-edit-item').forEach(itemForm => {
+            const heading = itemForm.querySelector('.challenge-heading-input')?.value.trim();
+            if (!heading) {
+                 console.warn("Skipping challenge item with no heading.");
+                 return; // Skip item if heading is missing
+            }
+
+            const existingId = itemForm.dataset.challengeId || null;
+
+            challengesData.challenges.push({
+                id: existingId || generateId('chal_'), // Use existing ID or generate new one
+                heading: heading,
+                iconUrl: itemForm.querySelector('.challenge-icon-input')?.value.trim() || null,
+                description: itemForm.querySelector('.challenge-desc-input')?.value || '', // Keep potential whitespace
+                imageUrl: itemForm.querySelector('.challenge-image-input')?.value.trim() || null
+            });
+        });
+        console.log("Challenge items saved:", challengesData.challenges);
+    }
 
     // --- QUIZ INTERACTION ---
-    function selectQuizOption(optEl) { const qDiv=optEl.closest('.quiz-question'); if(!qDiv||qDiv.classList.contains('answered'))return; qDiv.querySelectorAll('.quiz-option').forEach(o=>o.classList.remove('selected')); optEl.classList.add('selected'); }
-    function submitQuizAction(quizId) { const qEl=document.querySelector(`.content-element[data-element-id="${quizId}"]`); const cont=qEl?.querySelector('.quiz-container-inner'); if(!cont)return; const qs=cont.querySelectorAll('.quiz-question'); let score=0, answered=0; const total=qs.length; let firstUnanswered=null; if(total===0){alert("No Qs!");return;} qs.forEach(q=>{const sel=q.querySelector('.quiz-option.selected'); q.querySelectorAll('.quiz-feedback').forEach(fb=>fb.style.display='none'); q.classList.remove('answered'); q.querySelectorAll('.quiz-option').forEach(o=>o.classList.remove('correct','incorrect')); if(sel){answered++; q.classList.add('answered'); const isC=sel.dataset.isCorrect==='true'; q.querySelectorAll('.quiz-option').forEach(o=>{if(o.dataset.isCorrect==='true')o.classList.add('correct'); if(o===sel&&!isC)o.classList.add('incorrect');}); if(isC){score++; const fb=q.querySelector('.quiz-feedback.correct'); if(fb)fb.style.display='block';}else{const fb=q.querySelector('.quiz-feedback.incorrect'); if(fb){const cOpt=q.querySelector('.quiz-option.correct .quiz-option-text'); const cTxt=cOpt?cOpt.textContent:'N/A'; fb.innerHTML=`Incorrect. Correct: <strong>${escapeHtml(cTxt)}</strong>`; fb.style.display='block';}}}else{if(!firstUnanswered)firstUnanswered=q;}}); const btn=cont.querySelector('.quiz-submit-btn'); const resDiv=cont.querySelector('.final-quiz-result'); if(answered<total){alert(`Answer all ${total} Qs.`); if(firstUnanswered){firstUnanswered.scrollIntoView({behavior:'smooth',block:'center'}); firstUnanswered.style.outline='2px solid var(--danger)'; setTimeout(()=>{if(firstUnanswered)firstUnanswered.style.outline='none';},2500);}}else{const perc=total>0?Math.round((score/total)*100):0; if(resDiv){resDiv.textContent=`Complete! ${score}/${total} (${perc}%)`; resDiv.className=`final-quiz-result ${perc>=70?'success':'fail'}`; resDiv.style.display='block'; resDiv.scrollIntoView({behavior:'smooth',block:'nearest'});} if(btn)btn.disabled=true; qs.forEach(q=>q.classList.add('answered'));} }
+    function selectQuizOption(optionElement) {
+        const questionDiv = optionElement.closest('.quiz-question');
+        // Only allow selection if the question hasn't been answered yet
+        if (!questionDiv || questionDiv.classList.contains('answered')) {
+            return;
+        }
+        // Deselect siblings
+        questionDiv.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+        // Select the clicked one
+        optionElement.classList.add('selected');
+    }
+
+    function submitQuizAction(quizId) {
+        const quizElement = document.querySelector(`.content-element[data-element-id="${quizId}"]`);
+        const quizContainer = quizElement?.querySelector('.quiz-container-inner');
+        if (!quizContainer) {
+             console.error(`Quiz container not found for quiz ID: ${quizId}`);
+             return;
+        }
+
+        const questionDivs = quizContainer.querySelectorAll('.quiz-question');
+        const submitButton = quizContainer.querySelector('.quiz-submit-btn');
+        const resultDiv = quizContainer.querySelector('.final-quiz-result');
+
+        let score = 0;
+        let answeredCount = 0;
+        const totalQuestions = questionDivs.length;
+        let firstUnansweredQuestion = null;
+
+        if (totalQuestions === 0) {
+            alert("This quiz has no questions to submit.");
+            return;
+        }
+
+        // First pass: Check if all questions are answered and mark/score them
+        questionDivs.forEach((qDiv) => {
+            const selectedOption = qDiv.querySelector('.quiz-option.selected');
+
+             // Clear previous feedback/styles before evaluation
+             qDiv.classList.remove('answered');
+             qDiv.querySelectorAll('.quiz-feedback').forEach(fb => fb.style.display = 'none');
+             qDiv.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('correct', 'incorrect'));
+
+
+            if (selectedOption) {
+                answeredCount++;
+                qDiv.classList.add('answered'); // Mark as answered for styling
+                const isCorrect = selectedOption.dataset.isCorrect === 'true';
+
+                 // Apply correct/incorrect styles to all options for feedback
+                 qDiv.querySelectorAll('.quiz-option').forEach(opt => {
+                     if (opt.dataset.isCorrect === 'true') {
+                         opt.classList.add('correct'); // Highlight the correct answer regardless of selection
+                     }
+                     if (opt === selectedOption && !isCorrect) {
+                         opt.classList.add('incorrect'); // Mark the selected wrong answer
+                     }
+                 });
+
+
+                const feedbackDiv = qDiv.querySelector(isCorrect ? '.quiz-feedback.correct' : '.quiz-feedback.incorrect');
+                if (feedbackDiv) {
+                     if (isCorrect) {
+                        score++;
+                        feedbackDiv.textContent = "Correct!"; // Simple correct message
+                    } else {
+                        const correctAnswerText = qDiv.querySelector('.quiz-option.correct .quiz-option-text')?.textContent || 'N/A';
+                        feedbackDiv.innerHTML = `Incorrect. The correct answer was: <strong>${escapeHtml(correctAnswerText)}</strong>`;
+                    }
+                     feedbackDiv.style.display = 'block'; // Show feedback
+                }
+
+            } else {
+                // This question wasn't answered
+                if (!firstUnansweredQuestion) {
+                    firstUnansweredQuestion = qDiv; // Keep track of the first one missed
+                }
+            }
+        });
+
+        // Second pass: Decide whether to show final result or prompt to answer all
+        if (answeredCount < totalQuestions) {
+            alert(`Please answer all ${totalQuestions} questions before submitting.`);
+            if (firstUnansweredQuestion) {
+                // Scroll to and highlight the first unanswered question
+                firstUnansweredQuestion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstUnansweredQuestion.style.outline = '2px solid var(--danger)';
+                // Remove outline after a short time
+                setTimeout(() => {
+                    if (firstUnansweredQuestion) firstUnansweredQuestion.style.outline = 'none';
+                }, 2500);
+            }
+        } else {
+            // All questions answered, calculate and show final result
+            const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+            if (resultDiv) {
+                resultDiv.textContent = `Quiz Complete! Your score: ${score} / ${totalQuestions} (${percentage}%)`;
+                resultDiv.className = `final-quiz-result ${percentage >= 70 ? 'success' : 'fail'}`; // Example passing threshold
+                resultDiv.style.display = 'block';
+                resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+            if (submitButton) {
+                submitButton.disabled = true; // Disable submit button after completion
+                submitButton.textContent = 'Submitted';
+            }
+             // Ensure all questions are visually marked as answered (disables hover effects etc.)
+             questionDivs.forEach(qDiv => qDiv.classList.add('answered'));
+        }
+    }
 
     // --- EVENT LISTENERS ---
     function setupEventListeners() {
+
+        // Global Add Tab Button
         addTabButton?.addEventListener('click', addTabAction);
-        editStylesButton?.addEventListener('click', ()=>openEditModal('styles'));
-        tabsContainer?.addEventListener('click', (e)=>{const t=e.target; const btn=t.closest('button[data-action]'); const name=t.closest('.tab-name,.sub-tab-name'); if(btn){e.stopPropagation(); const act=btn.dataset.action; const tId=btn.dataset.tabId||btn.dataset.parentTabId; const sId=btn.dataset.subTabId; if(!tId&&['edit-subtab','remove-subtab','add-subtab'].includes(act))return; switch(act){ case 'edit-tab':openEditModal('tab',tId);break; case 'remove-tab':removeTabAction(tId);break; case 'add-subtab':addSubTabAction(tId);break; case 'edit-subtab':openEditModal('subtab',sId,tId);break; case 'remove-subtab':removeSubTabAction(tId,sId);break; }} else if(name?.classList.contains('sub-tab-name')){setActiveTab(name.dataset.parentTabId,name.dataset.subTabId);} else if(name?.classList.contains('tab-name')){setActiveTab(name.dataset.tabId);}});
-        addControls?.addEventListener('click', (e)=>{if(e.target.tagName==='BUTTON'&&e.target.dataset.type)addElementAction(e.target.dataset.type);});
-        contentArea?.addEventListener('click', (e)=>{const t=e.target; const actBtn=t.closest('button[data-action]'); const qOpt=t.closest('.quiz-option'); if(actBtn){const act=actBtn.dataset.action; const elId=actBtn.dataset.elementId||t.closest('.content-element')?.dataset.elementId; const qId=actBtn.dataset.quizId||t.closest('.quiz-container-inner')?.dataset.quizId; switch(act){ case 'edit-element':if(elId)openEditModal('element',elId); break; case 'remove-element':if(elId)removeElementAction(elId); break; case 'submit-quiz':if(qId)submitQuizAction(qId); break;}} else if(qOpt){selectQuizOption(qOpt);}});
-        closeModalButton?.addEventListener('click', closeModal); cancelModalButton?.addEventListener('click', closeModal); saveModalButton?.addEventListener('click', saveEditAction);
-        modalFormContent?.addEventListener('click', (e)=>{const target=e.target; if(target.matches('#quiz-editor-add-question-btn')){const cont=modalFormContent.querySelector('#quiz-editor-questions-container'); const msg=modalFormContent.querySelector('#quiz-editor-no-questions-msg'); if(cont){if(msg)msg.remove(); const idx=cont.children.length; cont.insertAdjacentHTML('beforeend',renderSingleQuizQuestionForm({},idx));}} else if(target.matches('.quiz-editor-remove-question-btn')){const idx=parseInt(target.dataset.index,10); if(!isNaN(idx)&&confirm(`Remove Q ${idx+1}?`)){const qDiv=target.closest('.quiz-edit-question'); if(qDiv)qDiv.remove();}} else if(target.matches('#challenges-editor-add-btn')){const list=modalFormContent.querySelector('#challenges-editor-list'); const msg=modalFormContent.querySelector('#challenges-editor-no-items-msg'); const count=list?list.children.length:0; if(list&&count<MAX_CHALLENGES){if(msg)msg.remove(); const idx=count; list.insertAdjacentHTML('beforeend',renderSingleChallengeForm({},idx)); if(count+1>=MAX_CHALLENGES)target.disabled=true;}} else if(target.matches('.challenges-editor-remove-btn')){const idx=parseInt(target.dataset.index,10); if(!isNaN(idx)&&confirm(`Remove Challenge ${idx+1}?`)){const cDiv=target.closest('.challenge-edit-item'); if(cDiv)cDiv.remove(); const addBtn=modalFormContent.querySelector('#challenges-editor-add-btn'); if(addBtn)addBtn.disabled=false;}} });
-        document.addEventListener('keydown', (e)=>{if(e.key==='Escape'&&modal?.style.display==='flex')closeModal();});
+
+        // Global Edit Styles Button
+        editStylesButton?.addEventListener('click', () => openEditModal('styles'));
+
+        // Sidebar (Tabs & Sub-tabs) Clicks - Use Event Delegation
+        tabsContainer?.addEventListener('click', (e) => {
+            const target = e.target;
+            const actionButton = target.closest('button[data-action]');
+            const nameSpan = target.closest('.tab-name, .sub-tab-name');
+
+            if (actionButton) {
+                e.stopPropagation(); // Prevent click from triggering tab activation if clicking a button inside
+                const action = actionButton.dataset.action;
+                const tabId = actionButton.dataset.tabId || actionButton.dataset.parentTabId; // Get relevant Tab ID
+                const subTabId = actionButton.dataset.subTabId;
+
+                if (!tabId && ['edit-subtab', 'remove-subtab', 'add-subtab'].includes(action)) {
+                     console.error("Action requires tab ID, but none found.", actionButton);
+                     return;
+                 }
+
+                switch (action) {
+                    case 'edit-tab':      openEditModal('tab', tabId); break;
+                    case 'remove-tab':    removeTabAction(tabId); break;
+                    case 'add-subtab':    addSubTabAction(tabId); break;
+                    case 'edit-subtab':   openEditModal('subtab', subTabId, tabId); break; // Pass both IDs
+                    case 'remove-subtab': removeSubTabAction(tabId, subTabId); break; // Pass both IDs
+                    default: console.warn(`Unknown sidebar action: ${action}`);
+                }
+            } else if (nameSpan) {
+                // Clicked on a tab or sub-tab name to activate it
+                const tabId = nameSpan.dataset.tabId || nameSpan.dataset.parentTabId;
+                const subTabId = nameSpan.dataset.subTabId || null; // Will be null for main tabs
+                setActiveTab(tabId, subTabId);
+            }
+        });
+
+        // Add Element Controls - Event Delegation
+        addControls?.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' && e.target.dataset.type) {
+                addElementAction(e.target.dataset.type);
+            }
+        });
+
+        // Main Content Area Clicks (Edit/Remove Elements, Quiz Options) - Event Delegation
+        contentArea?.addEventListener('click', (e) => {
+            const target = e.target;
+            const actionButton = target.closest('button[data-action]');
+            const quizOption = target.closest('.quiz-option');
+
+            if (actionButton) {
+                const action = actionButton.dataset.action;
+                // Find the closest element ID or quiz ID
+                const elementId = target.closest('.content-element')?.dataset.elementId;
+                const quizId = target.closest('.quiz-container-inner')?.dataset.quizId || actionButton.dataset.quizId;
+
+                switch (action) {
+                    case 'edit-element':
+                        if (elementId) openEditModal('element', elementId);
+                        else console.warn("Edit clicked but no element ID found.");
+                        break;
+                    case 'remove-element':
+                        if (elementId) removeElementAction(elementId);
+                        else console.warn("Remove clicked but no element ID found.");
+                        break;
+                    case 'submit-quiz':
+                        if (quizId) submitQuizAction(quizId);
+                        else console.warn("Submit quiz clicked but no quiz ID found.");
+                        break;
+                     default: console.warn(`Unknown content action: ${action}`);
+                }
+            } else if (quizOption) {
+                // Clicked on a quiz option
+                selectQuizOption(quizOption);
+            }
+        });
+
+        // Modal Buttons
+        closeModalButton?.addEventListener('click', closeModal);
+        cancelModalButton?.addEventListener('click', closeModal);
+        saveModalButton?.addEventListener('click', saveEditAction);
+
+        // Modal Form Internal Actions (Add/Remove Quiz Questions/Challenges) - Event Delegation
+        modalFormContent?.addEventListener('click', (e) => {
+            const target = e.target;
+
+            // --- Quiz Editor Actions ---
+            if (target.matches('#quiz-editor-add-question-btn')) {
+                const container = modalFormContent.querySelector('#quiz-editor-questions-container');
+                const noQuestionsMsg = modalFormContent.querySelector('#quiz-editor-no-questions-msg');
+                if (container) {
+                    if (noQuestionsMsg) noQuestionsMsg.remove(); // Remove the 'no questions' message
+                    const newIndex = container.children.length; // Index will be the current number of children
+                    container.insertAdjacentHTML('beforeend', renderSingleQuizQuestionForm({}, newIndex));
+                     // Focus the new question's text area
+                     const newTextArea = container.querySelector(`#quiz-q-text-${newIndex}`);
+                     if (newTextArea) setTimeout(() => newTextArea.focus(), 50);
+                }
+            } else if (target.matches('.quiz-editor-remove-question-btn')) {
+                const indexToRemove = parseInt(target.dataset.index, 10);
+                if (!isNaN(indexToRemove) && confirm(`Are you sure you want to remove Question ${indexToRemove + 1}?`)) {
+                    const questionDiv = target.closest('.quiz-edit-question');
+                    if (questionDiv) {
+                        questionDiv.remove();
+                        // Optional: Renumber subsequent questions in the modal? Or handle on save?
+                        // Simpler to handle on save. Re-rendering is complex here.
+                         // Check if container is empty again
+                         const container = modalFormContent.querySelector('#quiz-editor-questions-container');
+                         if (container && container.children.length === 0 && !modalFormContent.querySelector('#quiz-editor-no-questions-msg')) {
+                             container.innerHTML = '<p id="quiz-editor-no-questions-msg" style="text-align:center; font-style:italic;">No questions added yet.</p>';
+                         }
+                    }
+                }
+            }
+            // --- Challenges Editor Actions ---
+            else if (target.matches('#challenges-editor-add-btn')) {
+                 if (target.disabled) return; // Don't add if max reached
+                const listContainer = modalFormContent.querySelector('#challenges-editor-list');
+                const noItemsMsg = modalFormContent.querySelector('#challenges-editor-no-items-msg');
+                if (listContainer) {
+                    const currentIndex = listContainer.querySelectorAll('.challenge-edit-item').length;
+                     if (currentIndex >= MAX_CHALLENGES) {
+                         alert(`Maximum number of challenges (${MAX_CHALLENGES}) reached.`);
+                         target.disabled = true;
+                         return;
+                     }
+
+                    if (noItemsMsg) noItemsMsg.remove();
+                    listContainer.insertAdjacentHTML('beforeend', renderSingleChallengeForm({}, currentIndex));
+                     // Focus the new challenge's heading
+                     const newHeadingInput = listContainer.querySelector(`#challenge-heading-${currentIndex}`);
+                     if (newHeadingInput) setTimeout(() => newHeadingInput.focus(), 50);
+
+                    // Disable button if max is now reached
+                     if (currentIndex + 1 >= MAX_CHALLENGES) {
+                         target.disabled = true;
+                         // Optionally show message near button
+                     }
+                }
+            } else if (target.matches('.challenges-editor-remove-btn')) {
+                const indexToRemove = parseInt(target.dataset.index, 10);
+                 if (!isNaN(indexToRemove) && confirm(`Are you sure you want to remove Challenge ${indexToRemove + 1}?`)) {
+                     const itemDiv = target.closest('.challenge-edit-item');
+                     if (itemDiv) {
+                         itemDiv.remove();
+                         // Re-enable add button if below max
+                         const addBtn = modalFormContent.querySelector('#challenges-editor-add-btn');
+                         if (addBtn) {
+                              const currentCount = modalFormContent.querySelectorAll('.challenge-edit-item').length;
+                              addBtn.disabled = (currentCount >= MAX_CHALLENGES);
+                         }
+                         // Check if container is empty again
+                         const listContainer = modalFormContent.querySelector('#challenges-editor-list');
+                         if (listContainer && listContainer.children.length === 0 && !modalFormContent.querySelector('#challenges-editor-no-items-msg')) {
+                             listContainer.innerHTML = '<p id="challenges-editor-no-items-msg" style="text-align:center; font-style:italic;">No challenges added yet.</p>';
+                         }
+                     }
+                 }
+            }
+        });
+
+        // Global Keydown Listener (for Escape key in modal)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal?.style.display === 'flex') {
+                closeModal();
+            }
+        });
+
     } // End setupEventListeners
 
 }); // End DOMContentLoaded
