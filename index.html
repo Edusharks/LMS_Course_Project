@@ -20,23 +20,6 @@
             --global-font-size: 16px;
             --global-text-color: var(--dark);
 
-            /* Course/Project Specific (Defaults if not overridden by JS) */
-            --course-primary: var(--primary);
-            --course-secondary: var(--secondary);
-            --course-accent: var(--accent);
-            --course-text-color: var(--global-text-color);
-            --course-font-family: var(--global-font-family);
-            --course-font-size: var(--global-font-size);
-
-            --project-primary: var(--primary);
-            --project-secondary: var(--secondary);
-            --project-accent: var(--accent);
-            --project-text-color: var(--global-text-color);
-            --project-font-family: var(--global-font-family);
-            --project-font-size: var(--global-font-size);
-            --project-primary-rgb: var(--primary-rgb);
-
-
             --transition-speed: 0.3s;
             --card-bg: #ffffff;
             --card-shadow: 0 3px 10px rgba(0,0,0,0.07);
@@ -45,8 +28,11 @@
             --card-padding: 20px;
             --list-item-padding: 15px;
             --view-toggle-size: 30px;
+            --toggle-switch-width: 55px;
+            --toggle-switch-height: 28px;
 
-            /* Editor specific - defaults if not overridden */
+
+            /* Project/Course Editor specific - defaults if not overridden */
             --sidebar-width: 270px;
             --header-image-size: 80px; /* Used for Project Header */
             --challenge-icon-size: 40px;
@@ -62,56 +48,11 @@
             transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, font-family var(--transition-speed) ease, font-size var(--transition-speed) ease;
         }
 
-        /* Apply course/project specific styles */
-        #course-view {
-            font-family: var(--course-font-family);
-            color: var(--course-text-color);
-            font-size: var(--course-font-size);
-        }
-         #course-view .page-header {
-            background: linear-gradient(135deg, var(--course-primary), var(--course-secondary));
-         }
-         #course-view h1, #course-view h2, #course-view h3, #course-view h4, #course-view h5, #course-view h6 {
-             color: var(--course-primary);
-         }
-         #course-view .project-list .item-row h4 { /* Project links in course view */
-            color: var(--course-primary);
-         }
-         #course-view .element-controls p { color: var(--course-primary); }
-         #course-view .element-controls button { color: var(--course-primary); border-color: var(--course-primary); }
-         #course-view .element-controls button:hover:not(:disabled) { background-color: var(--course-primary); color: white; }
-
-
-         #project-view {
-            font-family: var(--project-font-family);
-            color: var(--project-text-color);
-            font-size: var(--project-font-size);
-         }
-         #project-view .page-header {
-             background: linear-gradient(135deg, var(--project-primary), var(--project-secondary));
-         }
-         #project-view h1, #project-view h2, #project-view h3, #project-view h4, #project-view h5, #project-view h6 {
-             color: var(--project-primary);
-         }
-         #project-view .tab.active { background-color: var(--project-primary); border-color: var(--project-primary); }
-         #project-view .tab.active .action-btn { color: var(--project-primary); }
-         #project-view .sub-tab.active { background-color: var(--project-secondary); border-color: var(--project-secondary); }
-         #project-view .sub-tab.active .action-btn { color: var(--project-secondary); }
-         #project-view .element-controls p { color: var(--project-primary); }
-         #project-view .element-controls button { color: var(--project-primary); border-color: var(--project-primary); }
-         #project-view .element-controls button:hover:not(:disabled) { background-color: var(--project-primary); color: white; }
-         #project-view .quiz-option.selected { border-color: var(--project-primary) !important; }
-         #project-view .quiz-submit-btn { background-color: var(--project-accent); color: var(--dark); }
-         #project-view .quiz-submit-btn:hover:not(:disabled) { background-color: color-mix(in srgb, var(--project-accent), #000 10%); }
-         #project-view .element-challenges { background-color: color-mix(in srgb, var(--project-accent), #fff 85%); border-color: var(--project-accent); }
-         #project-view .tab.active { box-shadow: 0 2px 5px rgba(var(--project-primary-rgb), 0.2); }
-
-
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
 
         /* --- General Headings & Buttons --- */
         h1, h2, h3, h4 { color: var(--primary); transition: color var(--transition-speed) ease; margin-top: 0; }
-        h1 { font-size: 2rem; margin-bottom: 15px; text-align: center; color: var(--dark); }
+        h1 { font-size: 2rem; margin-bottom: 15px; /* Keep some bottom margin if it's the main page title */ color: var(--dark); }
         /* Shared page header title style */
         .page-header .header-title { margin: 0 0 5px 0; color: white; font-size: 1.8rem; }
         .page-header .header-subtitle { margin: 0; color: rgba(255,255,255,0.9); font-size: 1rem; }
@@ -133,19 +74,44 @@
         .remove-btn:hover:not(:disabled) { background-color: #e66a6a; }
         .view-btn { background-color: var(--primary); color: white; padding: 6px 12px; font-size: 0.9em; border: none;}
         .view-btn:hover:not(:disabled) { background-color: #4a6cdc; }
-        .back-btn { background-color: #aaa; color: white; /* margin-bottom: 20px; REMOVED - now in header */ padding: 6px 12px; font-size: 0.9em; border: none;}
+        .back-btn { background-color: #aaa; color: white; /* Remove margin-bottom */ padding: 6px 12px; font-size: 0.9em; border: none;}
         .back-btn:hover { background-color: #888; }
-        /* Settings btn in dashboard header */
-        #app-settings-btn { background-color: rgba(255,255,255,0.8); backdrop-filter: blur(5px); border: 1px solid #ddd; border-radius: 50%; width: var(--view-toggle-size); height: var(--view-toggle-size); padding: 0; font-size: 1.1rem; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-left: 10px;}
-        #app-settings-btn:hover { background-color: white; }
+        /* Settings button (now in dashboard header) */
+        #app-settings-btn {
+             /* Removed fixed positioning, etc. */
+             background-color: #fff; /* Match view toggle */
+             border: 1px solid #ccc;
+             color: #555;
+             border-radius: 4px;
+             width: var(--view-toggle-size);
+             height: var(--view-toggle-size);
+             font-size: 1.1rem; /* Match view toggle */
+             display: inline-flex;
+             align-items: center;
+             justify-content: center;
+             padding: 5px;
+             margin-left: 10px; /* Add some space */
+        }
+        #app-settings-btn:hover { background-color: #eee; }
+
+        /* --- Editor/Student Toggle Switch Style --- */
+        .mode-toggle-switch { display: inline-flex; align-items: center; gap: 8px; margin-left: 10px; }
+        .mode-toggle-switch label { font-size: 0.85em; font-weight: 500; color: rgba(255,255,255,0.9); cursor: pointer; }
+        .mode-toggle-switch .toggle-container { position: relative; width: var(--toggle-switch-width); height: var(--toggle-switch-height); }
+        .mode-toggle-switch input[type="checkbox"] { opacity: 0; width: 0; height: 0; position: absolute; }
+        .mode-toggle-switch .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.2); transition: .4s; border-radius: var(--toggle-switch-height); }
+        .mode-toggle-switch .slider:before { position: absolute; content: ""; height: calc(var(--toggle-switch-height) - 6px); width: calc(var(--toggle-switch-height) - 6px); left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        .mode-toggle-switch input:checked + .slider { background-color: var(--success); }
+        .mode-toggle-switch input:checked + .slider:before { transform: translateX(calc(var(--toggle-switch-width) - var(--toggle-switch-height))); }
+        .mode-toggle-switch input:focus + .slider { box-shadow: 0 0 1px var(--success); }
 
         /* --- View Containers --- */
-        .view { display: none; padding-top: 20px; /* Reduced padding */ }
+        .view { display: none; /* Removed padding-top */ }
         .view.active { display: block; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .view-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;}
-        .view-header h1 { margin-bottom: 0; } /* Adjust heading margin in header */
+        .view-header h1 { margin-bottom: 0; text-align: left; } /* Adjust heading margin and align left */
         .view-controls { display: flex; gap: 10px; align-items: center; }
 
         /* --- Dashboard & Course View Styles --- */
@@ -158,17 +124,62 @@
         .item-card .item-image[data-error="true"] { content: var(--error-image-fallback); object-fit: contain; padding: 10px; }
         .item-card .item-content { padding: var(--card-padding); flex-grow: 1; display: flex; flex-direction: column;}
         .item-card p { font-size: 0.9rem; color: #555; margin-bottom: 15px; word-break: break-word; flex-grow: 1; /* Pushes actions down */ display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
-        .item-card .item-card-actions { display: none; /* REMOVED VIEW PROJECTS BUTTON FROM DASHBOARD CARD per req 2 */ justify-content: flex-end; padding-top: 10px; margin-top: auto; border-top: 1px solid #eee; }
+        .item-card .item-card-actions { justify-content: flex-end; padding-top: 10px; margin-top: auto; border-top: 1px solid #eee; }
         .item-card .item-card-actions:empty { display: none; } /* Hide if empty */
+
+        /* Hide bottom actions in rows */
+        .item-row .item-card-actions { display: none; }
+
+        /* Hide bottom actions in Project Cards (grid and list) */
+        #project-list .item-card .item-card-actions { display: none; }
+
+        /* Hide bottom actions in Course Cards (grid) - Project button removed via JS */
+        #course-list .item-card .item-card-actions:empty { display: none; }
 
         .item-card-actions .action-btn { padding: 6px; font-size: 1.1rem;} /* Make icons slightly bigger */
 
         /* Container for Title + Inline Actions */
-        .item-heading-container { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; flex-wrap: nowrap; width: 100%; }
-        .item-heading-container h4 { margin: 0; flex-grow: 1; flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--dark); }
-        .item-inline-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-        .item-inline-actions .action-btn { padding: 4px; font-size: 1rem; background-color: transparent; border: 1px solid transparent; opacity: 0.6; transition: all 0.2s ease; }
-        .item-inline-actions .action-btn:hover { opacity: 1; background-color: rgba(0,0,0,0.08); border-color: #ccc; }
+        .item-heading-container {
+            display: flex;
+            align-items: center; /* Vertical alignment */
+            justify-content: space-between; /* Title left, actions right */
+            gap: 10px;
+            margin-bottom: 8px;
+            flex-wrap: nowrap; /* Prevent wrapping of title/actions */
+            width: 100%;
+        }
+
+        /* Target h4 within the heading container */
+        .item-heading-container h4 {
+            margin: 0;
+            flex-grow: 1; /* Take available space */
+            flex-shrink: 1; /* Allow shrinking */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap; /* Prevent title wrapping */
+            color: var(--dark);
+        }
+
+        /* Inline action buttons group */
+        .item-inline-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0; /* Don't shrink */
+        }
+        .item-inline-actions .action-btn {
+            padding: 4px;
+            font-size: 1rem;
+            background-color: transparent;
+            border: 1px solid transparent;
+            opacity: 0.6;
+            transition: all 0.2s ease;
+        }
+        .item-inline-actions .action-btn:hover { /* General hover */
+             opacity: 1;
+             background-color: rgba(0,0,0,0.08);
+             border-color: #ccc;
+        }
         .item-inline-actions .remove-btn.action-btn { color: var(--danger); opacity: 0.7; }
         .item-inline-actions .remove-btn.action-btn:hover { color: white; background-color: var(--danger); border-color: var(--danger); opacity: 1; }
         .item-inline-actions .edit-btn.action-btn { color: #555; }
@@ -182,10 +193,8 @@
         .item-row .item-image[data-error="true"] { content: var(--error-image-fallback); object-fit: contain; padding: 5px; }
         .item-row .item-content { flex-grow: 1; display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; }
         .item-row .item-text-details { flex-grow: 1; }
-        .item-row h4 { margin-bottom: 4px; /* color: var(--primary); Set by view specific styles */ font-size: 1.05rem; word-break: break-word; }
+        .item-row h4 { margin-bottom: 4px; color: var(--primary); font-size: 1.05rem; word-break: break-word; }
         .item-row p { font-size: 0.9rem; color: #555; margin-bottom: 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
-        .item-row .item-card-actions { display: none; } /* Hide bottom actions in rows */
-
 
         .add-item-container { text-align: center; margin-top: 30px; }
 
@@ -198,45 +207,58 @@
         /* --- Shared Page Header Style (Project & Course) --- */
         .page-header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 25px; background: linear-gradient(135deg, var(--primary), var(--secondary)); /* Default, overridden by view styles */
+            padding: 15px 25px; background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            transition: background var(--transition-speed) ease;
+            transition: background var(--transition-speed) ease; gap: 15px; /* Add gap for spacing */
         }
         .page-header .header-content { display: flex; align-items: center; gap: 20px; flex-grow: 1; }
-        .page-header .header-title-container { flex-grow: 1; }
-        .page-header .header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-        .page-header .header-btn { background-color: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.5); width: 38px; height: 38px; border-radius: 50%; font-size: 20px; padding: 0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .page-header .header-btn:hover { background-color: rgba(255,255,255,0.4); }
+        .page-header .header-title-container { flex-grow: 1; } /* Allows title to take space */
+        .page-header .header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; } /* Container for right-side actions */
+        .page-header .header-actions .back-btn { background-color: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5); }
+        .page-header .header-actions .back-btn:hover { background-color: rgba(255,255,255,0.4); }
+        .page-header .header-actions .header-btn { /* Style for Edit/Settings buttons */
+            background-color: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.5);
+            width: 38px; height: 38px; border-radius: 50%; font-size: 20px; padding: 0;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .page-header .header-actions .header-btn:hover { background-color: rgba(255,255,255,0.4); }
+
 
         /* Project specific image in header */
         #project-view .page-header #projectHeaderImage { width: var(--header-image-size); height: var(--header-image-size); object-fit: cover; border-radius: 8px; border: 3px solid rgba(255, 255, 255, 0.5); background-color: rgba(255, 255, 255, 0.2); flex-shrink: 0; }
         #project-view .page-header #projectHeaderImage[data-error="true"] { background-image: var(--error-image-fallback); background-size: contain; background-repeat: no-repeat; background-position: center; }
 
-
-        /* --- Course View Specific Styles --- */
-        #course-view .course-content-header { margin-bottom: 15px; }
-        #course-view .course-main-content { background-color: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px; min-height: 100px; }
-        #course-view #course-content-area > p:first-child:last-child { text-align: center; color: #888; margin-top: 20px; font-style: italic; } /* Placeholder message styling */
-        #course-view #project-list-section h1 { margin-bottom: 20px; font-size: 1.8rem; text-align: left; border-bottom: none; }
+        /* --- Course View Specific Styles (New Content Area) --- */
+        #course-view { /* Remove back button margin */ }
+        #course-view .course-content-header { /* Inherits .page-header */ margin-bottom: 15px; } /* Adjust margin */
+        #course-view .course-main-content {
+            background-color: #fff; padding: 20px; border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px; min-height: 100px;
+        }
+        #course-view #course-content-area > p { text-align: center; color: #888; margin-top: 20px; font-style: italic; } /* Placeholder message */
 
         /* --- Element Controls Style (Shared: Project & Course) --- */
         .element-controls { margin-top: 20px; padding-top: 20px; border-top: 2px solid #eee; }
-        .element-controls p { font-weight: bold; margin: 0 0 10px 0; /* color: var(--primary); Set by view specific styles */ }
-        .element-controls button { margin-right: 10px; margin-bottom: 10px; background-color: #eef2ff; /* color: var(--primary); border: 1px solid var(--primary); Set by view */ font-size: 0.9em; font-weight: 500; }
-        .element-controls button:hover:not(:disabled) { /* background-color: var(--primary); color: white; Set by view */ }
+        .element-controls p { font-weight: bold; margin: 0 0 10px 0; color: var(--primary); }
+        .element-controls button { margin-right: 10px; margin-bottom: 10px; background-color: #eef2ff; color: var(--primary); border: 1px solid var(--primary); font-size: 0.9em; font-weight: 500; }
+        .element-controls button:hover:not(:disabled) { background-color: var(--primary); color: white; }
 
         /* --- Project View Specific Styles (Layout, Sidebar, etc.) --- */
+        #project-view { /* Remove back button margin */ }
         #project-view .project-layout { display: flex; gap: 25px; }
         #project-view #project-sidebar { width: var(--sidebar-width); flex-shrink: 0; background-color: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); height: fit-content; }
         #project-view #project-tabs { margin-bottom: 15px; }
         #project-view .tab, #project-view .sub-tab { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; margin-bottom: 8px; border-radius: 6px; cursor: pointer; border: 1px solid #eee; transition: all 0.2s ease; background-color: #fff; position: relative; }
         #project-view .tab:hover:not(.active), #project-view .sub-tab:hover:not(.active) { background-color: #f0f5ff; border-color: #c4cde0; }
-        #project-view .tab.active, #project-view .sub-tab.active { font-weight: bold; /* box-shadow: 0 2px 5px rgba(var(--project-primary-rgb), 0.2); Set by view */ }
-        #project-view .tab.active { /* background-color: var(--project-primary); color: white; border-color: var(--project-primary); Set by view */ }
-        #project-view .sub-tab.active { /* background-color: var(--project-secondary); border-color: var(--project-secondary); color: white; box-shadow: 0 2px 5px rgba(255, 122, 198, 0.2); Set by view */ }
+        #project-view .tab.active, #project-view .sub-tab.active { font-weight: bold; box-shadow: 0 2px 5px rgba(var(--primary-rgb), 0.2); }
+        #project-view .tab.active { background-color: var(--primary); color: white; border-color: var(--primary); }
+        #project-view .sub-tab.active { background-color: var(--secondary); border-color: var(--secondary); color: white; box-shadow: 0 2px 5px rgba(255, 122, 198, 0.2); }
         #project-view .tab:hover .tab-controls, #project-view .sub-tab:hover .sub-tab-controls, #project-view .tab.active .tab-controls, #project-view .sub-tab.active .sub-tab-controls { display: inline-flex; gap: 5px; }
-        #project-view .tab.active .action-btn { /* color: var(--project-primary); background-color: white; opacity: 1; Set by view */ }
-        #project-view .sub-tab.active .action-btn { /* color: var(--project-secondary); background-color: white; opacity: 1; Set by view */ }
+        /* Prevent hover display in student mode */
+        #project-view.student-mode .tab:hover .tab-controls,
+        #project-view.student-mode .sub-tab:hover .sub-tab-controls { display: none; }
+        #project-view .tab.active .action-btn { color: var(--primary); background-color: white; opacity: 1; }
+        #project-view .sub-tab.active .action-btn { color: var(--secondary); background-color: white; opacity: 1; }
         #project-view .tab-name, #project-view .sub-tab-name { flex-grow: 1; margin-right: 10px; word-break: break-word; padding: 2px 0; }
         #project-view .sub-tab { margin-left: 20px; padding: 8px 10px; font-size: 0.9em; margin-bottom: 5px; background-color: #f9f9fc; }
         #project-view .tab-controls, #project-view .sub-tab-controls { display: none; flex-shrink: 0; }
@@ -244,14 +266,14 @@
         #project-view .sidebar-actions .add-btn { width: 80%; }
         #project-view #project-main-content { flex-grow: 1; background-color: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); min-height: 400px; }
         #project-view #tab-content-area { margin-bottom: 30px; }
-        #project-view #tab-content-area > p:first-child:last-child { text-align: center; color: #888; margin-top: 30px; font-style: italic; } /* Placeholder styling */
+        #project-view #tab-content-area > p { text-align: center; color: #888; margin-top: 30px; font-style: italic; }
 
         /* --- Generic Content Element Styles (Used in Project Editor & Course Content) --- */
         .content-element { margin-bottom: 25px; padding: 20px; border: 1px dashed #e0e0e0; border-radius: 8px; position: relative; transition: all 0.2s ease; }
-        .content-element:hover:not(.student-view-no-hover) { border-style: solid; border-color: #b0b0b0; background-color: #fdfdfd; } /* Prevent hover style in student view */
+        .content-element:hover { border-style: solid; border-color: #b0b0b0; background-color: #fdfdfd; }
         .element-actions { position: absolute; top: 8px; right: 8px; display: none; background: rgba(245, 247, 250, 0.9); padding: 4px; border-radius: 5px; z-index: 10; gap: 4px; }
-        .content-element:hover:not(.student-view-no-hover) .element-actions { display: flex; }
-        .element-heading { font-size: 1.5rem; border-bottom: none; margin-bottom: 10px; color: inherit; font-family: inherit; }
+        .content-element:hover .element-actions { display: flex; }
+        .element-heading { /* Shared Heading Style */ font-size: 1.5rem; border-bottom: none; margin-bottom: 10px; color: inherit; font-family: inherit; }
         .element-text { white-space: pre-wrap; line-height: 1.7; margin: 0; color: inherit; font-family: inherit;}
         .media-heading { font-size: 1.3rem; margin-bottom: 8px; color: var(--dark); border-bottom: 1px solid #eee; padding-bottom: 4px; }
         .media-description { font-size: 0.95rem; color: #555; margin-top: 5px; margin-bottom: 15px; white-space: pre-wrap; }
@@ -276,7 +298,7 @@
         #project-view .quiz-option-image[data-error="true"] { content: var(--error-image-fallback); }
         #project-view .quiz-option-text { flex-grow: 1; }
         #project-view .quiz-question:not(.answered) .quiz-option:hover { background-color: #e8ecf3; border-color: #c4cde0; }
-        #project-view .quiz-option.selected { /* border-color: var(--project-primary) !important; Set by view */ background-color: #e8f0fe; font-weight: 500; }
+        #project-view .quiz-option.selected { border-color: var(--primary) !important; background-color: #e8f0fe; font-weight: 500; }
         #project-view .quiz-option.correct { background-color: var(--success) !important; color: #fff !important; border-color: #63c899 !important; font-weight: bold; }
         #project-view .quiz-option.incorrect { background-color: var(--danger) !important; color: #fff !important; border-color: #e66a6a !important; }
         #project-view .quiz-option.incorrect .quiz-option-text { text-decoration: line-through; }
@@ -285,12 +307,12 @@
         #project-view .quiz-feedback { margin-top: 10px; padding: 8px 12px; border-radius: 6px; display: none; font-size: .9rem; font-weight: 500;}
         #project-view .quiz-feedback.correct { background-color: #e6f7ed; color: #1d6c45; border: 1px solid #c3e6cb; }
         #project-view .quiz-feedback.incorrect { background-color: #fde8e8; color: #9b1c1c; border: 1px solid #f5c6cb; }
-        #project-view .quiz-submit-btn { /* background-color: var(--project-accent); Set by view */ /* color: var(--dark); */ border: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; margin-top: 20px; display: block; width: fit-content; }
-        #project-view .quiz-submit-btn:hover:not(:disabled) { /* background-color: #ffc833; Set by view */ }
+        #project-view .quiz-submit-btn { background-color: var(--accent); color: var(--dark); border: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; margin-top: 20px; display: block; width: fit-content; }
+        #project-view .quiz-submit-btn:hover:not(:disabled) { background-color: #ffc833; }
         #project-view .final-quiz-result { margin-top: 15px; padding: 12px 15px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 1.05rem;}
         #project-view .final-quiz-result.success { background-color: var(--success); color: white; }
         #project-view .final-quiz-result.fail { background-color: var(--danger); color: white; }
-        #project-view .element-challenges { padding: 15px; /* background-color: #fff8e1; border: 1px solid #ffe082; Set by view */ }
+        #project-view .element-challenges { padding: 15px; background-color: #fff8e1; border: 1px solid #ffe082; }
         #project-view .challenges-list { list-style: none; padding: 0; margin: 0; }
         #project-view .challenge-item { display: flex; align-items: flex-start; gap: 15px; padding: 15px 0; border-bottom: 1px dotted #ccc; }
         #project-view .challenge-item:last-child { border-bottom: none; }
@@ -320,33 +342,33 @@
         #modal-form-content .input-group > div { flex: 1; min-width: 150px; }
         #modal-form-content fieldset { border: 1px solid #ccc; border-radius: 6px; padding: 15px 20px; margin-bottom: 20px; }
         #modal-form-content legend { font-weight: bold; padding: 0 8px; font-size: 1em; color: var(--primary); }
-        .global-text-style-options { border: 1px solid #eee; padding: 15px; margin-top: 15px; border-radius: 6px; }
+        /* Keep specific modal form styles for Quiz/Challenges/Styles within #project-view context if needed */
+        .global-text-style-options { border: 1px solid #eee; padding: 15px; margin-top: 15px; border-radius: 6px; } /* Make this global */
         .global-text-style-options label { font-size: 0.9rem; margin-right: 8px; display: inline-block; min-width: 80px; }
         .global-text-style-options select, .global-text-style-options input[type=color], .global-text-style-options input[type=text] { display: inline-block; width: auto; margin-right: 15px; margin-bottom: 10px; padding: 6px 8px; font-size: 0.9rem; }
         .global-text-style-options input[type=color] { height: 30px; width: 50px; vertical-align: middle;}
         .global-text-style-options br { display: block; margin-bottom: 5px; content: "";}
 
         /* Project Editor Specific Modal Forms */
-        /* These styles are scoped via parent selector in the modal generation logic if needed, but basic ones can remain */
-        #edit-modal .quiz-edit-question { border: 1px solid #eee; padding: 15px; border-radius: 6px; margin-bottom: 15px; background: #fdfdfd; position: relative; }
-        #edit-modal .quiz-edit-question h4 { margin: 0 0 15px 0; font-size: 1.1rem; color: var(--dark); }
-        #edit-modal .quiz-edit-question h4 .remove-btn { position: absolute; top: 10px; right: 10px; }
-        #edit-modal .quiz-edit-question label { margin-top: 10px; font-weight: 500; font-size: 0.9rem;}
-        #edit-modal .quiz-edit-question input[type=text], #edit-modal .quiz-edit-question input[type=url], #edit-modal .quiz-edit-question textarea { margin-bottom: 10px; font-size: 0.95rem; }
-        #edit-modal .quiz-edit-question .quiz-image-input { margin-top: -5px; margin-bottom: 15px; }
-        #edit-modal .quiz-edit-question .quiz-image-input label { font-size: 0.85rem; color: #555;}
-        #edit-modal .quiz-edit-question .quiz-image-input input { padding: 6px 8px; font-size: 0.9rem;}
-        #edit-modal .quiz-edit-question .quiz-q-incorrect { background-color: #fff7f7; border-color: #f5c6cb; }
-        #modal-form-content #quiz-editor-add-question-btn { margin-top: 10px; display: block; width: fit-content; font-size: 0.9rem; }
-        #edit-modal #challenges-editor-list { max-height: 400px; overflow-y: auto; padding: 5px; margin-bottom: 15px;}
-        #edit-modal .challenge-edit-item { border: 1px solid #ddd; padding: 15px; border-radius: 6px; margin-bottom: 10px; background-color: #f9f9f9; position: relative;}
-        #edit-modal .challenge-edit-item h5 { margin: 0 0 10px 0; font-size: 1rem; color: var(--dark); }
-        #edit-modal .challenge-edit-item label { font-size: 0.9rem; }
-        #edit-modal .challenge-edit-item input[type=text], #edit-modal .challenge-edit-item input[type=url], #edit-modal .challenge-edit-item textarea { font-size: 0.95rem; }
-        #edit-modal .challenge-edit-item .remove-btn { position: absolute; top: 10px; right: 10px; }
-        #modal-form-content #challenges-editor-add-btn { margin-top: 0; display: block; width: fit-content; font-size: 0.9rem; }
-        #edit-modal .color-picker { display: flex; gap: 15px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; }
-        #edit-modal .color-picker label { margin-bottom: 0; margin-right: 5px; }
+        #project-view #edit-modal .quiz-edit-question { /* Scoped to project view */ border: 1px solid #eee; padding: 15px; border-radius: 6px; margin-bottom: 15px; background: #fdfdfd; position: relative; }
+        #project-view #edit-modal .quiz-edit-question h4 { margin: 0 0 15px 0; font-size: 1.1rem; color: var(--dark); }
+        #project-view #edit-modal .quiz-edit-question h4 .remove-btn { position: absolute; top: 10px; right: 10px; }
+        #project-view #edit-modal .quiz-edit-question label { margin-top: 10px; font-weight: 500; font-size: 0.9rem;}
+        #project-view #edit-modal .quiz-edit-question input[type=text], #project-view #edit-modal .quiz-edit-question input[type=url], #project-view #edit-modal .quiz-edit-question textarea { margin-bottom: 10px; font-size: 0.95rem; }
+        #project-view #edit-modal .quiz-edit-question .quiz-image-input { margin-top: -5px; margin-bottom: 15px; }
+        #project-view #edit-modal .quiz-edit-question .quiz-image-input label { font-size: 0.85rem; color: #555;}
+        #project-view #edit-modal .quiz-edit-question .quiz-image-input input { padding: 6px 8px; font-size: 0.9rem;}
+        #project-view #edit-modal .quiz-edit-question .quiz-q-incorrect { background-color: #fff7f7; border-color: #f5c6cb; }
+        #modal-form-content #quiz-editor-add-question-btn { margin-top: 10px; display: block; width: fit-content; font-size: 0.9rem; } /* Keep ID global for simplicity */
+        #project-view #edit-modal #challenges-editor-list { max-height: 400px; overflow-y: auto; padding: 5px; margin-bottom: 15px;}
+        #project-view #edit-modal .challenge-edit-item { border: 1px solid #ddd; padding: 15px; border-radius: 6px; margin-bottom: 10px; background-color: #f9f9f9; position: relative;}
+        #project-view #edit-modal .challenge-edit-item h5 { margin: 0 0 10px 0; font-size: 1rem; color: var(--dark); }
+        #project-view #edit-modal .challenge-edit-item label { font-size: 0.9rem; }
+        #project-view #edit-modal .challenge-edit-item input[type=text], #project-view #edit-modal .challenge-edit-item input[type=url], #project-view #edit-modal .challenge-edit-item textarea { font-size: 0.95rem; }
+        #project-view #edit-modal .challenge-edit-item .remove-btn { position: absolute; top: 10px; right: 10px; }
+        #modal-form-content #challenges-editor-add-btn { margin-top: 0; display: block; width: fit-content; font-size: 0.9rem; } /* Keep ID global */
+        #project-view #edit-modal .color-picker { display: flex; gap: 15px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; }
+        #project-view #edit-modal .color-picker label { margin-bottom: 0; margin-right: 5px; }
 
         .modal-actions { margin-top: 20px; text-align: right; border-top: 1px solid #eee; padding-top: 20px; flex-shrink: 0; }
         .modal-actions button { margin-left: 10px; padding: 10px 20px; }
@@ -355,98 +377,50 @@
         .modal-actions button.save-btn { background-color: var(--success); color: white; font-weight: bold; border: none;}
         .modal-actions button.save-btn:hover { background-color: #63c899; }
 
-        /* --- Editor/Student Toggle --- */
-        .view-mode-toggle { display: inline-flex; align-items: center; background-color: rgba(255,255,255,0.2); border-radius: 15px; padding: 3px; border: 1px solid rgba(255,255,255,0.5); }
-        .view-mode-toggle label { cursor: pointer; padding: 3px 10px; border-radius: 12px; font-size: 0.8em; color: white; transition: background-color 0.2s ease, color 0.2s ease; font-weight: 500; }
-        .view-mode-toggle input[type="radio"] { display: none; }
-        .view-mode-toggle input[type="radio"]:checked + label { background-color: white; color: var(--primary); /* Use appropriate primary */ box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        /* Adjust color based on context */
-        #course-view .view-mode-toggle input[type="radio"]:checked + label { color: var(--course-primary); }
-        #project-view .view-mode-toggle input[type="radio"]:checked + label { color: var(--project-primary); }
 
+        /* --- STUDENT MODE STYLES --- */
+        /* Course View Student Mode */
+        #course-view.student-mode #course-element-add-controls,
+        #course-view.student-mode .element-actions,
+        #course-view.student-mode .item-inline-actions .action-btn { /* Hide edit/remove on project list */
+            display: none !important; /* Use important to override potential inline styles or specificity issues */
+        }
+        #course-view.student-mode .edit-btn, /* General hide for any edit buttons */
+        #course-view.student-mode .remove-btn {
+             display: none !important;
+        }
+        #course-view.student-mode #edit-course-styles-btn { /* Hide the course style edit button */
+             display: none !important;
+        }
+        #course-view.student-mode .content-element:hover { /* Prevent hover effect on elements */
+            border-color: #e0e0e0;
+            background-color: transparent;
+            border-style: dashed;
+        }
 
-        /* --- Student View Mode Styles --- */
-        /* Course View */
-        #course-view.student-view-active .item-inline-actions, /* Hide edit/delete on project list */
-        #course-view.student-view-active #edit-course-styles-btn,
-        #course-view.student-view-active #add-project-btn,
-        #course-view.student-view-active #course-element-add-controls,
-        #course-view.student-view-active .element-actions /* Hide edit/delete on course elements */ {
+        /* Project View Student Mode */
+        #project-view.student-mode #edit-project-styles-btn, /* Header edit button */
+        #project-view.student-mode #element-add-controls, /* Add element controls */
+        #project-view.student-mode #project-sidebar .sidebar-actions .add-btn, /* Add tab button */
+        #project-view.student-mode .tab-controls, /* Tab edit/remove/add-sub */
+        #project-view.student-mode .sub-tab-controls, /* Sub-tab edit/remove */
+        #project-view.student-mode .element-actions { /* Element edit/remove */
             display: none !important;
         }
-        #course-view.student-view-active .item-row,
-        #course-view.student-view-active .item-card {
-             cursor: default; /* No hover pointer on items */
+        #project-view.student-mode #project-tabs .tab,
+        #project-view.student-mode #project-tabs .sub-tab {
+            cursor: default; /* Indicate non-interactive */
+            /* Optional: slightly fade non-active tabs */
         }
-        #course-view.student-view-active .item-row:hover,
-        #course-view.student-view-active .item-card:hover {
-            transform: none; /* Disable hover transform */
-            box-shadow: var(--card-shadow); /* Reset shadow */
+        #project-view.student-mode #project-tabs .tab:not(.active):hover,
+        #project-view.student-mode #project-tabs .sub-tab:not(.active):hover {
+            background-color: #fff; /* Disable hover effect */
+            border-color: #eee;
         }
-        #course-view.student-view-active .content-element {
-             border-color: transparent !important;
-             cursor: default;
-             background-color: inherit !important; /* Prevent hover background */
-        }
-        #course-view.student-view-active .content-element:hover {
-             border-color: transparent !important; /* Ensure border stays hidden */
-             background-color: inherit !important;
-        }
-        #course-view.student-view-active .content-element::before, /* Attempt to hide hover state */
-        #course-view.student-view-active .content-element::after {
-            display: none;
-        }
-        /* #course-view.student-view-active .content-element:hover .element-actions is covered by general .element-actions rule above */
-         #course-view.student-view-active .content-element {
-            pointer-events: none; /* Disable pointer events on element container */
-        }
-         #course-view.student-view-active .content-element * {
-            pointer-events: auto; /* Re-enable pointer events for content within element */
-        }
-
-
-        /* Project View */
-        #project-view.student-view-active #edit-project-styles-btn,
-        #project-view.student-view-active #add-tab-btn,
-        #project-view.student-view-active .tab-controls,
-        #project-view.student-view-active .sub-tab-controls,
-        #project-view.student-view-active .sidebar-actions button,
-        #project-view.student-view-active #element-add-controls,
-        #project-view.student-view-active .element-actions /* Hide edit/delete on project elements */ {
-            display: none !important;
-        }
-         #project-view.student-view-active #project-sidebar .tab,
-         #project-view.student-view-active #project-sidebar .sub-tab {
-             cursor: default;
-             pointer-events: none; /* Disable clicking tab labels */
-         }
-         #project-view.student-view-active #project-sidebar .tab *, /* Re-enable pointer events for text inside */
-         #project-view.student-view-active #project-sidebar .sub-tab * {
-             pointer-events: auto;
-         }
-
-         #project-view.student-view-active #project-sidebar .tab:hover:not(.active),
-         #project-view.student-view-active #project-sidebar .sub-tab:hover:not(.active) {
-             background-color: inherit;
-             border-color: #eee;
-         }
-         #project-view.student-view-active .content-element {
-             border-color: transparent !important;
-             cursor: default;
-             background-color: inherit !important;
-         }
-         #project-view.student-view-active .content-element:hover {
-             border-color: transparent !important;
-             background-color: inherit !important;
-         }
-         #project-view.student-view-active .content-element {
-            pointer-events: none; /* Disable element container interactions */
-        }
-         #project-view.student-view-active .content-element *,
-         #project-view.student-view-active .quiz-option, /* Ensure quiz options are clickable */
-         #project-view.student-view-active .quiz-submit-btn /* Ensure quiz submit is clickable */
-          {
-            pointer-events: auto; /* Re-enable for content */
+        #project-view.student-mode .content-element:hover { /* Prevent hover effect on elements */
+            border-color: #e0e0e0;
+            background-color: transparent;
+            border-style: dashed;
         }
 
 
@@ -457,32 +431,33 @@
             #project-view #project-tabs { display: flex; overflow-x: auto; padding-bottom: 10px; white-space: nowrap; border-bottom: 1px solid #eee;}
             #project-view #project-tabs p { text-align: left !important; }
             #project-view .tab, #project-view .sub-tab { flex-shrink: 0; margin-right: 8px; margin-bottom: 0; }
-            #project-view .tab-controls, #project-view .sub-tab-controls { display: none !important; } /* Hide always on small screens */
+            #project-view .tab-controls, #project-view .sub-tab-controls { display: none !important; } /* Ensure hidden on mobile too */
             #project-view .tab-name, #project-view .sub-tab-name { margin-right: 0; }
             #project-view .sub-tab { margin-left: 5px; }
-            #course-view .course-main-content { padding: 15px; }
-            .page-header .header-actions { flex-wrap: wrap; justify-content: flex-end; } /* Allow header actions to wrap */
+            /* Adjust course view content area */
+             #course-view .course-main-content { padding: 15px; }
         }
-        @media (max-width: 768px) {
-             .page-header { flex-direction: column; align-items: stretch; gap: 10px; padding: 15px; text-align: center;}
-             .page-header .header-content { gap: 15px; justify-content: center; order: 1;} /* Title below actions */
-             .page-header .header-actions { order: 0; justify-content: center; margin-bottom: 10px;} /* Actions on top */
-             #project-view .page-header .header-actions .back-btn { order: -1; } /* Back button first */
+        @media (max-width: 768px) { /* Adjust breakpoint for header actions */
+            .page-header { flex-direction: column; align-items: stretch; gap: 10px; padding: 15px; text-align: center;}
+            .page-header .header-content { gap: 15px; justify-content: center;}
+            .page-header .header-actions { justify-content: center; flex-wrap: wrap; } /* Center actions on smaller screens */
+            .mode-toggle-switch { margin-left: 0; margin-top: 5px; } /* Adjust toggle margin */
+            #project-view .page-header .header-actions { position: static; } /* Remove absolute positioning for project header btn */
 
-             /* Keep project edit btn somewhat accessible if needed, but maybe hide on mobile header? */
-             /* #project-view .page-header .header-btn { position: absolute; top: 10px; right: 10px;} */
+             .view-header { flex-direction: column; align-items: stretch; text-align: center; gap: 5px; }
+             .view-header h1 { text-align: center;}
         }
-
         @media (max-width: 600px) {
              :root { --global-font-size: 15px; --header-image-size: 60px; --challenge-icon-size: 30px;}
              .container { padding: 10px; }
              h1 { font-size: 1.6rem; }
              h2 { font-size: 1.4rem; }
-             .view { padding-top: 15px; }
-             .view-header { flex-direction: column; align-items: stretch; text-align: center; gap: 5px; }
+             /* App settings button already moved, no need for fixed styles */
+             .view { /* No padding needed now */ }
              .item-list.grid-view { grid-template-columns: 1fr; }
              .item-row { flex-direction: column; align-items: stretch; text-align: center;}
              .item-row .item-image { width: 100%; height: 120px; margin-bottom: 10px; }
+             .item-row .item-card-actions { justify-content: center;}
 
              #course-view .course-main-content { padding: 10px; }
              .element-controls { text-align: center; }
@@ -505,8 +480,7 @@
     </style>
 </head>
 <body>
-    <!-- App settings button moved to Dashboard Header -->
-    <!-- <button id="app-settings-btn" class="settings-btn" title="App Settings">⚙️</button> -->
+    <!-- Global Settings button removed from here -->
 
     <div class="container">
 
@@ -523,8 +497,8 @@
                             <svg viewBox="0 0 24 24"><path d="M3 5h18v2H3zm0 6h18v2H3zm0 6h18v2H3z"></path></svg>
                         </button>
                     </span>
-                    <!-- App Settings Button Moved Here -->
-                    <button id="app-settings-btn" title="App Settings">⚙️</button>
+                    <!-- Moved App Settings Button Here -->
+                    <button id="app-settings-btn" class="settings-btn" title="App Settings">⚙️</button>
                 </div>
             </div>
             <div id="course-list" class="item-list grid-view"> <!-- Default to grid -->
@@ -537,38 +511,37 @@
 
         <!-- View: Course (Intro Content + Projects List) -->
         <div id="course-view" class="view">
-             <!-- Back Button Moved to Header -->
-             <!-- <button id="back-to-dashboard-btn" class="back-btn">&larr; Back to Courses</button> -->
+             <!-- Back button moved to header -->
 
-             <!-- Course Header -->
+             <!-- NEW: Course Header with actions moved -->
              <header class="page-header course-content-header">
-                 <div class="header-content">
+                 <div class="header-content"> <!-- Title/Subtitle container -->
                      <div class="header-title-container">
                          <h2 class="header-title" id="course-content-main-title">Course Name</h2>
                          <!-- <p class="header-subtitle" id="course-content-subtitle">Optional Subtitle</p> -->
                      </div>
                  </div>
-                 <!-- Header Actions Area -->
-                 <div class="header-actions">
-                     <button id="back-to-dashboard-btn" class="back-btn">&larr; Back</button>
-                     <!-- Editor/Student Toggle -->
-                     <div class="view-mode-toggle" id="course-view-mode-toggle">
-                         <input type="radio" id="course-editor-mode" name="course_view_mode" value="editor" checked>
-                         <label for="course-editor-mode">Editor</label>
-                         <input type="radio" id="course-student-mode" name="course_view_mode" value="student">
-                         <label for="course-student-mode">Student</label>
-                     </div>
-                     <button id="edit-course-styles-btn" class="header-btn edit-btn" title="Edit Course Styles">✏️</button>
+                 <div class="header-actions"> <!-- Container for right-aligned actions -->
+                    <button id="back-to-dashboard-btn" class="back-btn" title="Back to Courses">&larr; Back</button>
+                    <div class="mode-toggle-switch">
+                        <label for="view-mode-toggle-course-input">Student</label>
+                        <div class="toggle-container">
+                            <input type="checkbox" id="view-mode-toggle-course-input" checked> <!-- Default to Editor -->
+                            <span class="slider"></span>
+                        </div>
+                        <label for="view-mode-toggle-course-input">Editor</label>
+                    </div>
+                    <button id="edit-course-styles-btn" class="header-btn" title="Edit Course Styles">🎨</button> <!-- New Edit Button -->
                  </div>
              </header>
 
-             <!-- Course Content Area -->
+             <!-- NEW: Course Content Area -->
              <div id="course-content-area" class="course-main-content">
                  <!-- Rendered course-level elements (headings, text, images etc) go here -->
                  <p>Loading course content...</p>
              </div>
 
-             <!-- Add Controls for Course Content -->
+             <!-- NEW: Add Controls for Course Content -->
              <div id="course-element-add-controls" class="element-controls">
                  <p>Add to this course description:</p>
                  <button data-action="add-course-element" data-type="heading">Heading</button>
@@ -580,35 +553,36 @@
 
              <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
 
-             <!-- Project List Section -->
-             <div id="project-list-section">
-                 <div class="view-header">
-                     <h1>Projects</h1> <!-- Use h1 for projects section title -->
-                     <div class="view-controls">
-                         <span class="view-toggle">
-                             <button id="course-grid-view-btn" title="Grid View">
-                                 <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm0 10h8v8H3zm10-10h8v8h-8zm0 10h8v8h-8z"></path></svg>
-                             </button>
-                             <button id="course-list-view-btn" title="List View">
-                                 <svg viewBox="0 0 24 24"><path d="M3 5h18v2H3zm0 6h18v2H3zm0 6h18v2H3z"></path></svg>
-                             </button>
-                         </span>
-                     </div>
+             <!-- Existing Project List Header -->
+             <div class="view-header">
+                 <h1 id="course-view-title" style="border: none; font-size: 1.8rem;">Projects</h1> <!-- Use h1 for projects section title -->
+                 <div class="view-controls">
+                     <span class="view-toggle">
+                         <button id="course-grid-view-btn" title="Grid View">
+                             <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm0 10h8v8H3zm10-10h8v8h-8zm0 10h8v8h-8z"></path></svg>
+                         </button>
+                         <button id="course-list-view-btn" title="List View">
+                             <svg viewBox="0 0 24 24"><path d="M3 5h18v2H3zm0 6h18v2H3zm0 6h18v2H3z"></path></svg>
+                         </button>
+                     </span>
                  </div>
-                 <div id="project-list" class="item-list grid-view project-list"> <!-- Default to grid, added class -->
-                    <!-- Project cards/rows for the selected course will be rendered here -->
-                </div>
-                 <div class="add-item-container">
-                    <button id="add-project-btn" class="add-btn">+ Add New Project</button>
-                </div>
              </div>
+
+             <!-- Existing Project List -->
+             <div id="project-list" class="item-list grid-view"> <!-- Default to grid -->
+                <!-- Project cards/rows for the selected course will be rendered here -->
+            </div>
+
+            <!-- Existing Add Project Button -->
+             <div class="add-item-container">
+                <button id="add-project-btn" class="add-btn">+ Add New Project</button>
+            </div>
         </div>
 
         <!-- View: Project Editor -->
         <div id="project-view" class="view">
-             <!-- Back Button Moved to Header -->
-             <!-- <button id="back-to-projects-btn" class="back-btn">&larr; Back to Projects</button> -->
-             <!-- Project Header -->
+             <!-- Back button moved to header -->
+             <!-- Project Header with actions moved -->
              <header class="page-header">
                 <div class="header-content">
                     <img id="projectHeaderImage" src="" alt="Project Header Image" data-error="false">
@@ -617,17 +591,17 @@
                         <p class="header-subtitle" id="projectSubtitle">Project Subtitle</p>
                     </div>
                 </div>
-                 <!-- Header Actions Area -->
-                 <div class="header-actions">
-                      <button id="back-to-projects-btn" class="back-btn">&larr; Back</button>
-                      <!-- Editor/Student Toggle -->
-                      <div class="view-mode-toggle" id="project-view-mode-toggle">
-                          <input type="radio" id="project-editor-mode" name="project_view_mode" value="editor" checked>
-                          <label for="project-editor-mode">Editor</label>
-                          <input type="radio" id="project-student-mode" name="project_view_mode" value="student">
-                          <label for="project-student-mode">Student</label>
-                      </div>
-                      <button id="edit-project-styles-btn" class="header-btn" title="Edit Project Info & Styles">⚙️</button>
+                <div class="header-actions"> <!-- Container for right-aligned actions -->
+                    <button id="back-to-projects-btn" class="back-btn" title="Back to Projects">&larr; Back</button>
+                    <div class="mode-toggle-switch">
+                        <label for="view-mode-toggle-project-input">Student</label>
+                        <div class="toggle-container">
+                             <input type="checkbox" id="view-mode-toggle-project-input" checked> <!-- Default to Editor -->
+                            <span class="slider"></span>
+                        </div>
+                        <label for="view-mode-toggle-project-input">Editor</label>
+                    </div>
+                    <button id="edit-project-styles-btn" class="header-btn" title="Edit Project Info & Styles">⚙️</button>
                  </div>
             </header>
             <!-- Project Layout -->
@@ -656,7 +630,7 @@
 
     </div> <!-- End .container -->
 
-    <!-- Modal -->
+    <!-- Modal (Remains mostly the same, adaptable) -->
     <div id="edit-modal" class="modal">
         <div class="modal-content">
             <span id="close-modal-btn" class="close-modal" title="Close">&times;</span>
@@ -673,12 +647,11 @@
 
 <script>
 // --- Constants ---
-const APP_DATA_KEY = 'courseAppData_v1.3'; // Version bump for course styles & content
+const APP_DATA_KEY = 'courseAppData_v1.3'; // Version bump for potential course styles
 const PROJECT_DATA_PREFIX = 'projectData_';
 const MAX_COURSES = 25;
 const MAX_PROJECTS_PER_COURSE = 25;
-const VIEW_PREFERENCE_KEY = 'itemViewPreference';
-const EDITOR_MODE_KEY = 'editorModeActive'; // To potentially persist mode state
+const VIEW_PREFERENCE_KEY = 'itemViewPreference'; // For Grid/List toggle
 
 // --- Project Editor Specific Constants ---
 const FONT_FAMILIES = [ { name: 'Default (Segoe UI)', value: "'Segoe UI', sans-serif" }, { name: 'Arial', value: "Arial, Helvetica, sans-serif" }, { name: 'Georgia', value: "Georgia, 'Times New Roman', serif" }, { name: 'Verdana', value: "Verdana, Geneva, sans-serif" }, { name: 'Courier New', value: "'Courier New', monospace" }, { name: 'Comic Sans MS', value: "'Comic Sans MS', cursive, sans-serif" } ];
@@ -719,7 +692,7 @@ function getDefaultElementData(type) {
 
 // --- Application State ---
 let appData = {
-    globalStyles: { /* Structure defined in loadAppData */ },
+    globalStyles: { /* Structure */ },
     courses: []
 };
 let currentProjectData = null; // For the project editor view
@@ -728,7 +701,6 @@ let activeCourseId = null;
 let activeProjectId = null;
 let editingContext = { type: null, id: null, parentId: null, isNew: false, elementType: null }; // elementType for adding new elements
 let currentItemViewMode = localStorage.getItem(VIEW_PREFERENCE_KEY) || 'grid'; // 'grid' or 'list'
-// let currentEditorMode = sessionStorage.getItem(EDITOR_MODE_KEY) !== 'student'; // Default to editor
 
 // --- DOM Element Lookups ---
 // Views
@@ -738,7 +710,7 @@ const projectView = document.getElementById('project-view');
 // Content Holders
 const courseListContainer = document.getElementById('course-list');
 const projectListContainer = document.getElementById('project-list');
-const courseViewProjectHeading = document.querySelector('#project-list-section h1'); // Project heading in course view
+const courseViewTitle = document.getElementById('course-view-title'); // Projects heading in course view
 const courseContentMainTitle = document.getElementById('course-content-main-title'); // Main course name header
 const courseContentArea = document.getElementById('course-content-area'); // Area for course desc elements
 const courseElementAddControls = document.getElementById('course-element-add-controls'); // Buttons to add course desc elements
@@ -752,11 +724,10 @@ const dashboardGridViewBtn = document.getElementById('dashboard-grid-view-btn');
 const dashboardListViewBtn = document.getElementById('dashboard-list-view-btn');
 const courseGridViewBtn = document.getElementById('course-grid-view-btn');
 const courseListViewBtn = document.getElementById('course-list-view-btn');
-const editCourseStylesBtn = document.getElementById('edit-course-styles-btn'); // New course style button
-const editProjectStylesBtn = document.getElementById('edit-project-styles-btn'); // Existing project style button
+const editCourseStylesBtn = document.getElementById('edit-course-styles-btn'); // New button in course header
 // Toggles
-const courseViewModeToggle = document.getElementById('course-view-mode-toggle');
-const projectViewModeToggle = document.getElementById('project-view-mode-toggle');
+const courseModeToggleInput = document.getElementById('view-mode-toggle-course-input');
+const projectModeToggleInput = document.getElementById('view-mode-toggle-project-input');
 // Modal Elements
 const modal = document.getElementById('edit-modal');
 const modalTitle = document.getElementById('modal-title');
@@ -771,29 +742,27 @@ let projectEditorElements = {}; // Populated in initProjectEditor
 // --- Data Management ---
 function loadAppData() {
     const storedData = localStorage.getItem(APP_DATA_KEY);
-    const defaultGlobalStyles = {
-        appFontFamily: DEFAULT_FONT_FAMILY, appFontSize: DEFAULT_FONT_SIZE_NAME,
-        appPrimaryColor: DEFAULT_PRIMARY_COLOR, appSecondaryColor: DEFAULT_SECONDARY_COLOR,
-        appAccentColor: DEFAULT_ACCENT_COLOR, appTextColor: DEFAULT_TEXT_COLOR,
-    };
-
     if (storedData) {
         try {
             const parsed = JSON.parse(storedData);
             if (parsed && Array.isArray(parsed.courses)) {
                 // Merge stored data with defaults for globalStyles
                 appData = {
-                    globalStyles: { ...defaultGlobalStyles, ...(parsed.globalStyles || {}) },
+                    globalStyles: { /* Default structure */
+                        appFontFamily: parsed.globalStyles?.appFontFamily || DEFAULT_FONT_FAMILY,
+                        appFontSize: parsed.globalStyles?.appFontSize || DEFAULT_FONT_SIZE_NAME,
+                        appPrimaryColor: parsed.globalStyles?.appPrimaryColor || DEFAULT_PRIMARY_COLOR,
+                        appSecondaryColor: parsed.globalStyles?.appSecondaryColor || DEFAULT_SECONDARY_COLOR,
+                        appAccentColor: parsed.globalStyles?.appAccentColor || DEFAULT_ACCENT_COLOR,
+                        appTextColor: parsed.globalStyles?.appTextColor || DEFAULT_TEXT_COLOR,
+                    },
                     courses: parsed.courses || []
                 };
-                 // Add missing properties during migration (imageUrl, content array, styles object)
+                 // Add missing properties during migration (imageUrl, content array, styles)
                  appData.courses.forEach(course => {
                      course.imageUrl = course.imageUrl || null;
                      course.content = Array.isArray(course.content) ? course.content : []; // Ensure content array exists
-                     course.styles = course.styles || { // Ensure styles object exists
-                         primaryColor: null, secondaryColor: null, accentColor: null,
-                         globalFontFamily: null, globalFontSize: null, globalTextColor: null
-                     };
+                     course.styles = course.styles || {}; // NEW: Ensure course styles object exists
                      if (!Array.isArray(course.projects)) course.projects = [];
                      course.projects.forEach(project => {
                          project.imageUrl = project.imageUrl || null;
@@ -806,14 +775,18 @@ function loadAppData() {
     }
     // Initialize with default structure if load failed or no data
     appData = {
-        globalStyles: { ...defaultGlobalStyles },
+        globalStyles: {
+             appFontFamily: DEFAULT_FONT_FAMILY, appFontSize: DEFAULT_FONT_SIZE_NAME,
+             appPrimaryColor: DEFAULT_PRIMARY_COLOR, appSecondaryColor: DEFAULT_SECONDARY_COLOR,
+             appAccentColor: DEFAULT_ACCENT_COLOR, appTextColor: DEFAULT_TEXT_COLOR,
+         },
         courses: [] // Start with empty courses
     };
     console.log("Initialized default app data.");
 }
 function saveAppData() { try { localStorage.setItem(APP_DATA_KEY, JSON.stringify(appData)); console.log("App data saved."); } catch (e) { console.error("Failed to save app data:", e); alert("Error: Could not save application data. Storage might be full."); } }
 function getProjectDataKey(projectId) { return `${PROJECT_DATA_PREFIX}${projectId}`; }
-function loadSpecificProjectData(projectId) {
+function loadSpecificProjectData(projectId) { /* ... (keep previous logic, ensure defaults align with global potentially) ... */
     const key = getProjectDataKey(projectId);
     const storedData = localStorage.getItem(key);
     if (storedData) {
@@ -823,14 +796,12 @@ function loadSpecificProjectData(projectId) {
                  // Apply defaults for styles etc., using *global app defaults* as base
                  parsed.styles = parsed.styles || {};
                  const defaultStyles = appData.globalStyles || {}; // Use loaded global defaults
-                 // Use null check carefully: if explicitly set to empty string (e.g. for inherit), keep it that way
-                 parsed.styles.primaryColor = parsed.styles.primaryColor === null || parsed.styles.primaryColor === undefined ? null : parsed.styles.primaryColor;
-                 parsed.styles.secondaryColor = parsed.styles.secondaryColor === null || parsed.styles.secondaryColor === undefined ? null : parsed.styles.secondaryColor;
-                 parsed.styles.accentColor = parsed.styles.accentColor === null || parsed.styles.accentColor === undefined ? null : parsed.styles.accentColor;
-                 parsed.styles.globalTextColor = parsed.styles.globalTextColor === null || parsed.styles.globalTextColor === undefined ? null : parsed.styles.globalTextColor;
-                 parsed.styles.globalFontSize = parsed.styles.globalFontSize === null || parsed.styles.globalFontSize === undefined ? null : parsed.styles.globalFontSize;
-                 parsed.styles.globalFontFamily = parsed.styles.globalFontFamily === null || parsed.styles.globalFontFamily === undefined ? null : parsed.styles.globalFontFamily;
-
+                 parsed.styles.primaryColor = parsed.styles.primaryColor === null ? null : (parsed.styles.primaryColor || defaultStyles.appPrimaryColor || DEFAULT_PRIMARY_COLOR);
+                 parsed.styles.secondaryColor = parsed.styles.secondaryColor === null ? null : (parsed.styles.secondaryColor || defaultStyles.appSecondaryColor || DEFAULT_SECONDARY_COLOR);
+                 parsed.styles.accentColor = parsed.styles.accentColor === null ? null : (parsed.styles.accentColor || defaultStyles.appAccentColor || DEFAULT_ACCENT_COLOR);
+                 parsed.styles.globalTextColor = parsed.styles.globalTextColor === null ? null : (parsed.styles.globalTextColor || defaultStyles.appTextColor || DEFAULT_TEXT_COLOR);
+                 parsed.styles.globalFontSize = parsed.styles.globalFontSize === null ? null : (parsed.styles.globalFontSize || defaultStyles.appFontSize || DEFAULT_FONT_SIZE_NAME);
+                 parsed.styles.globalFontFamily = parsed.styles.globalFontFamily === null ? null : (parsed.styles.globalFontFamily || defaultStyles.appFontFamily || DEFAULT_FONT_FAMILY);
                  parsed.headerImage = parsed.headerImage || getDefaultProjectDataTemplate().headerImage;
 
                  const projectMeta = findProjectMeta(projectId);
@@ -845,14 +816,19 @@ function loadSpecificProjectData(projectId) {
     console.log(`No valid data found for project ${projectId}, creating default.`);
     const projectMeta = findProjectMeta(projectId);
     const defaultData = getDefaultProjectDataTemplate(); // Get template
-    // Apply meta to the default template
+    // Apply meta and global styles to the default template
     defaultData.title = projectMeta?.name || "New Project";
     defaultData.subtitle = projectMeta?.description || "";
-    // New projects styles initially inherit (null)
-    defaultData.styles = { primaryColor: null, secondaryColor: null, accentColor: null, globalFontFamily: null, globalFontSize: null, globalTextColor: null };
+    // For new projects, styles initially inherit from global
+    defaultData.styles.primaryColor = null; // Indicate inheritance
+    defaultData.styles.secondaryColor = null;
+    defaultData.styles.accentColor = null;
+    defaultData.styles.globalTextColor = null;
+    defaultData.styles.globalFontSize = null;
+    defaultData.styles.globalFontFamily = null;
     return defaultData;
  }
-function saveSpecificProjectData(projectId, projectDataToSave) {
+function saveSpecificProjectData(projectId, projectDataToSave) { /* ... (keep previous logic) ... */
     if (!projectId || !projectDataToSave) { console.error("Cannot save project data: Project ID or data missing."); return; }
     const key = getProjectDataKey(projectId);
     try {
@@ -860,7 +836,7 @@ function saveSpecificProjectData(projectId, projectDataToSave) {
         if (projectMeta) {
             let metaChanged = false;
             if (projectMeta.name !== projectDataToSave.title) { projectMeta.name = projectDataToSave.title; metaChanged = true; }
-            // Update description from subtitle if needed (or keep separate?)
+            // Decide if subtitle should update description or vice versa
             // if (projectMeta.description !== projectDataToSave.subtitle) { projectMeta.description = projectDataToSave.subtitle; metaChanged = true; }
             if (metaChanged) saveAppData(); // Save appData if meta changed
         }
@@ -880,7 +856,7 @@ function findCourse(courseId) { return appData.courses.find(c => c.id === course
 function findProjectMeta(projectId) { for (const course of appData.courses) { const project = course.projects.find(p => p.id === projectId); if (project) return project; } return null; }
 function findProjectCourse(projectId) { for (const course of appData.courses) { const project = course.projects.find(p => p.id === projectId); if (project) return course; } return null; }
 
-// Find course-level content element
+// NEW: Find course-level content element
 function findCourseElementData(courseId, elementId) {
     const course = findCourse(courseId);
     if (!course || !Array.isArray(course.content)) return null;
@@ -891,7 +867,7 @@ function findCourseElementData(courseId, elementId) {
     return null;
 }
 
-// --- Apply Styles ---
+// --- Apply Global Styles ---
 function applyGlobalAppStyles() {
     const styles = appData.globalStyles;
     const root = document.documentElement;
@@ -913,116 +889,40 @@ function applyGlobalAppStyles() {
     console.log("Global app styles applied.");
 }
 
-function applyCourseStyles(courseId) {
-    const course = findCourse(courseId);
-    const styles = course?.styles || {};
-    const globalStyles = appData.globalStyles || {};
-    const root = document.documentElement;
-
-    // Determine final styles (Course overrides Global if set, else use Global, else use Default)
-    const finalPrimary = styles.primaryColor || globalStyles.appPrimaryColor || DEFAULT_PRIMARY_COLOR;
-    const finalSecondary = styles.secondaryColor || globalStyles.appSecondaryColor || DEFAULT_SECONDARY_COLOR;
-    const finalAccent = styles.accentColor || globalStyles.appAccentColor || DEFAULT_ACCENT_COLOR;
-    const finalTextColor = styles.globalTextColor || globalStyles.appTextColor || DEFAULT_TEXT_COLOR;
-    const finalFontFamily = styles.globalFontFamily || globalStyles.appFontFamily || DEFAULT_FONT_FAMILY;
-    const finalFontSizeName = styles.globalFontSize || globalStyles.appFontSize || DEFAULT_FONT_SIZE_NAME;
-
-    // Apply theme colors specifically for course scope using CSS variables
-    root.style.setProperty('--course-primary', finalPrimary);
-    root.style.setProperty('--course-secondary', finalSecondary);
-    root.style.setProperty('--course-accent', finalAccent);
-
-     // Apply text styles specifically for course scope
-    root.style.setProperty('--course-text-color', finalTextColor);
-    root.style.setProperty('--course-font-family', finalFontFamily);
-    const sizeMap = { small: '14px', medium: '16px', large: '18px', xlarge: '20px' };
-    const finalCssFontSize = sizeMap[finalFontSizeName] || finalFontSizeName || DEFAULT_FONT_SIZE_CSS;
-    root.style.setProperty('--course-font-size', finalCssFontSize);
-
-    console.log(`Course-specific styles applied for ${courseId}`);
-}
-
-function applyProjectStyles_Editor() {
-    const styles = currentProjectData?.styles || {};
-    const globalStyles = appData.globalStyles || {};
-    const root = document.documentElement;
-
-    // Determine final styles (Project overrides Global if set, else use Global, else use Default)
-    const finalPrimary = styles.primaryColor || globalStyles.appPrimaryColor || DEFAULT_PRIMARY_COLOR;
-    const finalSecondary = styles.secondaryColor || globalStyles.appSecondaryColor || DEFAULT_SECONDARY_COLOR;
-    const finalAccent = styles.accentColor || globalStyles.appAccentColor || DEFAULT_ACCENT_COLOR;
-    const finalTextColor = styles.globalTextColor || globalStyles.appTextColor || DEFAULT_TEXT_COLOR;
-    const finalFontFamily = styles.globalFontFamily || globalStyles.appFontFamily || DEFAULT_FONT_FAMILY;
-    const finalFontSizeName = styles.globalFontSize || globalStyles.appFontSize || DEFAULT_FONT_SIZE_NAME;
-
-    // Apply theme colors specifically for project scope
-    root.style.setProperty('--project-primary', finalPrimary);
-    root.style.setProperty('--project-secondary', finalSecondary);
-    root.style.setProperty('--project-accent', finalAccent);
-
-     // Apply text styles specifically for project scope
-    root.style.setProperty('--project-text-color', finalTextColor);
-    root.style.setProperty('--project-font-family', finalFontFamily);
-    const sizeMap = { small: '14px', medium: '16px', large: '18px', xlarge: '20px' };
-    const finalCssFontSize = sizeMap[finalFontSizeName] || finalFontSizeName || DEFAULT_FONT_SIZE_CSS;
-    root.style.setProperty('--project-font-size', finalCssFontSize);
-
-     // Update RGB based on final project primary color
-     const rgb = hexToRgb(finalPrimary);
-     if (rgb) root.style.setProperty('--project-primary-rgb', rgb);
-     else { // Fallback to global primary RGB if project primary is invalid/not set
-        const globalRgb = hexToRgb(globalStyles.appPrimaryColor || DEFAULT_PRIMARY_COLOR);
-        root.style.setProperty('--project-primary-rgb', globalRgb || '94, 129, 244');
-     }
-
-    // Apply project-specific header info
-    if (projectEditorElements.projectTitleElement) {
-        projectEditorElements.projectTitleElement.textContent = currentProjectData.title || 'Project';
-    }
-    if (projectEditorElements.projectSubtitleElement) {
-        projectEditorElements.projectSubtitleElement.textContent = currentProjectData.subtitle || '';
-    }
-    if (projectEditorElements.projectHeaderImageElement) {
-        const imgElement = projectEditorElements.projectHeaderImageElement;
-        imgElement.src = currentProjectData.headerImage || IMAGE_FALLBACK_SRC;
-        imgElement.dataset.error = "false";
-        imgElement.onerror = () => handleImageError(imgElement);
-        checkRenderedImageError(imgElement);
-    }
-    console.log(`Project-specific styles applied for ${activeProjectId}`);
-}
-
 // --- View Management ---
 function showView(viewName, courseId = null, projectId = null) {
     console.log(`Showing view: ${viewName}`, `Course: ${courseId}`, `Project: ${projectId}`);
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => {
+        v.classList.remove('active');
+        v.classList.remove('student-mode'); // Reset student mode when changing views
+    });
     activeCourseId = null; activeProjectId = null; currentProjectData = null;
     teardownEventListeners_Editor(); // Ensure project listeners are off
+
+    // Reset toggles to default (Editor)
+    if (courseModeToggleInput) courseModeToggleInput.checked = true;
+    if (projectModeToggleInput) projectModeToggleInput.checked = true;
 
     let targetViewElement; let hash = '#';
     switch (viewName) {
         case 'dashboard':
             targetViewElement = dashboardView; currentView = 'dashboard';
-            applyGlobalAppStyles(); // Ensure globals are primary source
             renderDashboardView(); setItemViewMode(courseListContainer, currentItemViewMode, dashboardGridViewBtn, dashboardListViewBtn);
             break;
         case 'course':
             targetViewElement = courseView; currentView = 'course'; activeCourseId = courseId;
             if (!activeCourseId) { console.error("Course ID missing."); showView('dashboard'); return; }
-            applyCourseStyles(activeCourseId); // Apply course specific styles OVER global
             renderCourseView(activeCourseId); setItemViewMode(projectListContainer, currentItemViewMode, courseGridViewBtn, courseListViewBtn);
-            setInitialViewModeToggle(courseView, courseViewModeToggle); // Set toggle state
             hash = `#/course/${activeCourseId}`;
             break;
         case 'project':
             targetViewElement = projectView; currentView = 'project'; activeProjectId = projectId;
             if (!activeProjectId) { console.error("Project ID missing."); showView('dashboard'); return; }
             const parentCourse = findProjectCourse(activeProjectId); activeCourseId = parentCourse?.id; // Need course ID for back button
-            initProjectEditor(activeProjectId); // This loads project data & applies styles over global
-            setInitialViewModeToggle(projectView, projectViewModeToggle); // Set toggle state
+            initProjectEditor(activeProjectId); // This also applies project-specific styles over global ones
             hash = `#/project/${activeProjectId}`;
             break;
-        default: targetViewElement = dashboardView; currentView = 'dashboard'; applyGlobalAppStyles(); renderDashboardView(); setItemViewMode(courseListContainer, currentItemViewMode, dashboardGridViewBtn, dashboardListViewBtn);
+        default: targetViewElement = dashboardView; currentView = 'dashboard'; renderDashboardView(); setItemViewMode(courseListContainer, currentItemViewMode, dashboardGridViewBtn, dashboardListViewBtn);
     }
     if (targetViewElement) { targetViewElement.classList.add('active'); window.scrollTo(0, 0); }
     if (window.location.hash !== hash) { history.pushState({ view: viewName, courseId: activeCourseId, projectId: activeProjectId }, '', hash); }
@@ -1048,24 +948,6 @@ function setItemViewMode(container, mode, gridBtn, listBtn) {
     }
 }
 
-function setInitialViewModeToggle(viewElement, toggleContainer) {
-    if (!viewElement || !toggleContainer) return;
-    // Default to editor mode on load
-    const editorRadio = toggleContainer.querySelector('input[value="editor"]');
-    const studentRadio = toggleContainer.querySelector('input[value="student"]');
-    if (editorRadio) editorRadio.checked = true;
-    viewElement.classList.remove('student-view-active');
-}
-
-function handleViewModeToggle(viewElement, isStudentMode) {
-    if (!viewElement) return;
-    viewElement.classList.toggle('student-view-active', isStudentMode);
-    // Optional: Save preference
-    // sessionStorage.setItem(EDITOR_MODE_KEY, isStudentMode ? 'student' : 'editor');
-    console.log(`${viewElement.id} view mode set to: ${isStudentMode ? 'Student' : 'Editor'}`);
-}
-
-
 function renderDashboardView() {
     courseListContainer.innerHTML = '';
     if (appData.courses.length === 0) {
@@ -1086,6 +968,7 @@ function renderDashboardView() {
                     <button class="remove-btn action-btn" data-action="remove-course" title="Remove Course">×</button>
                 </div>`;
 
+            // Structure: H4 first for flex layout
             const headingHtml = `
                 <div class="item-heading-container">
                     <h4>${escapeHtml(course.name)}</h4>
@@ -1108,7 +991,7 @@ function renderDashboardView() {
                         ${headingHtml}
                         ${descriptionHtml || '<p style="flex-grow: 1; visibility: hidden;"></p>'} <!-- Placeholder pushes actions down -->
                         <div class="item-card-actions">
-                            <!-- View Projects Button Removed from here -->
+                             <!-- Project Button Removed -->
                         </div>
                     </div>
                 `;
@@ -1127,12 +1010,13 @@ function renderCourseView(courseId) {
     const course = findCourse(courseId);
     if (!course) {
         console.error(`Course not found: ${courseId}`);
-        showView('dashboard');
+        showView('dashboard'); // Go back if course doesn't exist
         return;
     }
 
     // 1. Render Course Header
     courseContentMainTitle.textContent = escapeHtml(course.name);
+    // courseContentSubtitle.textContent = escapeHtml(course.description || ''); // Or maybe show description in content area
 
     // 2. Render Course Content Area
     courseContentArea.innerHTML = ''; // Clear previous
@@ -1141,13 +1025,13 @@ function renderCourseView(courseId) {
             renderElement(elementData, courseContentArea, 'course-element'); // Use 'course-element' context
         });
     } else {
-        courseContentArea.innerHTML = '<p>This course has no introductory content yet. Add some below!</p>';
+        courseContentArea.innerHTML = '<p style="text-align: center; color: #888; padding: 20px 0;">This course has no introductory content yet. Add some below!</p>';
     }
 
-    // 3. Render Project List
+    // 3. Render Project List (using a separate function now)
     renderProjectListForCourse(courseId);
 
-    // 4. Ensure add controls are visible (CSS will hide in student mode)
+    // 4. Ensure add controls are visible (will be hidden by CSS if in student mode)
     courseElementAddControls.style.display = 'block';
 }
 
@@ -1156,9 +1040,9 @@ function renderProjectListForCourse(courseId) {
     projectListContainer.innerHTML = ''; // Clear only the project list
     const course = findCourse(courseId);
 
-    if (!course) return;
+    if (!course) return; // Should already be checked by caller, but safe check
 
-    courseViewProjectHeading.textContent = `Projects`; // Set heading
+    courseViewTitle.textContent = `Projects`; // Set the heading for the project section
     const projects = course.projects || [];
 
     if (projects.length === 0) {
@@ -1168,7 +1052,7 @@ function renderProjectListForCourse(courseId) {
             const itemElement = document.createElement('div');
             itemElement.className = projectListContainer.classList.contains('list-view') ? 'item-row item-container' : 'item-card item-container';
             itemElement.dataset.projectId = project.id;
-            itemElement.dataset.courseId = courseId;
+            itemElement.dataset.courseId = courseId; // Keep course ID for context
 
             const defaultImage = 'https://via.placeholder.com/300x150/eee/ccc?text=Project';
             const imageUrl = project.imageUrl || defaultImage;
@@ -1180,6 +1064,7 @@ function renderProjectListForCourse(courseId) {
                     <button class="remove-btn action-btn" data-action="remove-project" title="Remove Project">×</button>
                 </div>`;
 
+            // H4 first for flex layout
             const headingHtml = `
                 <div class="item-heading-container">
                     <h4>${escapeHtml(project.name)}</h4>
@@ -1217,7 +1102,7 @@ function renderProjectListForCourse(courseId) {
     updateMaxItemsMessage(addProjectButton, 'max-projects-msg', MAX_PROJECTS_PER_COURSE, 'projects');
 }
 
-// Helper to check image after render
+// Helper to check image after render (useful if src is set dynamically)
 function checkRenderedImageError(imgElement) {
     if (imgElement && imgElement.complete && imgElement.naturalWidth === 0 && !imgElement.dataset.error) {
         handleImageError(imgElement);
@@ -1233,61 +1118,66 @@ function updateMaxItemsMessage(button, msgId, max, itemType) {
 }
 
 
-// --- Generic Element Rendering ---
+// --- Generic Element Rendering (Used by Project Editor & Course Content) ---
+// contextType: 'project-element' or 'course-element' to determine action types
 function renderElement(elData, container, contextType = 'project-element') {
     const wrap = document.createElement('div');
     wrap.className = `content-element element-${elData.type}`;
     wrap.dataset.elementId = elData.id;
-    // Add class for student view styling hook
-    if (container.closest('.student-view-active')) {
-        wrap.classList.add('student-view-no-hover');
-    }
-
     wrap.appendChild(createStandardActions(elData.id, elData.type, contextType)); // Pass context
 
     let html = '';
     try {
         const d = elData.data || {};
-        // Optional heading/description
+        // Add optional heading/description for media types
         if (['image', 'video', 'presentation', 'challenges', 'quiz'].includes(elData.type)) {
             if (d.heading) html += `<h3 class="media-heading">${escapeHtml(d.heading)}</h3>`;
             if (d.description) html += `<p class="media-description">${escapeHtml(d.description)}</p>`;
         }
 
         switch (elData.type) {
-            case 'heading': html += `<h2 class="element-heading">${escapeHtml(d.text || 'Heading')}</h2>`; break;
-            case 'text': html += `<p class="element-text">${escapeHtml(d.text || 'Text block...')}</p>`; break;
+            case 'heading':
+                html += `<h2 class="element-heading">${escapeHtml(d.text || 'Heading')}</h2>`;
+                break;
+            case 'text':
+                html += `<p class="element-text">${escapeHtml(d.text || 'Text block...')}</p>`;
+                break;
             case 'image':
                 const iUrl = d.url || '', iAlt = escapeHtml(d.alt || ''), iW = escapeHtml(d.width || 'auto'), iH = escapeHtml(d.height || 'auto');
                 html += `<div class="element-image-wrapper"><img src="${escapeHtml(iUrl)}" alt="${iAlt}" style="width:${iW};height:${iH};" onerror="handleImageError(this)" data-error="false"></div>`;
                 break;
-            case 'video': case 'presentation':
+            case 'video':
+            case 'presentation':
                 const eUrl = d.url || 'about:blank', fUrl = getEmbedUrlWithOptions(eUrl);
                 const eTitle = escapeHtml(elData.type === 'video' ? 'Video Content' : 'Presentation Content');
                 html += `<div class="media-wrapper-16-9"><iframe src="${escapeHtml(fUrl)}" title="${eTitle}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`;
                 break;
-            // Project-specific elements
+            // Project-specific elements only rendered within project context
             case 'quiz':
                  if (contextType === 'project-element') renderQuizElement_Editor(elData, wrap);
-                 else html += `<p>[Quiz Element - Viewable in Project Editor]</p>`;
-                 html = null; // Content added directly
+                 else html += `<p>[Quiz Element - Viewable in Project Editor]</p>`; // Placeholder for course view
+                 html = null; // Content added directly to wrap
                  break;
             case 'challenges':
                  if (contextType === 'project-element') renderChallengesElement_Editor(elData, wrap);
-                 else html += `<p>[Challenges Element - Viewable in Project Editor]</p>`;
-                 html = null; // Content added directly
+                 else html += `<p>[Challenges Element - Viewable in Project Editor]</p>`; // Placeholder for course view
+                 html = null; // Content added directly to wrap
                  break;
-            default: html = `<p>Unknown element type: ${escapeHtml(elData.type)}</p>`;
+            default:
+                html = `<p>Unknown element type: ${escapeHtml(elData.type)}</p>`;
         }
         if (html !== null) {
             wrap.insertAdjacentHTML('beforeend', html);
             checkRenderedImageError(wrap.querySelector('img'));
         }
-    } catch (e) { console.error("Error rendering element:", elData, e); wrap.insertAdjacentHTML('beforeend', `<p style="color:var(--danger);">Error rendering element.</p>`); }
+    } catch (e) {
+        console.error("Error rendering element:", elData, e);
+        wrap.insertAdjacentHTML('beforeend', `<p style="color:var(--danger);">Error rendering element.</p>`);
+    }
     container.appendChild(wrap);
 }
 
-// Creates Edit/Remove buttons
+// Creates Edit/Remove buttons, aware of context
 function createStandardActions(id, type, contextType) {
     const el = document.createElement('div');
     el.className = 'element-actions';
@@ -1300,13 +1190,15 @@ function createStandardActions(id, type, contextType) {
 
 
 // --- Project Editor Initialization and Core Logic ---
+// (Keep initProjectEditor, applyProjectStyles_Editor, renderSidebar_Editor, etc. largely the same)
+// Ensure renderElement_Editor is replaced by the generic renderElement call
 
 function initProjectEditor(projectId) {
     console.log(`Initializing project editor for: ${projectId}`);
     currentProjectData = loadSpecificProjectData(projectId);
     if (!currentProjectData) {
         console.error("Failed to load project data for editor.");
-        showView('course', activeCourseId); // Go back
+        showView('course', activeCourseId); // Go back if project data failed
         return;
     }
 
@@ -1316,14 +1208,14 @@ function initProjectEditor(projectId) {
         projectHeaderImageElement: document.getElementById('projectHeaderImage'),
         tabsContainer: projectView.querySelector('#project-tabs'),
         contentArea: projectView.querySelector('#tab-content-area'),
-        addControls: projectView.querySelector('#element-add-controls'),
+        addControls: projectView.querySelector('#element-add-controls'), // Project specific add controls
         addTabButton: projectView.querySelector('#add-tab-btn'),
-        // editStylesButton is global lookup now
+        editStylesButton: projectView.querySelector('#edit-project-styles-btn')
     };
 
     if (!projectEditorElements.tabsContainer || !projectEditorElements.contentArea || !projectEditorElements.addControls) {
-         console.error("Essential project editor elements not found!");
-         projectView.querySelector('#project-main-content').innerHTML = '<p style="color: var(--danger); text-align: center;">Error loading editor.</p>';
+         console.error("Essential project editor elements not found within #project-view!");
+         projectView.querySelector('#project-main-content').innerHTML = '<p style="color: var(--danger); text-align: center;">Error loading project editor components.</p>';
          return;
      }
 
@@ -1340,7 +1232,46 @@ function initProjectEditor(projectId) {
 
 const projectEditorState = { currentTabId: null, currentSubTabId: null };
 
-function renderSidebar_Editor() { /* ... (No changes needed in logic, uses project styles via CSS vars) ... */
+function applyProjectStyles_Editor() {
+    const styles = currentProjectData.styles || {};
+    const globalStyles = appData.globalStyles || {};
+    const root = document.documentElement;
+
+    // Determine final styles (Project overrides Global if set, else use Global, else use Default)
+    const finalPrimary = styles.primaryColor !== null ? styles.primaryColor : (globalStyles.appPrimaryColor || DEFAULT_PRIMARY_COLOR);
+    const finalSecondary = styles.secondaryColor !== null ? styles.secondaryColor : (globalStyles.appSecondaryColor || DEFAULT_SECONDARY_COLOR);
+    const finalAccent = styles.accentColor !== null ? styles.accentColor : (globalStyles.appAccentColor || DEFAULT_ACCENT_COLOR);
+    const finalTextColor = styles.globalTextColor !== null ? styles.globalTextColor : (globalStyles.appTextColor || DEFAULT_TEXT_COLOR);
+    const finalFontFamily = styles.globalFontFamily !== null ? styles.globalFontFamily : (globalStyles.appFontFamily || DEFAULT_FONT_FAMILY);
+    const finalFontSizeName = styles.globalFontSize !== null ? styles.globalFontSize : (globalStyles.appFontSize || DEFAULT_FONT_SIZE_NAME);
+
+    // Apply theme colors
+    root.style.setProperty('--primary', finalPrimary);
+    root.style.setProperty('--secondary', finalSecondary);
+    root.style.setProperty('--accent', finalAccent);
+
+     // Apply text styles
+    root.style.setProperty('--global-text-color', finalTextColor);
+    root.style.setProperty('--global-font-family', finalFontFamily);
+    const sizeMap = { small: '14px', medium: '16px', large: '18px', xlarge: '20px' };
+    const finalCssFontSize = sizeMap[finalFontSizeName] || finalFontSizeName || DEFAULT_FONT_SIZE_CSS;
+    root.style.setProperty('--global-font-size', finalCssFontSize);
+
+     // Update RGB based on final primary color
+     const rgb = hexToRgb(finalPrimary);
+     if (rgb) root.style.setProperty('--primary-rgb', rgb);
+
+    // Apply project-specific header info
+    projectEditorElements.projectTitleElement.textContent = currentProjectData.title || 'Project';
+    projectEditorElements.projectSubtitleElement.textContent = currentProjectData.subtitle || '';
+    const imgElement = projectEditorElements.projectHeaderImageElement;
+    imgElement.src = currentProjectData.headerImage || IMAGE_FALLBACK_SRC;
+    imgElement.dataset.error = "false";
+    imgElement.onerror = () => handleImageError(imgElement);
+    checkRenderedImageError(imgElement);
+}
+
+function renderSidebar_Editor() { /* ... (No changes needed) ... */
     const { tabsContainer } = projectEditorElements;
     tabsContainer.innerHTML = '';
     if (!currentProjectData.tabs?.length) { tabsContainer.innerHTML = '<p style="text-align:center;color:#888;font-style:italic;">No tabs.</p>'; return; }
@@ -1367,9 +1298,8 @@ function createControlsDiv_Editor(type, tId, sId = null) { const d = document.cr
 function renderContentArea_Editor() { /* Uses generic renderElement */
     const { contentArea, addControls } = projectEditorElements;
     contentArea.innerHTML = '';
-    addControls.style.display = 'none'; // Hide initially
+    addControls.style.display = 'none'; // Hide initially, show if content array found
     const contentArray = getCurrentContentArray_Editor();
-    const isStudentMode = projectView.classList.contains('student-view-active');
 
     if (contentArray === null) {
         const tabData = findTabData_Editor(projectEditorState.currentTabId);
@@ -1379,11 +1309,7 @@ function renderContentArea_Editor() { /* Uses generic renderElement */
         return;
     }
 
-    // Show add controls only in editor mode
-    if (!isStudentMode) {
-        addControls.style.display = 'block';
-    }
-
+    addControls.style.display = 'block'; // Show controls if content can be added
     if (contentArray.length === 0) {
         contentArea.innerHTML = '<p>This section is empty. Add elements using the controls below.</p>';
     } else {
@@ -1396,8 +1322,8 @@ function renderContentArea_Editor() { /* Uses generic renderElement */
 }
 
 // Project Editor Specific element rendering (Quiz, Challenges) - called by generic renderElement
-function renderQuizElement_Editor(quizData, wrap) { /* ... (No changes needed in logic) ... */ const cont = document.createElement('div'); cont.className = 'quiz-container-inner'; cont.dataset.quizId = quizData.id; const qs = quizData.data?.questions || []; if (qs.length === 0) { cont.innerHTML = '<p>No questions defined for this quiz yet.</p>'; } else { qs.forEach((q, i) => { if (!q) return; const qDiv = document.createElement('div'); qDiv.className = 'quiz-question'; qDiv.dataset.questionIndex = i; const qCont = document.createElement('div'); qCont.className = 'quiz-question-content'; if (q.questionImageUrl) { const img = document.createElement('img'); img.className = 'quiz-question-image'; img.src = escapeHtml(q.questionImageUrl); img.alt = `Question ${i + 1} Image`; img.onerror = () => handleImageError(img); img.dataset.error = "false"; qCont.appendChild(img); checkRenderedImageError(img); } qCont.innerHTML += `<p class="quiz-question-text">${i + 1}. ${escapeHtml(q.questionText || '...')}</p>`; qDiv.appendChild(qCont); const optsDiv = document.createElement('div'); optsDiv.className = 'quiz-options'; const cAns = String(q.correctAnswer || '').trim(); const iAns = Array.isArray(q.incorrectAnswers) ? q.incorrectAnswers : []; const iImgs = Array.isArray(q.incorrectAnswersImageUrls) ? q.incorrectAnswersImageUrls : []; const iOpts = iAns.map((t, idx) => ({ text: String(t || '').trim(), img: iImgs[idx] || null })).filter(o => o.text !== ''); const allOptsData = [{ text: cAns, img: q.correctAnswerImageUrl || null, isC: true }, ...iOpts.map(o => ({ ...o, isC: false }))].filter(o => o.text !== ''); if (allOptsData.length > 0) { [...allOptsData].sort(() => Math.random() - 0.5).forEach(oD => { const oEl = document.createElement('div'); oEl.className = 'quiz-option'; oEl.dataset.isCorrect = oD.isC.toString(); if (oD.img) { const optImg = document.createElement('img'); optImg.className = 'quiz-option-image'; optImg.src = escapeHtml(oD.img); optImg.alt = 'Option Image'; optImg.onerror = () => handleImageError(optImg); optImg.dataset.error = "false"; oEl.appendChild(optImg); checkRenderedImageError(optImg); } oEl.innerHTML += `<span class="quiz-option-text">${escapeHtml(oD.text)}</span>`; optsDiv.appendChild(oEl); }); } else { optsDiv.innerHTML = '<p style="font-size:0.9em;color:red;">No options defined.</p>'; } qDiv.appendChild(optsDiv); qDiv.innerHTML += `<div class="quiz-feedback correct" style="display:none;">Correct!</div><div class="quiz-feedback incorrect" style="display:none;">Incorrect</div>`; cont.appendChild(qDiv); }); } cont.innerHTML += `<button class="quiz-submit-btn" data-action="submit-quiz" data-quiz-id="${quizData.id}" ${qs.length === 0 ? 'disabled' : ''}>Submit Answers</button><div class="final-quiz-result" style="display:none;"></div>`; wrap.appendChild(cont); }
-function renderChallengesElement_Editor(elData, wrap) { /* ... (No changes needed in logic) ... */ const chs = elData.data?.challenges || []; const list = document.createElement('ul'); list.className = 'challenges-list'; if (chs.length === 0) { list.innerHTML = '<li><p>No challenges defined yet.</p></li>'; } else { chs.forEach(c => { if (!c?.id || !c.heading) return; const item = document.createElement('li'); item.className = 'challenge-item'; item.dataset.challengeId = c.id; let itemHtml = ''; const iconUrl = c.iconUrl || IMAGE_FALLBACK_SRC; itemHtml += `<img class="challenge-icon" src="${escapeHtml(iconUrl)}" alt="Challenge Icon" onerror="handleImageError(this)" data-error="false">`; itemHtml += '<div class="challenge-content">'; itemHtml += `<h4>${escapeHtml(c.heading)}</h4>`; if (c.description) itemHtml += `<p>${escapeHtml(c.description)}</p>`; if (c.imageUrl) { const imgUrl = c.imageUrl; itemHtml += `<img src="${escapeHtml(imgUrl)}" alt="Challenge Image" onerror="handleImageError(this)" data-error="false">`; } itemHtml += '</div>'; item.innerHTML = itemHtml; item.querySelectorAll('img').forEach(img => checkRenderedImageError(img)); list.appendChild(item); }); } wrap.appendChild(list); }
+function renderQuizElement_Editor(quizData, wrap) { /* ... (No changes needed) ... */ const cont = document.createElement('div'); cont.className = 'quiz-container-inner'; cont.dataset.quizId = quizData.id; const qs = quizData.data?.questions || []; if (qs.length === 0) { cont.innerHTML = '<p>No questions defined for this quiz yet.</p>'; } else { qs.forEach((q, i) => { if (!q) return; const qDiv = document.createElement('div'); qDiv.className = 'quiz-question'; qDiv.dataset.questionIndex = i; const qCont = document.createElement('div'); qCont.className = 'quiz-question-content'; if (q.questionImageUrl) { const img = document.createElement('img'); img.className = 'quiz-question-image'; img.src = escapeHtml(q.questionImageUrl); img.alt = `Question ${i + 1} Image`; img.onerror = () => handleImageError(img); img.dataset.error = "false"; qCont.appendChild(img); checkRenderedImageError(img); } qCont.innerHTML += `<p class="quiz-question-text">${i + 1}. ${escapeHtml(q.questionText || '...')}</p>`; qDiv.appendChild(qCont); const optsDiv = document.createElement('div'); optsDiv.className = 'quiz-options'; const cAns = String(q.correctAnswer || '').trim(); const iAns = Array.isArray(q.incorrectAnswers) ? q.incorrectAnswers : []; const iImgs = Array.isArray(q.incorrectAnswersImageUrls) ? q.incorrectAnswersImageUrls : []; const iOpts = iAns.map((t, idx) => ({ text: String(t || '').trim(), img: iImgs[idx] || null })).filter(o => o.text !== ''); const allOptsData = [{ text: cAns, img: q.correctAnswerImageUrl || null, isC: true }, ...iOpts.map(o => ({ ...o, isC: false }))].filter(o => o.text !== ''); if (allOptsData.length > 0) { [...allOptsData].sort(() => Math.random() - 0.5).forEach(oD => { const oEl = document.createElement('div'); oEl.className = 'quiz-option'; oEl.dataset.isCorrect = oD.isC.toString(); if (oD.img) { const optImg = document.createElement('img'); optImg.className = 'quiz-option-image'; optImg.src = escapeHtml(oD.img); optImg.alt = 'Option Image'; optImg.onerror = () => handleImageError(optImg); optImg.dataset.error = "false"; oEl.appendChild(optImg); checkRenderedImageError(optImg); } oEl.innerHTML += `<span class="quiz-option-text">${escapeHtml(oD.text)}</span>`; optsDiv.appendChild(oEl); }); } else { optsDiv.innerHTML = '<p style="font-size:0.9em;color:red;">No options defined.</p>'; } qDiv.appendChild(optsDiv); qDiv.innerHTML += `<div class="quiz-feedback correct" style="display:none;">Correct!</div><div class="quiz-feedback incorrect" style="display:none;">Incorrect</div>`; cont.appendChild(qDiv); }); } cont.innerHTML += `<button class="quiz-submit-btn" data-action="submit-quiz" data-quiz-id="${quizData.id}" ${qs.length === 0 ? 'disabled' : ''}>Submit Answers</button><div class="final-quiz-result" style="display:none;"></div>`; wrap.appendChild(cont); }
+function renderChallengesElement_Editor(elData, wrap) { /* ... (No changes needed) ... */ const chs = elData.data?.challenges || []; const list = document.createElement('ul'); list.className = 'challenges-list'; if (chs.length === 0) { list.innerHTML = '<li><p>No challenges defined yet.</p></li>'; } else { chs.forEach(c => { if (!c?.id || !c.heading) return; const item = document.createElement('li'); item.className = 'challenge-item'; item.dataset.challengeId = c.id; let itemHtml = ''; const iconUrl = c.iconUrl || IMAGE_FALLBACK_SRC; itemHtml += `<img class="challenge-icon" src="${escapeHtml(iconUrl)}" alt="Challenge Icon" onerror="handleImageError(this)" data-error="false">`; itemHtml += '<div class="challenge-content">'; itemHtml += `<h4>${escapeHtml(c.heading)}</h4>`; if (c.description) itemHtml += `<p>${escapeHtml(c.description)}</p>`; if (c.imageUrl) { const imgUrl = c.imageUrl; itemHtml += `<img src="${escapeHtml(imgUrl)}" alt="Challenge Image" onerror="handleImageError(this)" data-error="false">`; } itemHtml += '</div>'; item.innerHTML = itemHtml; item.querySelectorAll('img').forEach(img => checkRenderedImageError(img)); list.appendChild(item); }); } wrap.appendChild(list); }
 
 // --- Other Project Editor Helpers (Keep same logic) ---
 function initContent_Editor() { let targetTabId = null; let targetSubTabId = null; if (currentProjectData.tabs?.length > 0 && currentProjectData.tabs[0]?.id) { targetTabId = currentProjectData.tabs[0].id; const firstTab = currentProjectData.tabs[0]; if(Array.isArray(firstTab.subTabs) && firstTab.subTabs.length > 0 && firstTab.subTabs[0]?.id) { targetSubTabId = firstTab.subTabs[0].id; } } if (targetTabId) { setActiveTab_Editor(targetTabId, targetSubTabId); } else { renderSidebar_Editor(); renderContentArea_Editor(); } }
@@ -1416,11 +1342,12 @@ function selectQuizOption_Editor(optEl) { const qDiv = optEl.closest('.quiz-ques
 function submitQuizAction_Editor(quizId) { const qEl = projectEditorElements.contentArea?.querySelector(`.content-element[data-element-id="${quizId}"]`); const cont = qEl?.querySelector('.quiz-container-inner'); if (!cont) return; const qs = cont.querySelectorAll('.quiz-question'); let score = 0, answered = 0; const total = qs.length; let firstUnanswered = null; if (total === 0) { alert("This quiz has no questions!"); return; } qs.forEach(q => { const sel = q.querySelector('.quiz-option.selected'); q.querySelectorAll('.quiz-feedback').forEach(fb => fb.style.display = 'none'); q.classList.remove('answered'); q.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('correct', 'incorrect')); if (sel) { answered++; q.classList.add('answered'); const isC = sel.dataset.isCorrect === 'true'; q.querySelectorAll('.quiz-option').forEach(o => { if (o.dataset.isCorrect === 'true') o.classList.add('correct'); if (o === sel && !isC) o.classList.add('incorrect'); }); if (isC) { score++; const fb = q.querySelector('.quiz-feedback.correct'); if (fb) fb.style.display = 'block'; } else { const fb = q.querySelector('.quiz-feedback.incorrect'); if (fb) { const cOpt = q.querySelector('.quiz-option.correct .quiz-option-text'); const cTxt = cOpt ? cOpt.textContent : 'N/A'; fb.innerHTML = `Incorrect. The correct answer was: <strong>${escapeHtml(cTxt)}</strong>`; fb.style.display = 'block'; } } } else { if (!firstUnanswered) firstUnanswered = q; } }); const btn = cont.querySelector('.quiz-submit-btn'); const resDiv = cont.querySelector('.final-quiz-result'); if (answered < total) { alert(`Please answer all ${total} questions before submitting.`); if (firstUnanswered) { firstUnanswered.scrollIntoView({ behavior: 'smooth', block: 'center' }); firstUnanswered.style.outline = '2px solid var(--danger)'; setTimeout(() => { if (firstUnanswered) firstUnanswered.style.outline = 'none'; }, 2500); } } else { const perc = total > 0 ? Math.round((score / total) * 100) : 0; if (resDiv) { resDiv.textContent = `Quiz Complete! Your score: ${score} out of ${total} (${perc}%)`; resDiv.className = `final-quiz-result ${perc >= 70 ? 'success' : 'fail'}`; resDiv.style.display = 'block'; resDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } if (btn) btn.disabled = true; qs.forEach(q => q.classList.add('answered')); } }
 
 
-// --- Global Modal & Saving ---
+// --- Global Modal & Saving (Adapted for new features) ---
 
 function openEditModal(type, id = null, parentId = null, isNew = false, elementTypeForNew = null) {
     if (!modal || !modalFormContent || !modalTitle) { console.error("Modal elements not found!"); return; }
 
+    // parentId is CourseID for 'project', TabID for 'subtab', null otherwise unless specified
     editingContext = { type, id, parentId, isNew, elementType: elementTypeForNew };
     modalFormContent.innerHTML = '';
     let title = 'Edit';
@@ -1431,7 +1358,7 @@ function openEditModal(type, id = null, parentId = null, isNew = false, elementT
         switch (type) {
             case 'course':
                 title = isNew ? 'Add New Course' : 'Edit Course';
-                currentData = isNew ? { name: '', description: '', imageUrl: '', content: [], styles: {} } : findCourse(id);
+                currentData = isNew ? { name: '', description: '', imageUrl: '', content: [], styles: {} } : findCourse(id); // Add styles default
                 if (!currentData && !isNew) throw new Error("Course data not found.");
                 formHtml = `
                     <label for="edit-item-name">Course Name:</label>
@@ -1446,7 +1373,8 @@ function openEditModal(type, id = null, parentId = null, isNew = false, elementT
                 title = isNew ? 'Add New Project' : 'Edit Project';
                  currentData = isNew ? { name: '', description: '', imageUrl: '' } : findProjectMeta(id);
                 if (!currentData && !isNew) throw new Error("Project metadata not found.");
-                if (!findCourse(parentId) && isNew) throw new Error("Cannot add project: Parent course ID missing/invalid.");
+                // parentId here should be the courseId
+                if (!findCourse(parentId) && isNew) throw new Error("Cannot add project: Parent course ID is missing or invalid.");
                  formHtml = `
                     <label for="edit-item-name">Project Name:</label>
                     <input type="text" id="edit-item-name" value="${escapeHtml(currentData.name || '')}" required>
@@ -1462,16 +1390,18 @@ function openEditModal(type, id = null, parentId = null, isNew = false, elementT
                  formHtml = generateAppStyleForm(currentData);
                  break;
 
-             case 'courseStyles': // NEW: Course Styles
-                  title = 'Edit Course Styles';
-                  currentData = findCourse(id); // id is courseId here
-                  if (!currentData) throw new Error("Course not found for editing styles.");
-                  formHtml = generateCourseStyleForm(currentData.styles);
-                  break;
+             // --- NEW: Course Styles ---
+             case 'courseStyles':
+                 title = 'Edit Course Styles';
+                 const courseForStyles = findCourse(activeCourseId);
+                 if (!courseForStyles) throw new Error("Cannot edit styles: Active course not found.");
+                 currentData = courseForStyles.styles || {}; // Use course styles or empty object
+                 formHtml = generateCourseStyleForm(currentData); // Use a new form generator
+                 break;
 
-            // Course Content Element
+            // --- Course Content Element ---
             case 'course-element':
-                const courseForElement = findCourse(activeCourseId);
+                const courseForElement = findCourse(activeCourseId); // Use activeCourseId
                 if (!courseForElement) throw new Error("Cannot edit element: Active course not found.");
                 title = isNew ? `Add New ${elementTypeForNew || 'Element'} to Course` : 'Edit Course Element';
                 if (!isNew) {
@@ -1483,19 +1413,19 @@ function openEditModal(type, id = null, parentId = null, isNew = false, elementT
                     const elementType = elementTypeForNew || id?.split('_')[0];
                     if (!elementType || ['quiz', 'challenges'].includes(elementType)) throw new Error("Invalid element type for course content.");
                     currentData = { id: id, type: elementType, data: getDefaultElementData(elementType) };
-                    editingContext.elementType = elementType;
+                    editingContext.elementType = elementType; // Ensure type is stored
                 }
-                formHtml = generateElementForm(currentData);
+                formHtml = generateElementForm(currentData); // Use generic form generator
                 break;
 
-             // Project Editor Specific Cases
+             // --- Project Editor Specific Cases ---
             case 'tab': currentData = findTabData_Editor(id); if (!currentData && !isNew) throw new Error("Tab data not found."); title = isNew ? 'Add New Tab' : 'Edit Tab'; formHtml = `<label for="edit-generic-name">Tab Name:</label><input type="text" id="edit-generic-name" value="${escapeHtml(currentData?.name || '')}" required>`; break;
             case 'subtab': currentData = findSubTabData_Editor(parentId, id); if (!currentData && !isNew) throw new Error("Sub-tab data not found."); title = isNew ? 'Add New Sub-Tab' : 'Edit Sub-Tab'; formHtml = `<label for="edit-generic-name">Sub-Tab Name:</label><input type="text" id="edit-generic-name" value="${escapeHtml(currentData?.name || '')}" required>`; break;
             case 'element': // Project element
                  title = isNew ? `Add New ${elementTypeForNew || 'Element'} to Project Section` : 'Edit Project Element';
                  if (!isNew) { const findResult = findElementData_Editor(id); if (!findResult) throw new Error("Project element data not found."); currentData = findResult.element; title = `Edit ${currentData.type.charAt(0).toUpperCase() + currentData.type.slice(1)}`; }
                  else { const elementType = elementTypeForNew || id?.split('_')[0]; if (!elementType) throw new Error("Element type not specified for new project element."); currentData = { id: id, type: elementType, data: getDefaultElementData(elementType) }; editingContext.elementType = elementType; }
-                 formHtml = generateElementForm(currentData);
+                 formHtml = generateElementForm(currentData); // Use generic form generator
                  break;
             case 'styles': // Project styles
                  title = 'Edit Project Info & Styles'; currentData = currentProjectData; if (!currentData) throw new Error("No project loaded to edit styles."); formHtml = generateStyleForm_Editor(currentData); break;
@@ -1512,89 +1442,93 @@ function openEditModal(type, id = null, parentId = null, isNew = false, elementT
 }
 
 // Form generator for Global App Styles
-function generateAppStyleForm(globalStylesData) { const s = globalStylesData || {}; return `<fieldset><legend>Global Theme Colors</legend><div class="color-picker"><label>Primary:</label><input type="color" id="edit-style-primary" value="${s.appPrimaryColor || DEFAULT_PRIMARY_COLOR}"><label>Secondary:</label><input type="color" id="edit-style-secondary" value="${s.appSecondaryColor || DEFAULT_SECONDARY_COLOR}"><label>Accent:</label><input type="color" id="edit-style-accent" value="${s.appAccentColor || DEFAULT_ACCENT_COLOR}"></div></fieldset><fieldset><legend>Global Text Styles</legend>${generateGlobalTextStyleFormControls_App(s)}</fieldset>`; }
-function generateGlobalTextStyleFormControls_App(styles = {}) { const currentFontFamily = styles.appFontFamily || DEFAULT_FONT_FAMILY; const currentFontSize = styles.appFontSize || DEFAULT_FONT_SIZE_NAME; const currentTextColor = styles.appTextColor || DEFAULT_TEXT_COLOR; let fontFamilyOptions = FONT_FAMILIES.map(font => `<option value="${escapeHtml(font.value)}" ${currentFontFamily === font.value ? 'selected' : ''}>${escapeHtml(font.name)}</option>`).join(''); let fontSizeOptions = FONT_SIZES.map(size => { let isSelected = (currentFontSize === size); if (size === 'custom' && currentFontSize && !FONT_SIZES.includes(currentFontSize)) isSelected = true; return `<option value="${size}" ${isSelected ? 'selected' : ''}>${size === 'custom' ? 'Custom...' : size.charAt(0).toUpperCase() + size.slice(1)}</option>`; }).join(''); const isCustomSize = currentFontSize && !FONT_SIZES.slice(0, -1).includes(currentFontSize); const customSizeValue = isCustomSize ? currentFontSize : ''; return `<div class="global-text-style-options"><label for="edit-global-style-font">Font Family:</label><select id="edit-global-style-font">${fontFamilyOptions}</select><br><label for="edit-global-style-size">Font Size:</label><select id="edit-global-style-size">${fontSizeOptions}</select><input type="text" id="edit-global-style-size-custom" placeholder="e.g., 17px" value="${escapeHtml(customSizeValue)}" style="display:${isCustomSize ? 'inline-block' : 'none'};width:120px; margin-left: 5px;"><br><label for="edit-global-style-color">Text Color:</label><input type="color" id="edit-global-style-color" value="${currentTextColor}"></div>`; }
+function generateAppStyleForm(globalStylesData) { /* ... (No changes needed) ... */ const s = globalStylesData || {}; return `<fieldset><legend>Global Theme Colors</legend><div class="color-picker"><label>Primary:</label><input type="color" id="edit-style-primary" value="${s.appPrimaryColor || DEFAULT_PRIMARY_COLOR}"><label>Secondary:</label><input type="color" id="edit-style-secondary" value="${s.appSecondaryColor || DEFAULT_SECONDARY_COLOR}"><label>Accent:</label><input type="color" id="edit-style-accent" value="${s.appAccentColor || DEFAULT_ACCENT_COLOR}"></div></fieldset><fieldset><legend>Global Text Styles</legend>${generateGlobalTextStyleFormControls_App(s)}</fieldset>`; }
+// Specific form generator for App Text styles (targets appData.globalStyles)
+function generateGlobalTextStyleFormControls_App(styles = {}) { /* ... (No changes needed) ... */ const currentFontFamily = styles.appFontFamily || DEFAULT_FONT_FAMILY; const currentFontSize = styles.appFontSize || DEFAULT_FONT_SIZE_NAME; const currentTextColor = styles.appTextColor || DEFAULT_TEXT_COLOR; let fontFamilyOptions = FONT_FAMILIES.map(font => `<option value="${escapeHtml(font.value)}" ${currentFontFamily === font.value ? 'selected' : ''}>${escapeHtml(font.name)}</option>`).join(''); let fontSizeOptions = FONT_SIZES.map(size => { let isSelected = (currentFontSize === size); if (size === 'custom' && currentFontSize && !FONT_SIZES.includes(currentFontSize)) isSelected = true; return `<option value="${size}" ${isSelected ? 'selected' : ''}>${size === 'custom' ? 'Custom...' : size.charAt(0).toUpperCase() + size.slice(1)}</option>`; }).join(''); const isCustomSize = currentFontSize && !FONT_SIZES.slice(0, -1).includes(currentFontSize); const customSizeValue = isCustomSize ? currentFontSize : ''; return `<div class="global-text-style-options"><label for="edit-global-style-font">Font Family:</label><select id="edit-global-style-font">${fontFamilyOptions}</select><br><label for="edit-global-style-size">Font Size:</label><select id="edit-global-style-size">${fontSizeOptions}</select><input type="text" id="edit-global-style-size-custom" placeholder="e.g., 17px" value="${escapeHtml(customSizeValue)}" style="display:${isCustomSize ? 'inline-block' : 'none'};width:120px; margin-left: 5px;"><br><label for="edit-global-style-color">Text Color:</label><input type="color" id="edit-global-style-color" value="${currentTextColor}"></div>`; }
 
-// NEW: Form generator for Course Styles
+// NEW: Form generator for Course-Specific Styles
 function generateCourseStyleForm(courseStylesData) {
     const s = courseStylesData || {};
+    // Define what styles are editable for a course - e.g., background color, text color?
+    // Placeholder: Allow editing a specific course background color
     return `
+        <p>Define styles specific to this course page content area.</p>
         <fieldset>
-            <legend>Course Theme Colors (Overrides Global)</legend>
-            <div class="color-picker">
-                <label>Primary:</label><input type="color" id="edit-style-primary" value="${s.primaryColor || ''}" title="Leave blank to inherit global">
-                <label>Secondary:</label><input type="color" id="edit-style-secondary" value="${s.secondaryColor || ''}" title="Leave blank to inherit global">
-                <label>Accent:</label><input type="color" id="edit-style-accent" value="${s.accentColor || ''}" title="Leave blank to inherit global">
-            </div>
-            <button type="button" id="inherit-theme-colors-btn" style="font-size: 0.8em; padding: 2px 5px;">Inherit All Global Colors</button>
-        </fieldset>
-        <fieldset>
-            <legend>Course Text Styles (Overrides Global)</legend>
-            ${generateGlobalTextStyleFormControls_Course(s)}
-        </fieldset>
-    `;
-}
-
-// NEW: Form generator for Course Text Styles (used within generateCourseStyleForm)
-function generateGlobalTextStyleFormControls_Course(styles = {}) {
-    const globalStyles = appData.globalStyles;
-    const cF = styles.globalFontFamily; // Course specific font
-    const cS = styles.globalFontSize;   // Course specific size
-    const cC = styles.globalTextColor;  // Course specific color
-
-    let fOpts = FONT_FAMILIES.map(font => `<option value="${escapeHtml(font.value)}" ${cF === font.value ? 'selected' : ''}>${escapeHtml(font.name)}</option>`).join('');
-    fOpts = `<option value="" ${cF === null || cF === undefined ? 'selected':''}>Inherit Global (${globalStyles.appFontFamily})</option>` + fOpts;
-
-    let sOpts = FONT_SIZES.map(size => {
-        let iS = cS === size;
-        if (size === 'custom' && cS && !FONT_SIZES.includes(cS)) iS = true;
-        return `<option value="${size}" ${iS ? 'selected' : ''}>${size === 'custom' ? 'Custom...' : size.charAt(0).toUpperCase() + size.slice(1)}</option>`;
-    }).join('');
-    sOpts = `<option value="" ${cS === null || cS === undefined ? 'selected':''}>Inherit Global (${globalStyles.appFontSize})</option>` + sOpts;
-
-    const isCustom = (cS && !FONT_SIZES.slice(0, -1).includes(cS));
-    const customVal = isCustom ? cS : '';
-
-    return `
-        <div class="global-text-style-options">
-            <label>Font:</label><select id="edit-global-style-font">${fOpts}</select><br>
-            <label>Size:</label><select id="edit-global-style-size">${sOpts}</select>
-            <input id="edit-global-style-size-custom" placeholder="e.g., 17px" value="${escapeHtml(customVal)}" style="display:${isCustom ? 'inline-block' : 'none'};width:100px;">
+            <legend>Course Content Area Styles</legend>
+            <label for="edit-course-style-bgcolor">Background Color:</label>
+            <input type="color" id="edit-course-style-bgcolor" value="${s.backgroundColor || '#ffffff'}">
             <br>
-            <label>Color:</label><input type="color" id="edit-global-style-color" value="${cC || ''}" title="Leave blank to inherit global">
-            <button type="button" id="inherit-text-color-btn" style="margin-left: 5px; font-size: 0.8em; padding: 2px 5px;" title="Inherit Global Color (${globalStyles.appTextColor})">Inherit</button>
-        </div>
+            <label for="edit-course-style-textcolor">Text Color:</label>
+            <input type="color" id="edit-course-style-textcolor" value="${s.textColor || appData.globalStyles.appTextColor || DEFAULT_TEXT_COLOR}">
+            <p style="font-size: 0.8em; color: #666;">(More options like font could be added here)</p>
+        </fieldset>
     `;
 }
 
-
-// Generic Form Generator for Elements
+// Generic Form Generator for Elements (Heading, Text, Image, Video, Presentation, Quiz, Challenges)
 function generateElementForm(elementData) {
-    const d = elementData.data || {}; const type = elementData.type; let h = '';
-    if (['image', 'video', 'presentation', 'quiz', 'challenges'].includes(type)) { h += `<fieldset><legend>Optional Display Info</legend><label for="edit-media-heading">Display Heading (Optional):</label><input id="edit-media-heading" type="text" value="${escapeHtml(d.heading || '')}" placeholder="E.g., Introduction Video"><label for="edit-media-description">Display Description (Optional):</label><textarea id="edit-media-description" rows="3" placeholder="A short description that appears above the media/section.">${escapeHtml(d.description || '')}</textarea></fieldset>`; }
-    h += `<fieldset><legend>${type.charAt(0).toUpperCase() + type.slice(1)} Content</legend>`;
-    switch (type) {
-        case 'heading': h += `<label for="edit-element-text">Heading Text:</label><input type="text" id="edit-element-text" value="${escapeHtml(d.text || '')}" required>`; break;
-        case 'text': h += `<label for="edit-element-text">Text Content:</label><textarea id="edit-element-text" rows="6">${escapeHtml(d.text || '')}</textarea>`; break;
-        case 'image': h += `<label for="edit-element-url">Image URL:</label><input type="url" id="edit-element-url" value="${escapeHtml(d.url || '')}" required placeholder="https://..."><label for="edit-element-alt">Alternative Text (for accessibility):</label><input type="text" id="edit-element-alt" value="${escapeHtml(d.alt || '')}" placeholder="Describe the image"><div class="input-group"><div><label for="edit-element-width">Width (e.g., 100%, 300px, auto):</label><input type="text" id="edit-element-width" value="${escapeHtml(d.width || 'auto')}"></div><div><label for="edit-element-height">Height (e.g., 200px, auto):</label><input type="text" id="edit-element-height" value="${escapeHtml(d.height || 'auto')}"></div></div>`; break;
-        case 'video': case 'presentation': const urlLabel = type === 'video' ? 'Video URL (YouTube, Vimeo, etc.):' : 'Presentation URL (Google Slides, etc.):'; h += `<label for="edit-element-url">${urlLabel}</label><input type="url" id="edit-element-url" value="${escapeHtml(d.url || '')}" required placeholder="https://...">`; break;
-        case 'quiz': h += generateQuizEditForm_Editor(d); break;
-        case 'challenges': h += generateChallengesEditForm_Editor(d); break;
-        default: h += '<p>Cannot edit this element type.</p>';
+    const d = elementData.data || {};
+    const type = elementData.type;
+    let h = '';
+
+    // Optional Heading/Description fields for relevant types
+    if (['image', 'video', 'presentation', 'quiz', 'challenges'].includes(type)) {
+         h += `<fieldset><legend>Optional Display Info</legend>
+                <label for="edit-media-heading">Display Heading (Optional):</label>
+                <input id="edit-media-heading" type="text" value="${escapeHtml(d.heading || '')}" placeholder="E.g., Introduction Video">
+                <label for="edit-media-description">Display Description (Optional):</label>
+                <textarea id="edit-media-description" rows="3" placeholder="A short description that appears above the media/section.">${escapeHtml(d.description || '')}</textarea>
+               </fieldset>`;
     }
-    h += `</fieldset>`; return h;
+
+    h += `<fieldset><legend>${type.charAt(0).toUpperCase() + type.slice(1)} Content</legend>`; // Main content fieldset
+
+    switch (type) {
+        case 'heading':
+            h += `<label for="edit-element-text">Heading Text:</label><input type="text" id="edit-element-text" value="${escapeHtml(d.text || '')}" required>`;
+            break;
+        case 'text':
+            h += `<label for="edit-element-text">Text Content:</label><textarea id="edit-element-text" rows="6">${escapeHtml(d.text || '')}</textarea>`;
+            break;
+        case 'image':
+            h += `<label for="edit-element-url">Image URL:</label><input type="url" id="edit-element-url" value="${escapeHtml(d.url || '')}" required placeholder="https://...">
+                  <label for="edit-element-alt">Alternative Text (for accessibility):</label><input type="text" id="edit-element-alt" value="${escapeHtml(d.alt || '')}" placeholder="Describe the image">
+                  <div class="input-group">
+                      <div><label for="edit-element-width">Width (e.g., 100%, 300px, auto):</label><input type="text" id="edit-element-width" value="${escapeHtml(d.width || 'auto')}"></div>
+                      <div><label for="edit-element-height">Height (e.g., 200px, auto):</label><input type="text" id="edit-element-height" value="${escapeHtml(d.height || 'auto')}"></div>
+                  </div>`;
+            break;
+        case 'video':
+        case 'presentation':
+            const urlLabel = type === 'video' ? 'Video URL (YouTube, Vimeo, etc.):' : 'Presentation URL (Google Slides, etc.):';
+            h += `<label for="edit-element-url">${urlLabel}</label><input type="url" id="edit-element-url" value="${escapeHtml(d.url || '')}" required placeholder="https://...">`;
+            break;
+        // Project-specific forms generated by their own functions
+        case 'quiz':
+             if (editingContext.type !== 'element') h += '<p>Quiz editing is only available within the Project Editor.</p>';
+             else h += generateQuizEditForm_Editor(d); // Reuse project editor form generator
+             break;
+        case 'challenges':
+             if (editingContext.type !== 'element') h += '<p>Challenges editing is only available within the Project Editor.</p>';
+             else h += generateChallengesEditForm_Editor(d); // Reuse project editor form generator
+             break;
+        default:
+            h += '<p>Cannot edit this element type.</p>';
+    }
+    h += `</fieldset>`; // Close main content fieldset
+    return h;
 }
 
-// Form Generators for Project Editor Specifics
-function generateStyleForm_Editor(projectData) { const s = projectData.styles || {}; return `<fieldset><legend>Info & Header</legend><label>Project Title:</label><input id="edit-style-title" value="${escapeHtml(projectData.title || '')}"><label>Project Subtitle:</label><input id="edit-style-subtitle" value="${escapeHtml(projectData.subtitle || '')}"><label>Header Image URL:</label><input type="url" id="edit-style-headerimg" value="${escapeHtml(projectData.headerImage || '')}"></fieldset><fieldset><legend>Theme Colors (Overrides Global)</legend><div class="color-picker"><label>Primary:</label><input type="color" id="edit-style-primary" value="${s.primaryColor || ''}" title="Leave blank to inherit global"><label>Secondary:</label><input type="color" id="edit-style-secondary" value="${s.secondaryColor || ''}" title="Leave blank to inherit global"><label>Accent:</label><input type="color" id="edit-style-accent" value="${s.accentColor || ''}" title="Leave blank to inherit global"></div><button type="button" id="inherit-theme-colors-btn" style="font-size: 0.8em; padding: 2px 5px;">Inherit All Global Colors</button></fieldset><fieldset><legend>Project Text Styles (Overrides Global)</legend>${generateGlobalTextStyleFormControls_Project(s)}</fieldset>`; }
-function generateGlobalTextStyleFormControls_Project(styles={}) { const globalStyles = appData.globalStyles; const cF = styles.globalFontFamily; const cS = styles.globalFontSize; const cC = styles.globalTextColor; let fOpts = FONT_FAMILIES.map(font => `<option value="${escapeHtml(font.value)}" ${cF === font.value ? 'selected' : ''}>${escapeHtml(font.name)}</option>`).join(''); fOpts = `<option value="" ${cF === null || cF === undefined ? 'selected':''}>Inherit Global (${globalStyles.appFontFamily})</option>` + fOpts; let sOpts = FONT_SIZES.map(size => { let iS = cS === size; if (size === 'custom' && cS && !FONT_SIZES.includes(cS)) iS = true; return `<option value="${size}" ${iS ? 'selected' : ''}>${size === 'custom' ? 'Custom...' : size.charAt(0).toUpperCase() + size.slice(1)}</option>`; }).join(''); sOpts = `<option value="" ${cS === null || cS === undefined ? 'selected':''}>Inherit Global (${globalStyles.appFontSize})</option>` + sOpts; const isCustom = (cS && !FONT_SIZES.slice(0, -1).includes(cS)); const customVal = isCustom ? cS : ''; return `<div class="global-text-style-options"><label>Font:</label><select id="edit-global-style-font">${fOpts}</select><br><label>Size:</label><select id="edit-global-style-size">${sOpts}</select><input id="edit-global-style-size-custom" placeholder="e.g., 17px" value="${escapeHtml(customVal)}" style="display:${isCustom ? 'inline-block' : 'none'};width:100px;"><br><label>Color:</label><input type="color" id="edit-global-style-color" value="${cC || ''}" title="Leave blank to inherit global"><button type="button" id="inherit-text-color-btn" style="margin-left: 5px; font-size: 0.8em; padding: 2px 5px;" title="Inherit Global Color (${globalStyles.appTextColor})">Inherit</button></div>`; }
-function generateQuizEditForm_Editor(quizData){ let h = '<fieldset><legend>Quiz Questions</legend><div id="quiz-editor-questions-container">'; const qs = quizData.questions || []; if (qs.length === 0) h += '<p id="quiz-editor-no-questions-msg">No questions added yet.</p>'; else qs.forEach((q, i) => { h += renderSingleQuizQuestionForm_Editor(q, i); }); h += '</div></fieldset><button type="button" id="quiz-editor-add-question-btn" class="add-btn quiz-edit-add-question-btn">+ Add Question</button>'; return h; }
-function renderSingleQuizQuestionForm_Editor(q={},i){ const inc = Array.isArray(q.incorrectAnswers) ? q.incorrectAnswers : []; const incImgs = Array.isArray(q.incorrectAnswersImageUrls) ? q.incorrectAnswersImageUrls : []; let h = `<div class="quiz-edit-question" data-question-index="${i}"><h4>Question ${i + 1}<button type="button" class="remove-btn action-btn quiz-editor-remove-question-btn" data-index="${i}" title="Remove Question ${i + 1}">&times;</button></h4><label for="quiz-q-text-${i}">Question Text:</label><textarea id="quiz-q-text-${i}" rows="2" required>${escapeHtml(q.questionText || '')}</textarea><div class="quiz-image-input"><label for="quiz-q-image-${i}">Question Image URL (Optional):</label><input type="url" id="quiz-q-image-${i}" value="${escapeHtml(q.questionImageUrl || '')}"></div><label for="quiz-q-correct-${i}" style="color:var(--success);font-weight:bold;">Correct Answer:</label><input type="text" id="quiz-q-correct-${i}" value="${escapeHtml(q.correctAnswer || '')}" required><div class="quiz-image-input"><label for="quiz-q-correct-image-${i}">Correct Answer Image URL (Optional):</label><input type="url" id="quiz-q-correct-image-${i}" value="${escapeHtml(q.correctAnswerImageUrl || '')}"></div><label>Incorrect Answers (up to 3):</label>`; for (let j = 0; j < 3; j++) { h += `<div style="border-left:2px solid #eee;padding-left:10px;margin-bottom:10px;"><input type="text" class="quiz-q-incorrect" id="quiz-q-incorrect-${i}-${j}" value="${escapeHtml(inc[j] || '')}" placeholder="Incorrect answer ${j + 1}"><div class="quiz-image-input"><label for="quiz-q-incorrect-image-${i}-${j}">Incorrect Answer ${j + 1} Image URL (Optional):</label><input type="url" class="quiz-q-incorrect-image" id="quiz-q-incorrect-image-${i}-${j}" value="${escapeHtml(incImgs[j] || '')}"></div></div>`; } h += `</div>`; return h; }
-function generateChallengesEditForm_Editor(chData){ const d = chData || { challenges: [] }; let h = `<fieldset><legend>Challenges Items</legend><div id="challenges-editor-list">`; const chs = d.challenges || []; if (chs.length === 0) h += '<p id="challenges-editor-no-items-msg">No challenge items added yet.</p>'; else chs.forEach((c, i) => h += renderSingleChallengeForm_Editor(c, i)); h += `</div></fieldset><button type="button" id="challenges-editor-add-btn" class="add-btn" ${chs.length >= MAX_CHALLENGES ? 'disabled' : ''}>+ Add Challenge Item</button>${chs.length >= MAX_CHALLENGES ? `<p style="color:var(--danger);font-size:0.9em;">Maximum challenges (${MAX_CHALLENGES}) reached.</p>` : ''}`; return h; }
-function renderSingleChallengeForm_Editor(c={},i){ return `<div class="challenge-edit-item" data-challenge-index="${i}" data-challenge-id="${c.id || ''}"><h5>Challenge Item ${i + 1}<button type="button" class="remove-btn action-btn challenges-editor-remove-btn" data-index="${i}" title="Remove Challenge ${i + 1}">&times;</button></h5><label for="challenge-heading-${i}">Heading:</label><input type="text" class="challenge-heading-input" id="challenge-heading-${i}" value="${escapeHtml(c.heading || '')}" required><label for="challenge-icon-${i}">Icon URL (Optional):</label><input type="url" class="challenge-icon-input" id="challenge-icon-${i}" value="${escapeHtml(c.iconUrl || '')}"><label for="challenge-desc-${i}">Description:</label><textarea class="challenge-desc-input" id="challenge-desc-${i}" rows="2">${escapeHtml(c.description || '')}</textarea><label for="challenge-image-${i}">Image URL (Optional):</label><input type="url" class="challenge-image-input" id="challenge-image-${i}" value="${escapeHtml(c.imageUrl || '')}" ></div>`; }
+// Form Generators for Project Editor Specifics (Styles, Quiz, Challenges)
+function generateStyleForm_Editor(projectData) { /* ... (No changes needed) ... */ const s = projectData.styles || {}; return `<fieldset><legend>Info & Header</legend><label>Project Title:</label><input id="edit-style-title" value="${escapeHtml(projectData.title || '')}"><label>Project Subtitle:</label><input id="edit-style-subtitle" value="${escapeHtml(projectData.subtitle || '')}"><label>Header Image URL:</label><input type="url" id="edit-style-headerimg" value="${escapeHtml(projectData.headerImage || '')}"></fieldset><fieldset><legend>Theme Colors (Overrides Global)</legend><div class="color-picker"><label>Primary:</label><input type="color" id="edit-style-primary" value="${s.primaryColor || ''}" title="Leave blank to inherit global"><label>Secondary:</label><input type="color" id="edit-style-secondary" value="${s.secondaryColor || ''}" title="Leave blank to inherit global"><label>Accent:</label><input type="color" id="edit-style-accent" value="${s.accentColor || ''}" title="Leave blank to inherit global"></div><button type="button" id="inherit-theme-colors-btn" style="font-size: 0.8em; padding: 2px 5px;">Inherit All Global Colors</button></fieldset><fieldset><legend>Project Text Styles (Overrides Global)</legend>${generateGlobalTextStyleFormControls_Project(s)}</fieldset>`; }
+function generateGlobalTextStyleFormControls_Project(styles={}) { /* ... (No changes needed) ... */ const globalStyles = appData.globalStyles; const cF = styles.globalFontFamily; const cS = styles.globalFontSize; const cC = styles.globalTextColor; let fOpts = FONT_FAMILIES.map(font => `<option value="${escapeHtml(font.value)}" ${cF === font.value ? 'selected' : ''}>${escapeHtml(font.name)}</option>`).join(''); fOpts = `<option value="" ${cF === null || cF === undefined ? 'selected':''}>Inherit Global (${globalStyles.appFontFamily})</option>` + fOpts; let sOpts = FONT_SIZES.map(size => { let iS = cS === size; if (size === 'custom' && cS && !FONT_SIZES.includes(cS)) iS = true; return `<option value="${size}" ${iS ? 'selected' : ''}>${size === 'custom' ? 'Custom...' : size.charAt(0).toUpperCase() + size.slice(1)}</option>`; }).join(''); sOpts = `<option value="" ${cS === null || cS === undefined ? 'selected':''}>Inherit Global (${globalStyles.appFontSize})</option>` + sOpts; const isCustom = (cS && !FONT_SIZES.slice(0, -1).includes(cS)); const customVal = isCustom ? cS : ''; return `<div class="global-text-style-options"><label>Font:</label><select id="edit-global-style-font">${fOpts}</select><br><label>Size:</label><select id="edit-global-style-size">${sOpts}</select><input id="edit-global-style-size-custom" placeholder="e.g., 17px" value="${escapeHtml(customVal)}" style="display:${isCustom ? 'inline-block' : 'none'};width:100px;"><br><label>Color:</label><input type="color" id="edit-global-style-color" value="${cC || ''}" title="Leave blank to inherit global"><button type="button" id="inherit-text-color-btn" style="margin-left: 5px; font-size: 0.8em; padding: 2px 5px;" title="Inherit Global Color (${globalStyles.appTextColor})">Inherit</button></div>`; }
+function generateQuizEditForm_Editor(quizData){ /* ... (No changes needed) ... */ let h = '<fieldset><legend>Quiz Questions</legend><div id="quiz-editor-questions-container">'; const qs = quizData.questions || []; if (qs.length === 0) h += '<p id="quiz-editor-no-questions-msg">No questions added yet.</p>'; else qs.forEach((q, i) => { h += renderSingleQuizQuestionForm_Editor(q, i); }); h += '</div></fieldset><button type="button" id="quiz-editor-add-question-btn" class="add-btn quiz-edit-add-question-btn">+ Add Question</button>'; return h; }
+function renderSingleQuizQuestionForm_Editor(q={},i){ /* ... (No changes needed) ... */ const inc = Array.isArray(q.incorrectAnswers) ? q.incorrectAnswers : []; const incImgs = Array.isArray(q.incorrectAnswersImageUrls) ? q.incorrectAnswersImageUrls : []; let h = `<div class="quiz-edit-question" data-question-index="${i}"><h4>Question ${i + 1}<button type="button" class="remove-btn action-btn quiz-editor-remove-question-btn" data-index="${i}" title="Remove Question ${i + 1}">&times;</button></h4><label for="quiz-q-text-${i}">Question Text:</label><textarea id="quiz-q-text-${i}" rows="2" required>${escapeHtml(q.questionText || '')}</textarea><div class="quiz-image-input"><label for="quiz-q-image-${i}">Question Image URL (Optional):</label><input type="url" id="quiz-q-image-${i}" value="${escapeHtml(q.questionImageUrl || '')}"></div><label for="quiz-q-correct-${i}" style="color:var(--success);font-weight:bold;">Correct Answer:</label><input type="text" id="quiz-q-correct-${i}" value="${escapeHtml(q.correctAnswer || '')}" required><div class="quiz-image-input"><label for="quiz-q-correct-image-${i}">Correct Answer Image URL (Optional):</label><input type="url" id="quiz-q-correct-image-${i}" value="${escapeHtml(q.correctAnswerImageUrl || '')}"></div><label>Incorrect Answers (up to 3):</label>`; for (let j = 0; j < 3; j++) { h += `<div style="border-left:2px solid #eee;padding-left:10px;margin-bottom:10px;"><input type="text" class="quiz-q-incorrect" id="quiz-q-incorrect-${i}-${j}" value="${escapeHtml(inc[j] || '')}" placeholder="Incorrect answer ${j + 1}"><div class="quiz-image-input"><label for="quiz-q-incorrect-image-${i}-${j}">Incorrect Answer ${j + 1} Image URL (Optional):</label><input type="url" class="quiz-q-incorrect-image" id="quiz-q-incorrect-image-${i}-${j}" value="${escapeHtml(incImgs[j] || '')}"></div></div>`; } h += `</div>`; return h; }
+function generateChallengesEditForm_Editor(chData){ /* ... (No changes needed) ... */ const d = chData || { challenges: [] }; let h = `<fieldset><legend>Challenges Items</legend><div id="challenges-editor-list">`; const chs = d.challenges || []; if (chs.length === 0) h += '<p id="challenges-editor-no-items-msg">No challenge items added yet.</p>'; else chs.forEach((c, i) => h += renderSingleChallengeForm_Editor(c, i)); h += `</div></fieldset><button type="button" id="challenges-editor-add-btn" class="add-btn" ${chs.length >= MAX_CHALLENGES ? 'disabled' : ''}>+ Add Challenge Item</button>${chs.length >= MAX_CHALLENGES ? `<p style="color:var(--danger);font-size:0.9em;">Maximum challenges (${MAX_CHALLENGES}) reached.</p>` : ''}`; return h; }
+function renderSingleChallengeForm_Editor(c={},i){ /* ... (No changes needed) ... */ return `<div class="challenge-edit-item" data-challenge-index="${i}" data-challenge-id="${c.id || ''}"><h5>Challenge Item ${i + 1}<button type="button" class="remove-btn action-btn challenges-editor-remove-btn" data-index="${i}" title="Remove Challenge ${i + 1}">&times;</button></h5><label for="challenge-heading-${i}">Heading:</label><input type="text" class="challenge-heading-input" id="challenge-heading-${i}" value="${escapeHtml(c.heading || '')}" required><label for="challenge-icon-${i}">Icon URL (Optional):</label><input type="url" class="challenge-icon-input" id="challenge-icon-${i}" value="${escapeHtml(c.iconUrl || '')}"><label for="challenge-desc-${i}">Description:</label><textarea class="challenge-desc-input" id="challenge-desc-${i}" rows="2">${escapeHtml(c.description || '')}</textarea><label for="challenge-image-${i}">Image URL (Optional):</label><input type="url" class="challenge-image-input" id="challenge-image-${i}" value="${escapeHtml(c.imageUrl || '')}" ></div>`; }
 
 
-function closeModal() { if (modal) modal.style.display = 'none'; if (modalFormContent) modalFormContent.innerHTML = ''; editingContext = { type: null, id: null, parentId: null, isNew: false, elementType: null }; }
+function closeModal() { /* ... (same) ... */ if (modal) modal.style.display = 'none'; if (modalFormContent) modalFormContent.innerHTML = ''; editingContext = { type: null, id: null, parentId: null, isNew: false, elementType: null }; }
 
 function saveEditAction() {
     const { type, id, parentId, isNew, elementType } = editingContext;
@@ -1607,15 +1541,15 @@ function saveEditAction() {
             case 'course':
                 name = getModalValue('#edit-item-name'); description = getModalValue('#edit-item-description', '', false); imageUrl = getModalValue('#edit-item-imageurl', null);
                 if (!name) throw new Error("Course name is required.");
-                if (isNew) { if (appData.courses.length >= MAX_COURSES) throw new Error("Maximum courses reached."); const newCourse = { id: generateId('course_'), name, description, imageUrl, projects: [], content: [], styles: { primaryColor: null, secondaryColor: null, accentColor: null, globalFontFamily: null, globalFontSize: null, globalTextColor: null } }; appData.courses.push(newCourse); } else { const course = findCourse(id); if (!course) throw new Error("Course not found for editing."); course.name = name; course.description = description; course.imageUrl = imageUrl; }
+                if (isNew) { if (appData.courses.length >= MAX_COURSES) throw new Error("Maximum courses reached."); const newCourse = { id: generateId('course_'), name, description, imageUrl, projects: [], content: [], styles: {} }; appData.courses.push(newCourse); } else { const course = findCourse(id); if (!course) throw new Error("Course not found for editing."); course.name = name; course.description = description; course.imageUrl = imageUrl; /* course.content is handled by course-element edits, styles by courseStyles edits */ }
                 saveAppData(); renderDashboardView();
                 break;
             case 'project':
                 name = getModalValue('#edit-item-name'); description = getModalValue('#edit-item-description', '', false); imageUrl = getModalValue('#edit-item-imageurl', null);
                 if (!name) throw new Error("Project name is required.");
-                const courseForProject = findCourse(parentId);
+                const courseForProject = findCourse(parentId); // parentId is courseId here
                 if (!courseForProject) throw new Error("Parent course not found when saving project.");
-                if (isNew) { if (courseForProject.projects.length >= MAX_PROJECTS_PER_COURSE) throw new Error(`Maximum projects reached for course "${courseForProject.name}".`); const newProjectId = generateId('proj_'); const newProjectMeta = { id: newProjectId, name, description, imageUrl }; courseForProject.projects.push(newProjectMeta); const defaultProjData = getDefaultProjectDataTemplate(); defaultProjData.title = name; defaultProjData.subtitle = description; saveSpecificProjectData(newProjectId, defaultProjData); } else { const projectMeta = findProjectMeta(id); if (!projectMeta) throw new Error("Project metadata not found for editing."); projectMeta.name = name; projectMeta.description = description; projectMeta.imageUrl = imageUrl; const projectData = loadSpecificProjectData(id); projectData.title = name; saveSpecificProjectData(id, projectData); }
+                if (isNew) { if (courseForProject.projects.length >= MAX_PROJECTS_PER_COURSE) throw new Error(`Maximum projects reached for course "${courseForProject.name}".`); const newProjectId = generateId('proj_'); const newProjectMeta = { id: newProjectId, name, description, imageUrl }; courseForProject.projects.push(newProjectMeta); const defaultProjData = getDefaultProjectDataTemplate(); defaultProjData.title = name; defaultProjData.subtitle = description; /* Inherit styles */ saveSpecificProjectData(newProjectId, defaultProjData); } else { const projectMeta = findProjectMeta(id); if (!projectMeta) throw new Error("Project metadata not found for editing."); projectMeta.name = name; projectMeta.description = description; projectMeta.imageUrl = imageUrl; const projectData = loadSpecificProjectData(id); projectData.title = name; /* Only update title in project data, subtitle/desc is in meta */ saveSpecificProjectData(id, projectData); }
                 saveAppData(); renderCourseView(parentId); // Re-render the course view
                 break;
              case 'appStyles': // Global Styles
@@ -1626,53 +1560,51 @@ function saveEditAction() {
                  styles.appFontFamily = getModalValue('#edit-global-style-font', DEFAULT_FONT_FAMILY, false);
                  styles.appTextColor = getModalValue('#edit-global-style-color', DEFAULT_TEXT_COLOR, false);
                  const sizeSelApp = modalFormContent.querySelector('#edit-global-style-size');
-                 if (sizeSelApp?.value === 'custom') { const customSize = getModalValue('#edit-global-style-size-custom', '').trim(); styles.appFontSize = (customSize && (customSize.includes('px') || customSize.includes('em') || customSize.includes('%') || /^\d+$/.test(customSize))) ? customSize : DEFAULT_FONT_SIZE_NAME; } else { styles.appFontSize = sizeSelApp?.value || DEFAULT_FONT_SIZE_NAME; }
+                 if (sizeSelApp?.value === 'custom') { const customSize = getModalValue('#edit-global-style-size-custom', '').trim(); if (customSize && (customSize.includes('px') || customSize.includes('em') || customSize.includes('%') || /^\d+$/.test(customSize))) { styles.appFontSize = customSize; } else { styles.appFontSize = DEFAULT_FONT_SIZE_NAME; console.warn("Invalid custom font size, reverting to default.");} } else { styles.appFontSize = sizeSelApp?.value || DEFAULT_FONT_SIZE_NAME; }
                  saveAppData();
-                 applyGlobalAppStyles();
-                 if (currentView === 'course') applyCourseStyles(activeCourseId); // Re-apply course styles if affected
-                 if (currentView === 'project') applyProjectStyles_Editor(); // Re-apply project styles if affected
+                 applyGlobalAppStyles(); // Apply immediately
+                 if (currentView === 'project') applyProjectStyles_Editor(); // Re-apply project styles if in project view
                  break;
 
-            case 'courseStyles': // NEW: Save Course Styles
-                 const courseToStyle = findCourse(id); // id is courseId
+            // --- Course Styles Save ---
+            case 'courseStyles':
+                 const courseToStyle = findCourse(activeCourseId);
                  if (!courseToStyle) throw new Error("Course not found for saving styles.");
                  if (!courseToStyle.styles) courseToStyle.styles = {};
-                 courseToStyle.styles.primaryColor = getModalValue('#edit-style-primary', '', false) || null;
-                 courseToStyle.styles.secondaryColor = getModalValue('#edit-style-secondary', '', false) || null;
-                 courseToStyle.styles.accentColor = getModalValue('#edit-style-accent', '', false) || null;
-                 courseToStyle.styles.globalFontFamily = getModalValue('#edit-global-style-font', '', false) || null;
-                 courseToStyle.styles.globalTextColor = getModalValue('#edit-global-style-color', '', false) || null;
-                 const sizeSelCourse = modalFormContent.querySelector('#edit-global-style-size');
-                 if (sizeSelCourse?.value === 'custom') { const customSize = getModalValue('#edit-global-style-size-custom', '').trim(); courseToStyle.styles.globalFontSize = (customSize && (customSize.includes('px') || customSize.includes('em') || customSize.includes('%') || /^\d+$/.test(customSize))) ? customSize : null; }
-                 else { courseToStyle.styles.globalFontSize = sizeSelCourse?.value || null; }
+                 // Get values from the courseStyles modal form
+                 courseToStyle.styles.backgroundColor = getModalValue('#edit-course-style-bgcolor', '#ffffff', false);
+                 courseToStyle.styles.textColor = getModalValue('#edit-course-style-textcolor', appData.globalStyles.appTextColor || DEFAULT_TEXT_COLOR, false);
+                 // Add more style saving logic here if form is expanded
                  saveAppData();
-                 applyCourseStyles(id); // Re-apply styles immediately
+                 // Apply course styles immediately (needs implementation - perhaps update CSS variables specific to course content area)
+                 applyCourseSpecificStyles(courseToStyle.id); // You'll need to create this function
                  break;
 
-            // Course Content Element Save
+            // --- Course Content Element Save ---
             case 'course-element':
                 const courseForSave = findCourse(activeCourseId);
                 if (!courseForSave) throw new Error("Cannot save element: Active course not found.");
-                const savedElementData = saveElementEditFromModal(id, isNew, elementType);
+                const savedElementData = saveElementEditFromModal(id, isNew, elementType); // Use generic save
                 if (isNew) {
                     if (!Array.isArray(courseForSave.content)) courseForSave.content = [];
                     courseForSave.content.push(savedElementData);
                 } else {
+                    // Find and update existing element (saveElementEditFromModal modifies the object directly if found)
                     const findResult = findCourseElementData(activeCourseId, id);
                     if (!findResult) throw new Error("Failed to find course element to update after save attempt.");
-                    // Object already updated by saveElementEditFromModal
+                    // No explicit update needed here as saveElementEditFromModal modifies the passed object
                 }
                 saveAppData();
-                renderCourseView(activeCourseId);
+                renderCourseView(activeCourseId); // Re-render the whole course view
                 break;
 
-            // Project Editor Saves
+            // --- Project Editor Saves ---
             case 'tab': case 'subtab':
                  const genericName = getModalValue('#edit-generic-name'); if (!genericName) throw new Error("Name cannot be empty."); let itemToUpdate; if (type === 'tab') { itemToUpdate = findTabData_Editor(id); if (!itemToUpdate) throw new Error("Tab not found for saving."); } else { itemToUpdate = findSubTabData_Editor(parentId, id); if (!itemToUpdate) throw new Error("Sub-tab not found for saving."); } itemToUpdate.name = genericName; saveSpecificProjectData(activeProjectId, currentProjectData); renderSidebar_Editor(); break;
             case 'element': // Project element
-                 const savedProjectElementData = saveElementEditFromModal(id, isNew, elementType);
+                 const savedProjectElementData = saveElementEditFromModal(id, isNew, elementType); // Use generic save
                  if (isNew) { const targetArray = getCurrentContentArray_Editor(); if (!targetArray) throw new Error("Target array not found for new project element."); targetArray.push(savedProjectElementData); }
-                 else { const findResult = findElementData_Editor(id); if (!findResult) throw new Error("Failed to find project element to update after save."); }
+                 else { /* Find/update happens within saveElementEditFromModal */ const findResult = findElementData_Editor(id); if (!findResult) throw new Error("Failed to find project element to update after save."); }
                  saveSpecificProjectData(activeProjectId, currentProjectData); renderContentArea_Editor(); break;
             case 'styles': // Project styles
                  if (!currentProjectData) throw new Error("No project data loaded to save styles.");
@@ -1680,21 +1612,22 @@ function saveEditAction() {
                  currentProjectData.subtitle = getModalValue('#edit-style-subtitle') || currentProjectData.subtitle;
                  currentProjectData.headerImage = getModalValue('#edit-style-headerimg') || currentProjectData.headerImage;
                  if (!currentProjectData.styles) currentProjectData.styles = {};
+                 // Store null if blank/default to signify inheritance
                  currentProjectData.styles.primaryColor = getModalValue('#edit-style-primary', '', false) || null;
                  currentProjectData.styles.secondaryColor = getModalValue('#edit-style-secondary', '', false) || null;
                  currentProjectData.styles.accentColor = getModalValue('#edit-style-accent', '', false) || null;
                  currentProjectData.styles.globalFontFamily = getModalValue('#edit-global-style-font', '', false) || null;
                  currentProjectData.styles.globalTextColor = getModalValue('#edit-global-style-color', '', false) || null;
                  const sizeSelProj = modalFormContent.querySelector('#edit-global-style-size');
-                 if (sizeSelProj?.value === 'custom') { const customSize = getModalValue('#edit-global-style-size-custom', '').trim(); currentProjectData.styles.globalFontSize = (customSize && (customSize.includes('px') || customSize.includes('em') || customSize.includes('%') || /^\d+$/.test(customSize))) ? customSize : null; }
+                 if (sizeSelProj?.value === 'custom') { const customSize = getModalValue('#edit-global-style-size-custom', '').trim(); if (customSize && (customSize.includes('px') || customSize.includes('em') || customSize.includes('%') || /^\d+$/.test(customSize))) { currentProjectData.styles.globalFontSize = customSize; } else { currentProjectData.styles.globalFontSize = null; if(customSize) console.warn("Invalid custom font size, reverting to inherit.");} }
                  else { currentProjectData.styles.globalFontSize = sizeSelProj?.value || null; }
                  saveSpecificProjectData(activeProjectId, currentProjectData);
                  applyProjectStyles_Editor(); // Re-apply styles immediately
+                 // Also update meta data if title changed
                  const projectMetaForStyleSave = findProjectMeta(activeProjectId);
-                 if (projectMetaForStyleSave && (projectMetaForStyleSave.name !== currentProjectData.title || projectMetaForStyleSave.description !== currentProjectData.subtitle)) {
+                 if (projectMetaForStyleSave && projectMetaForStyleSave.name !== currentProjectData.title) {
                      projectMetaForStyleSave.name = currentProjectData.title;
-                     projectMetaForStyleSave.description = currentProjectData.subtitle; // Keep meta description in sync with project subtitle
-                     saveAppData();
+                     saveAppData(); // Save the meta change
                  }
                  break;
             default: throw new Error(`Unknown save type: ${type}`);
@@ -1703,67 +1636,128 @@ function saveEditAction() {
     } catch (e) { console.error("Error saving edit:", e); alert(`Save failed: ${e.message}`); }
 }
 
+// Placeholder function to apply course-specific styles
+function applyCourseSpecificStyles(courseId) {
+    const course = findCourse(courseId);
+    if (!course || !course.styles || currentView !== 'course') return;
 
-// Generic save logic for elements
+    const contentAreaEl = document.getElementById('course-content-area');
+    if (contentAreaEl) {
+        // Example: Apply saved background and text color
+        if (course.styles.backgroundColor) {
+            contentAreaEl.style.backgroundColor = course.styles.backgroundColor;
+        } else {
+            contentAreaEl.style.backgroundColor = ''; // Revert to default CSS
+        }
+        if (course.styles.textColor) {
+            contentAreaEl.style.color = course.styles.textColor;
+        } else {
+            contentAreaEl.style.color = ''; // Revert to default CSS
+        }
+        // Add logic for other styles (font, etc.) if implemented
+        console.log(`Applied specific styles for course ${courseId}`);
+    }
+}
+
+
+// Generic save logic for elements (handles both project and course contexts)
+// Returns the saved element data object (either new or updated)
 function saveElementEditFromModal(elementId, isNew, elementTypeFromContext) {
     let elementData;
-    let isCourseContext = editingContext.type === 'course-element';
+    let isCourseContext = editingContext.type === 'course-element'; // Determine context
 
     if (isNew) {
         const elementType = elementTypeFromContext || elementId?.split('_')[0];
-        if (!elementType) throw new Error("Cannot determine element type.");
+        if (!elementType) throw new Error("Cannot determine element type for new element.");
         elementData = { id: elementId, type: elementType, data: getDefaultElementData(elementType) };
     } else {
-        const findResult = isCourseContext ? findCourseElementData(activeCourseId, elementId) : findElementData_Editor(elementId);
-        if (!findResult) throw new Error(`Element data not found: ${elementId}`);
-        elementData = findResult.element;
+        // Find existing data based on context
+        const findResult = isCourseContext
+            ? findCourseElementData(activeCourseId, elementId)
+            : findElementData_Editor(elementId); // Project context
+
+        if (!findResult) throw new Error(`Element data not found for saving: ${elementId}`);
+        elementData = findResult.element; // Get reference to the object in the data structure
         if (!elementData.data) elementData.data = {};
     }
 
     const getVal = (sel, trim = true) => getModalValue(sel, '', trim);
 
+    // Save optional heading/description
     if (['image', 'video', 'presentation', 'quiz', 'challenges'].includes(elementData.type)) {
          elementData.data.heading = getVal('#edit-media-heading');
-         elementData.data.description = getVal('#edit-media-description', false);
+         elementData.data.description = getVal('#edit-media-description', false); // Don't trim description
     }
 
+    // Save type-specific data
     switch (elementData.type) {
-        case 'heading': elementData.data.text = getVal('#edit-element-text'); if (!elementData.data.text.trim()) throw new Error("Heading text cannot be empty."); break;
-        case 'text': elementData.data.text = getVal('#edit-element-text', false); break;
-        case 'image':
-            elementData.data.url = getVal('#edit-element-url'); if (!elementData.data.url) throw new Error("Image URL required.");
-             if (!elementData.data.url.startsWith('http') && !elementData.data.url.startsWith('//') && !elementData.data.url.startsWith('data:')) console.warn(`URL "${elementData.data.url}" may not be valid.`);
-            elementData.data.alt = getVal('#edit-element-alt');
-            let width = getVal('#edit-element-width') || 'auto'; let height = getVal('#edit-element-height') || 'auto';
-            const sizeRegex = /^(auto|(\d+(\.\d+)?(px|%|em|rem|vw|vh)?))$/i;
-            elementData.data.width = sizeRegex.test(width) ? width : 'auto'; elementData.data.height = sizeRegex.test(height) ? height : 'auto';
+        case 'heading':
+            elementData.data.text = getVal('#edit-element-text');
+            if (!elementData.data.text.trim()) throw new Error("Heading text cannot be empty.");
             break;
-        case 'video': case 'presentation':
-            elementData.data.url = getVal('#edit-element-url'); if (!elementData.data.url) throw new Error("URL required.");
-             if (!elementData.data.url.startsWith('http') && !elementData.data.url.startsWith('//')) console.warn(`URL "${elementData.data.url}" may not be valid.`);
-            delete elementData.data.alt; delete elementData.data.width; delete elementData.data.height; break;
-        case 'quiz': if (isCourseContext) throw new Error("Quiz cannot be saved in course context."); saveQuizEditFromModal_Project(elementData.data); break;
-        case 'challenges': if (isCourseContext) throw new Error("Challenges cannot be saved in course context."); saveChallengesEditFromModal_Project(elementData.data); break;
-        default: throw new Error(`Cannot save unknown element type: ${elementData.type}`);
+        case 'text':
+            elementData.data.text = getVal('#edit-element-text', false); // Don't trim text block
+            break;
+        case 'image':
+            elementData.data.url = getVal('#edit-element-url');
+            if (!elementData.data.url) throw new Error("Image URL is required.");
+            // Basic validation encouragement
+            if (!elementData.data.url.startsWith('http') && !elementData.data.url.startsWith('//') && !elementData.data.url.startsWith('data:')) {
+                 console.warn(`URL "${elementData.data.url}" might not be valid. Ensure it starts with http://, https://, // or data:`);
+             }
+            elementData.data.alt = getVal('#edit-element-alt');
+            let width = getVal('#edit-element-width') || 'auto';
+            let height = getVal('#edit-element-height') || 'auto';
+            // Basic validation for size values
+            const sizeRegex = /^(auto|(\d+(\.\d+)?(px|%|em|rem|vw|vh)?))$/i;
+            elementData.data.width = sizeRegex.test(width) ? width : 'auto';
+            elementData.data.height = sizeRegex.test(height) ? height : 'auto';
+            break;
+        case 'video':
+        case 'presentation':
+            elementData.data.url = getVal('#edit-element-url');
+            if (!elementData.data.url) throw new Error("URL is required.");
+            if (!elementData.data.url.startsWith('http') && !elementData.data.url.startsWith('//')) {
+                 console.warn(`URL "${elementData.data.url}" might not be valid. Ensure it starts with http://, https://, or //`);
+             }
+            // Remove image-specific fields if somehow present
+            delete elementData.data.alt;
+            delete elementData.data.width;
+            delete elementData.data.height;
+            break;
+        // Project-specific saves (only triggered if modal opened in project context)
+        case 'quiz':
+            if (isCourseContext) throw new Error("Cannot save Quiz element in course context.");
+            saveQuizEditFromModal_Project(elementData.data); // Updates data object directly
+            break;
+        case 'challenges':
+             if (isCourseContext) throw new Error("Cannot save Challenges element in course context.");
+             saveChallengesEditFromModal_Project(elementData.data); // Updates data object directly
+            break;
+        default:
+            throw new Error(`Cannot save unknown element type: ${elementData.type}`);
     }
-    return elementData;
+    return elementData; // Return the (potentially modified) element data object
 }
 
-// Project Editor Specific Save Helpers
-function saveQuizEditFromModal_Project(quizData) { if (!modalFormContent) throw new Error("Modal form not found for quiz save."); quizData.questions = []; modalFormContent.querySelectorAll('.quiz-edit-question').forEach((qForm, i) => { const qTxt = qForm.querySelector(`#quiz-q-text-${i}`)?.value.trim(); const cAns = qForm.querySelector(`#quiz-q-correct-${i}`)?.value.trim(); if (!qTxt || !cAns) { console.warn(`Skipping Question ${i + 1}: Missing text or correct answer.`); return; } const qImg = qForm.querySelector(`#quiz-q-image-${i}`)?.value.trim() || null; const cImg = qForm.querySelector(`#quiz-q-correct-image-${i}`)?.value.trim() || null; const iAns = [], iImgs = []; for (let j = 0; j < 3; j++) { const iTxt = qForm.querySelector(`#quiz-q-incorrect-${i}-${j}`)?.value.trim(); if (iTxt) { iAns.push(iTxt); iImgs.push(qForm.querySelector(`#quiz-q-incorrect-image-${i}-${j}`)?.value.trim() || null); } else { iImgs.push(null); } } while (iImgs.length < iAns.length) iImgs.push(null); quizData.questions.push({ questionText: qTxt, questionImageUrl: qImg, correctAnswer: cAns, correctAnswerImageUrl: cImg, incorrectAnswers: iAns, incorrectAnswersImageUrls: iImgs }); }); console.log("Quiz questions saved:", quizData.questions); }
-function saveChallengesEditFromModal_Project(chData) { if (!modalFormContent) throw new Error("Modal form not found for challenges save."); chData.challenges = []; modalFormContent.querySelectorAll('.challenge-edit-item').forEach(item => { const head = item.querySelector('.challenge-heading-input')?.value.trim(); if (!head) { console.warn("Skipping challenge: Heading missing."); return; } chData.challenges.push({ id: item.dataset.challengeId || generateId('chal_'), heading: head, iconUrl: item.querySelector('.challenge-icon-input')?.value.trim() || null, description: item.querySelector('.challenge-desc-input')?.value || '', imageUrl: item.querySelector('.challenge-image-input')?.value.trim() || null }); }); console.log("Challenge items saved:", chData.challenges); }
+// --- Project Editor Specific Save Helpers (Keep same) ---
+function saveQuizEditFromModal_Project(quizData) { /* ... (No changes needed) ... */ if (!modalFormContent) throw new Error("Modal form content not found while saving quiz."); quizData.questions = []; modalFormContent.querySelectorAll('.quiz-edit-question').forEach((qForm, i) => { const qTxt = qForm.querySelector(`#quiz-q-text-${i}`)?.value.trim(); const cAns = qForm.querySelector(`#quiz-q-correct-${i}`)?.value.trim(); if (!qTxt || !cAns) { console.warn(`Skipping Question ${i + 1}: Missing question text or correct answer.`); return; } const qImg = qForm.querySelector(`#quiz-q-image-${i}`)?.value.trim() || null; const cImg = qForm.querySelector(`#quiz-q-correct-image-${i}`)?.value.trim() || null; const iAns = [], iImgs = []; for (let j = 0; j < 3; j++) { const iTxt = qForm.querySelector(`#quiz-q-incorrect-${i}-${j}`)?.value.trim(); if (iTxt) { iAns.push(iTxt); iImgs.push(qForm.querySelector(`#quiz-q-incorrect-image-${i}-${j}`)?.value.trim() || null); } else { iImgs.push(null); } } while (iImgs.length < iAns.length) iImgs.push(null); quizData.questions.push({ questionText: qTxt, questionImageUrl: qImg, correctAnswer: cAns, correctAnswerImageUrl: cImg, incorrectAnswers: iAns, incorrectAnswersImageUrls: iImgs }); }); console.log("Quiz questions saved:", quizData.questions); }
+function saveChallengesEditFromModal_Project(chData) { /* ... (No changes needed) ... */ if (!modalFormContent) throw new Error("Modal form content not found while saving challenges."); chData.challenges = []; modalFormContent.querySelectorAll('.challenge-edit-item').forEach(item => { const head = item.querySelector('.challenge-heading-input')?.value.trim(); if (!head) { console.warn("Skipping challenge item: Heading is missing."); return; } chData.challenges.push({ id: item.dataset.challengeId || generateId('chal_'), heading: head, iconUrl: item.querySelector('.challenge-icon-input')?.value.trim() || null, description: item.querySelector('.challenge-desc-input')?.value || '', imageUrl: item.querySelector('.challenge-image-input')?.value.trim() || null }); }); console.log("Challenge items saved:", chData.challenges); }
 
 
 // --- Event Listeners Setup ---
 
 function setupGlobalEventListeners() {
-    // Dashboard View Event Delegation
+    // App Settings Button (Now in dashboard header)
+    appSettingsButton?.addEventListener('click', () => openEditModal('appStyles'));
+
+    // --- Dashboard View Event Delegation ---
     dashboardView?.addEventListener('click', (e) => {
         const target = e.target;
         const button = target.closest('button');
         const itemContainer = target.closest('.item-container[data-course-id]');
 
-        if (button) {
+        if (button) { // Handle button clicks first
             e.stopPropagation();
             const action = button.dataset.action;
             const buttonId = button.id;
@@ -1771,51 +1765,52 @@ function setupGlobalEventListeners() {
             if (buttonId === 'dashboard-grid-view-btn') { setItemViewMode(courseListContainer, 'grid', dashboardGridViewBtn, dashboardListViewBtn); return; }
             if (buttonId === 'dashboard-list-view-btn') { setItemViewMode(courseListContainer, 'list', dashboardGridViewBtn, dashboardListViewBtn); return; }
             if (buttonId === 'add-course-btn') { if (!button.disabled) { openEditModal('course', null, null, true); } return; }
-            if (buttonId === 'app-settings-btn') { openEditModal('appStyles'); return; } // Moved button
+            // App settings button click handled globally by its ID listener
 
             const courseId = button.closest('[data-course-id]')?.dataset.courseId;
             if (action && courseId) {
                  switch (action) {
-                     // case 'view-projects': // Button removed from card
-                     //    showView('course', courseId); break;
+                     // view-projects button removed
                      case 'edit-course': openEditModal('course', courseId); break;
                      case 'remove-course': removeCourse(courseId); break;
                  }
                  return;
             }
-        } else if (itemContainer) {
+        } else if (itemContainer) { // Handle click on item itself (card/row)
             e.stopPropagation();
             showView('course', itemContainer.dataset.courseId);
         }
     });
 
-    // Course View Event Delegation
+    // --- Course View Event Delegation ---
     courseView?.addEventListener('click', (e) => {
          const target = e.target;
          const button = target.closest('button');
-         const projectItemContainer = target.closest('#project-list .item-container[data-project-id]'); // Project item within its list
-         const courseContentElement = target.closest('#course-content-area .content-element[data-element-id]'); // Course content element
+         const projectItemContainer = target.closest('.item-container[data-project-id]'); // Project item
+         // const courseContentElement = target.closest('.content-element[data-element-id]'); // Course content element
 
-         if (button) {
+         if (button) { // Handle button clicks
             e.stopPropagation();
             const action = button.dataset.action;
             const buttonId = button.id;
 
-            // Header Buttons
-            if (buttonId === 'back-to-dashboard-btn') { showView('dashboard'); return; }
-            if (buttonId === 'edit-course-styles-btn') { openEditModal('courseStyles', activeCourseId); return; }
             // View Toggles
             if (buttonId === 'course-grid-view-btn') { setItemViewMode(projectListContainer, 'grid', courseGridViewBtn, courseListViewBtn); return; }
             if (buttonId === 'course-list-view-btn') { setItemViewMode(projectListContainer, 'list', courseGridViewBtn, courseListViewBtn); return; }
+            // Header Buttons
+            if (buttonId === 'back-to-dashboard-btn') { showView('dashboard'); return; }
+            if (buttonId === 'edit-course-styles-btn') { openEditModal('courseStyles'); return; } // New course style edit
             // Add Project Button
             if (buttonId === 'add-project-btn') { if (!button.disabled) { openEditModal('project', null, activeCourseId, true); } return; }
+
             // Add Course Element Buttons
             if (action === 'add-course-element') {
                 const elementType = button.dataset.type;
                 if (elementType) { openEditModal('course-element', generateId(elementType + '_'), activeCourseId, true, elementType); }
                 return;
             }
-            // Project Item Actions
+
+            // Project Item Actions (Edit/Remove Project)
             const projectIdForAction = button.closest('[data-project-id]')?.dataset.projectId;
             if (projectIdForAction && ['edit-project', 'remove-project'].includes(action)) {
                  const courseIdForAction = button.closest('[data-course-id]')?.dataset.courseId || activeCourseId;
@@ -1825,7 +1820,8 @@ function setupGlobalEventListeners() {
                  }
                  return;
             }
-            // Course Content Element Actions
+
+            // Course Content Element Actions (Edit/Remove Course Element)
             const elementIdForAction = button.closest('[data-element-id]')?.dataset.elementId;
             if (elementIdForAction && ['edit-course-element', 'remove-course-element'].includes(action)) {
                  switch (action) {
@@ -1834,33 +1830,25 @@ function setupGlobalEventListeners() {
                  }
                  return;
             }
-         } else if (projectItemContainer && !projectItemContainer.closest('.student-view-active')) { // Allow click only in editor mode
+
+         } else if (projectItemContainer) { // Click on Project Item (Card/Row)
              e.stopPropagation();
              showView('project', projectItemContainer.dataset.courseId, projectItemContainer.dataset.projectId);
          }
+         // No action needed for clicking on a course content element itself (handled by buttons)
     });
 
-    // Project View Back Button (now in header)
-    projectView?.querySelector('#back-to-projects-btn')?.addEventListener('click', () => {
-        if (activeCourseId) { showView('course', activeCourseId); }
-        else { showView('dashboard'); } // Fallback
-    });
-    // Project View Edit Styles Button (now in header)
-    projectView?.querySelector('#edit-project-styles-btn')?.addEventListener('click', () => {
-         openEditModal('styles', activeProjectId);
-    });
+    // Project View Back Button (Now handled by delegation in header actions)
+    // backToProjectsButton?.addEventListener('click', ...); // Removed, handled via delegation
 
-
-    // Editor/Student Toggles
-    courseViewModeToggle?.addEventListener('change', (e) => {
-        handleViewModeToggle(courseView, e.target.value === 'student');
+    // --- Mode Toggles ---
+    courseModeToggleInput?.addEventListener('change', (e) => {
+        courseView?.classList.toggle('student-mode', !e.target.checked);
     });
-    projectViewModeToggle?.addEventListener('change', (e) => {
-        handleViewModeToggle(projectView, e.target.value === 'student');
-        // Re-render content area to apply element hover styles correctly
-        if (currentView === 'project') {
-             renderContentArea_Editor();
-        }
+    projectModeToggleInput?.addEventListener('change', (e) => {
+        projectView?.classList.toggle('student-mode', !e.target.checked);
+        // Force redraw of sidebar if needed, especially for controls hiding
+        if (currentView === 'project') renderSidebar_Editor();
     });
 
 
@@ -1869,7 +1857,7 @@ function setupGlobalEventListeners() {
     cancelModalButton?.addEventListener('click', closeModal);
     saveModalButton?.addEventListener('click', saveEditAction);
 
-    // Modal Form Internal Actions
+    // Modal Form Internal Actions (Delegated)
     modalFormContent?.addEventListener('click', handleModalFormInternalClick);
 
     // Global Keydown Listener
@@ -1878,53 +1866,94 @@ function setupGlobalEventListeners() {
     // Handle Hash Changes
     window.addEventListener('hashchange', handleHashChange);
 
-    // Global listener for style modal actions (font size custom toggle, inherit buttons)
+    // Global listener for font size custom input toggle & inherit buttons
     document.addEventListener('change', (e) => { if (e.target && e.target.id === 'edit-global-style-size') { const customInput = modalFormContent?.querySelector('#edit-global-style-size-custom'); if (customInput) { const showCustom = (e.target.value === 'custom'); customInput.style.display = showCustom ? 'inline-block' : 'none'; if (!showCustom) customInput.value = ''; if (showCustom) setTimeout(() => customInput.focus(), 0); } } });
     document.addEventListener('click', (e) => {
-        if (e.target?.id === 'inherit-text-color-btn') { const colorInput = modalFormContent?.querySelector('#edit-global-style-color'); if (colorInput) colorInput.value = ''; }
-        if (e.target?.id === 'inherit-theme-colors-btn') { modalFormContent?.querySelectorAll('#edit-style-primary, #edit-style-secondary, #edit-style-accent').forEach(inp => inp.value = ''); }
+        if (e.target?.id === 'inherit-text-color-btn') { const colorInput = modalFormContent?.querySelector('#edit-global-style-color'); if (colorInput) colorInput.value = ''; } // Clear to inherit
+        if (e.target?.id === 'inherit-theme-colors-btn') { modalFormContent?.querySelectorAll('#edit-style-primary, #edit-style-secondary, #edit-style-accent').forEach(inp => inp.value = ''); } // Clear colors to inherit
     });
 }
 
 
 // Extracted Remove Logic
-function removeCourse(courseId) { const course = findCourse(courseId); if (!course) return; if (confirm(`DELETE Course "${escapeHtml(course.name)}"?\n\nThis will also permanently delete ALL ${course.projects.length} associated projects and ALL course content!`)) { course.projects.forEach(p => deleteSpecificProjectData(p.id)); appData.courses = appData.courses.filter(c => c.id !== courseId); saveAppData(); renderDashboardView(); } }
-function removeProject(projectId, courseId) { const projectMeta = findProjectMeta(projectId); if (!projectMeta) return; if (confirm(`DELETE Project "${escapeHtml(projectMeta.name)}"? This cannot be undone.`)) { deleteSpecificProjectData(projectId); const course = findCourse(courseId); if (course) { course.projects = course.projects.filter(p => p.id !== projectId); saveAppData(); renderCourseView(courseId); } else { console.warn("Parent course not found during project removal."); showView('dashboard'); } } }
-function removeCourseElement(courseId, elementId) { const course = findCourse(courseId); const findResult = findCourseElementData(courseId, elementId); if (!course || !findResult) { alert("Could not find course or element to remove."); return; } if (confirm(`Remove this ${findResult.element.type} element from the course description?`)) { course.content.splice(findResult.index, 1); saveAppData(); renderCourseView(courseId); } }
+function removeCourse(courseId) {
+    const course = findCourse(courseId);
+    if (!course) return;
+    if (confirm(`DELETE Course "${escapeHtml(course.name)}"?\n\nThis will also permanently delete ALL ${course.projects.length} associated projects and ALL course content!`)) {
+        course.projects.forEach(p => deleteSpecificProjectData(p.id)); // Delete associated project data
+        appData.courses = appData.courses.filter(c => c.id !== courseId);
+        saveAppData(); renderDashboardView();
+    }
+}
+function removeProject(projectId, courseId) {
+     const projectMeta = findProjectMeta(projectId);
+     if (!projectMeta) return;
+     if (confirm(`DELETE Project "${escapeHtml(projectMeta.name)}"? This action cannot be undone.`)) {
+         deleteSpecificProjectData(projectId); // Delete project's own data
+         const course = findCourse(courseId);
+         if (course) {
+             course.projects = course.projects.filter(p => p.id !== projectId);
+             saveAppData();
+             renderCourseView(courseId); // Re-render the course view
+         } else {
+             console.warn("Parent course not found during project removal, reloading dashboard.");
+             showView('dashboard'); // Fallback if course context is weird
+         }
+     }
+}
+// NEW: Remove Course Content Element
+function removeCourseElement(courseId, elementId) {
+    const course = findCourse(courseId);
+    const findResult = findCourseElementData(courseId, elementId);
+    if (!course || !findResult) {
+        alert("Could not find the course or element to remove.");
+        return;
+    }
+    if (confirm(`Are you sure you want to remove this ${findResult.element.type} element from the course description?`)) {
+        course.content.splice(findResult.index, 1);
+        saveAppData();
+        renderCourseView(courseId); // Re-render the course view
+    }
+}
 
-// Handles clicks inside the modal form
+// Handles clicks inside the modal form for things specific to certain edit types
 function handleModalFormInternalClick(e) {
     const target = e.target;
-    const { type: currentModalType } = editingContext;
+    const { type: currentModalType } = editingContext; // What type of item is the modal editing?
 
-    // Project Element Editing Specifics (Quiz/Challenges)
-    // Only relevant if modal is editing a project 'element'
-    if (currentModalType === 'element' && currentView === 'project') { // Check context
-        if (target.matches('#quiz-editor-add-question-btn')) { const cont = modalFormContent.querySelector('#quiz-editor-questions-container'); const msg = modalFormContent.querySelector('#quiz-editor-no-questions-msg'); if (cont) { if (msg) msg.remove(); const idx = cont.children.length; cont.insertAdjacentHTML('beforeend', renderSingleQuizQuestionForm_Editor({}, idx)); const nI = cont.querySelector(`#quiz-q-text-${idx}`); if(nI) setTimeout(()=>nI.focus(), 50); } }
-        else if (target.matches('.quiz-editor-remove-question-btn')) { const idx = parseInt(target.dataset.index, 10); if (!isNaN(idx) && confirm(`Remove Question ${idx + 1}?`)) { const qDiv = target.closest('.quiz-edit-question'); if (qDiv) { qDiv.remove(); const cont = modalFormContent.querySelector('#quiz-editor-questions-container'); if (cont && cont.children.length === 0 && !cont.querySelector('#quiz-editor-no-questions-msg')) { cont.innerHTML = '<p id="quiz-editor-no-questions-msg" style="text-align:center; font-style:italic;">No questions added yet.</p>';}} } }
-        else if (target.matches('#challenges-editor-add-btn')) { if (target.disabled) return; const list = modalFormContent.querySelector('#challenges-editor-list'); const msg = modalFormContent.querySelector('#challenges-editor-no-items-msg'); const count = list ? list.querySelectorAll('.challenge-edit-item').length : 0; if (list && count < MAX_CHALLENGES) { if (msg) msg.remove(); const idx = count; list.insertAdjacentHTML('beforeend', renderSingleChallengeForm_Editor({}, idx)); const nI = list.querySelector(`#challenge-heading-${idx}`); if(nI) setTimeout(()=>nI.focus(), 50); if (count + 1 >= MAX_CHALLENGES) target.disabled = true; } }
-        else if (target.matches('.challenges-editor-remove-btn')) { const idx = parseInt(target.dataset.index, 10); if (!isNaN(idx) && confirm(`Remove Challenge Item ${idx + 1}?`)) { const cDiv = target.closest('.challenge-edit-item'); if (cDiv) { cDiv.remove(); const addBtn = modalFormContent.querySelector('#challenges-editor-add-btn'); if (addBtn) { const currentCount = modalFormContent.querySelectorAll('.challenge-edit-item').length; addBtn.disabled = (currentCount >= MAX_CHALLENGES); } const list = modalFormContent.querySelector('#challenges-editor-list'); if (list && list.children.length === 0 && !list.querySelector('#challenges-editor-no-items-msg')) { list.innerHTML = '<p id="challenges-editor-no-items-msg" style="text-align:center; font-style:italic;">No challenge items added yet.</p>'; }} } }
+    // --- Project Element Editing Specifics (Quiz/Challenges) ---
+    // Only relevant if modal type is 'element' (project element) or 'course-element'
+    if (currentModalType === 'element' || currentModalType === 'course-element') {
+         // Check if editing a Quiz or Challenges type within the project context ('element')
+         const isProjectQuizChallengesEdit = (currentModalType === 'element') &&
+            (modalFormContent.querySelector('#quiz-editor-questions-container') || modalFormContent.querySelector('#challenges-editor-list'));
+
+         if (isProjectQuizChallengesEdit) {
+            if (target.matches('#quiz-editor-add-question-btn')) { const cont = modalFormContent.querySelector('#quiz-editor-questions-container'); const msg = modalFormContent.querySelector('#quiz-editor-no-questions-msg'); if (cont) { if (msg) msg.remove(); const idx = cont.children.length; cont.insertAdjacentHTML('beforeend', renderSingleQuizQuestionForm_Editor({}, idx)); const nI = cont.querySelector(`#quiz-q-text-${idx}`); if(nI) setTimeout(()=>nI.focus(), 50); } }
+            else if (target.matches('.quiz-editor-remove-question-btn')) { const idx = parseInt(target.dataset.index, 10); if (!isNaN(idx) && confirm(`Remove Question ${idx + 1}?`)) { const qDiv = target.closest('.quiz-edit-question'); if (qDiv) { qDiv.remove(); const cont = modalFormContent.querySelector('#quiz-editor-questions-container'); if (cont && cont.children.length === 0 && !cont.querySelector('#quiz-editor-no-questions-msg')) { cont.innerHTML = '<p id="quiz-editor-no-questions-msg" style="text-align:center; font-style:italic;">No questions added yet.</p>';}} } }
+            else if (target.matches('#challenges-editor-add-btn')) { if (target.disabled) return; const list = modalFormContent.querySelector('#challenges-editor-list'); const msg = modalFormContent.querySelector('#challenges-editor-no-items-msg'); const count = list ? list.querySelectorAll('.challenge-edit-item').length : 0; if (list && count < MAX_CHALLENGES) { if (msg) msg.remove(); const idx = count; list.insertAdjacentHTML('beforeend', renderSingleChallengeForm_Editor({}, idx)); const nI = list.querySelector(`#challenge-heading-${idx}`); if(nI) setTimeout(()=>nI.focus(), 50); if (count + 1 >= MAX_CHALLENGES) target.disabled = true; } }
+            else if (target.matches('.challenges-editor-remove-btn')) { const idx = parseInt(target.dataset.index, 10); if (!isNaN(idx) && confirm(`Remove Challenge Item ${idx + 1}?`)) { const cDiv = target.closest('.challenge-edit-item'); if (cDiv) { cDiv.remove(); const addBtn = modalFormContent.querySelector('#challenges-editor-add-btn'); if (addBtn) { const currentCount = modalFormContent.querySelectorAll('.challenge-edit-item').length; addBtn.disabled = (currentCount >= MAX_CHALLENGES); } const list = modalFormContent.querySelector('#challenges-editor-list'); if (list && list.children.length === 0 && !list.querySelector('#challenges-editor-no-items-msg')) { list.innerHTML = '<p id="challenges-editor-no-items-msg" style="text-align:center; font-style:italic;">No challenge items added yet.</p>'; }} } }
+        }
     }
-    // Inherit buttons are handled globally
+    // Inherit buttons are handled globally now
 }
 
 
 // --- Project Editor Event Listeners Management ---
 let isProjectEditorListenersActive = false;
-const projectEditorEventHandlers = {
-    handleProjectSidebarClick,
-    handleProjectAddControlsClick,
-    handleProjectContentAreaClick
-};
+const projectEditorEventHandlers = { handleProjectSidebarClick, handleProjectAddControlsClick, handleProjectContentAreaClick, handleProjectHeaderClick };
 
 function setupEventListeners_Editor() {
-    if (isProjectEditorListenersActive || currentView !== 'project') return;
+    if (isProjectEditorListenersActive || currentView !== 'project') return; // Only setup if in project view
     console.log("Setting up project editor event listeners.");
-    const { addTabButton, tabsContainer, contentArea, addControls } = projectEditorElements;
+    const { addTabButton, editStylesButton, tabsContainer, contentArea, addControls } = projectEditorElements;
+    const projectHeader = projectView.querySelector('.page-header'); // Get header for delegation
 
-    // Note: Edit Styles button listener is now handled globally via projectView click delegation if needed, or direct ID lookup
+    // Specific Button Clicks (if not handled by delegation)
+    addTabButton?.addEventListener('click', addTabAction_Editor); // Keep direct listener for add tab
 
-    addTabButton?.addEventListener('click', addTabAction_Editor);
+    // Delegated Clicks
+    projectHeader?.addEventListener('click', projectEditorEventHandlers.handleProjectHeaderClick); // Handle header actions (Back, Edit Styles)
     tabsContainer?.addEventListener('click', projectEditorEventHandlers.handleProjectSidebarClick);
     addControls?.addEventListener('click', projectEditorEventHandlers.handleProjectAddControlsClick);
     contentArea?.addEventListener('click', projectEditorEventHandlers.handleProjectContentAreaClick);
@@ -1935,9 +1964,14 @@ function setupEventListeners_Editor() {
 function teardownEventListeners_Editor() {
     if (!isProjectEditorListenersActive) return;
     console.log("Tearing down project editor event listeners.");
-     const { addTabButton, tabsContainer, contentArea, addControls } = projectEditorElements;
+     const { addTabButton, /* editStylesButton, */ tabsContainer, contentArea, addControls } = projectEditorElements; // editStylesButton handled by delegation
+     const projectHeader = projectView.querySelector('.page-header');
 
+     // Remove specific handlers if elements are known and stable
      addTabButton?.removeEventListener('click', addTabAction_Editor);
+
+     // Remove delegated handlers
+     projectHeader?.removeEventListener('click', projectEditorEventHandlers.handleProjectHeaderClick);
      tabsContainer?.removeEventListener('click', projectEditorEventHandlers.handleProjectSidebarClick);
      addControls?.removeEventListener('click', projectEditorEventHandlers.handleProjectAddControlsClick);
      contentArea?.removeEventListener('click', projectEditorEventHandlers.handleProjectContentAreaClick);
@@ -1945,22 +1979,48 @@ function teardownEventListeners_Editor() {
      isProjectEditorListenersActive = false;
 }
 
-// --- Project Editor Event Handlers ---
-function handleProjectSidebarClick(e) { if (currentView !== 'project' || projectView.classList.contains('student-view-active')) return; const target = e.target; const btn = target.closest('button[data-action]'); const name = target.closest('.tab-name,.sub-tab-name'); if (btn) { e.stopPropagation(); const act = btn.dataset.action; const tId = btn.dataset.tabId || btn.dataset.parentTabId; const sId = btn.dataset.subTabId; if (!tId && ['edit-subtab', 'remove-subtab', 'add-subtab'].includes(act)) return; switch (act) { case 'edit-tab': openEditModal('tab', tId); break; case 'remove-tab': removeTabAction_Editor(tId); break; case 'add-subtab': addSubTabAction_Editor(tId); break; case 'edit-subtab': openEditModal('subtab', sId, tId); break; case 'remove-subtab': removeSubTabAction_Editor(tId, sId); break; } } else if (name) { /* Let normal tab selection handle this if needed, or block? */ /* Let's allow tab selection */ if (name?.classList.contains('sub-tab-name')) setActiveTab_Editor(name.dataset.parentTabId, name.dataset.subTabId); else if (name?.classList.contains('tab-name')) setActiveTab_Editor(name.dataset.tabId); } }
-function handleProjectAddControlsClick(e) { if (currentView !== 'project' || projectView.classList.contains('student-view-active')) return; if (e.target.tagName === 'BUTTON' && e.target.dataset.type) { addElementAction_Editor(e.target.dataset.type); } }
-function handleProjectContentAreaClick(e) { if (currentView !== 'project') return; const t = e.target; const isStudentMode = projectView.classList.contains('student-view-active'); const actBtn = t.closest('button[data-action]'); const qOpt = t.closest('.quiz-option'); if (actBtn) { const act = actBtn.dataset.action; const elId = t.closest('.content-element')?.dataset.elementId; const qId = t.closest('.quiz-container-inner')?.dataset.quizId || actBtn.dataset.quizId; if (!isStudentMode) { // Editor only actions switch (act) { case 'edit-element': if (elId) openEditModal('element', elId); break; case 'remove-element': if (elId) removeElementAction_Editor(elId); break; } } // Actions allowed in both modes switch (act) { case 'submit-quiz': if (qId) submitQuizAction_Editor(qId); break; } } else if (qOpt) { selectQuizOption_Editor(qOpt); } }
+// --- Project Editor Event Handlers (Keep same logic, add header handler) ---
+function handleProjectHeaderClick(e) {
+    if (currentView !== 'project') return;
+    const target = e.target;
+    const button = target.closest('button');
+    if (button) {
+        const buttonId = button.id;
+        if (buttonId === 'back-to-projects-btn') {
+            if (activeCourseId) showView('course', activeCourseId);
+            else showView('dashboard');
+        } else if (buttonId === 'edit-project-styles-btn') {
+             openEditModal('styles', activeProjectId);
+        }
+        // Toggle switch handled globally by its input change listener
+    }
+}
+function handleProjectSidebarClick(e) { if (currentView !== 'project') return; const target = e.target; const btn = target.closest('button[data-action]'); const name = target.closest('.tab-name,.sub-tab-name'); if (btn) { e.stopPropagation(); const act = btn.dataset.action; const tId = btn.dataset.tabId || btn.dataset.parentTabId; const sId = btn.dataset.subTabId; if (!tId && ['edit-subtab', 'remove-subtab', 'add-subtab'].includes(act)) { console.warn("Action requires tab ID."); return; } switch (act) { case 'edit-tab': openEditModal('tab', tId); break; case 'remove-tab': removeTabAction_Editor(tId); break; case 'add-subtab': addSubTabAction_Editor(tId); break; case 'edit-subtab': openEditModal('subtab', sId, tId); break; case 'remove-subtab': removeSubTabAction_Editor(tId, sId); break; } } else if (name?.classList.contains('sub-tab-name')) { setActiveTab_Editor(name.dataset.parentTabId, name.dataset.subTabId); } else if (name?.classList.contains('tab-name')) { setActiveTab_Editor(name.dataset.tabId); } }
+function handleProjectAddControlsClick(e) { if (currentView !== 'project') return; if (e.target.tagName === 'BUTTON' && e.target.dataset.type) { addElementAction_Editor(e.target.dataset.type); } }
+function handleProjectContentAreaClick(e) { if (currentView !== 'project') return; const t = e.target; const actBtn = t.closest('button[data-action]'); const qOpt = t.closest('.quiz-option'); if (actBtn) { const act = actBtn.dataset.action; const elId = t.closest('.content-element')?.dataset.elementId; const qId = t.closest('.quiz-container-inner')?.dataset.quizId || actBtn.dataset.quizId; switch (act) { case 'edit-element': if (elId) openEditModal('element', elId); break; case 'remove-element': if (elId) removeElementAction_Editor(elId); break; case 'submit-quiz': if (qId) submitQuizAction_Editor(qId); break; } } else if (qOpt) { selectQuizOption_Editor(qOpt); } }
 
 
 // --- Routing ---
 function handleHashChange() {
     const hash = window.location.hash;
     console.log("Routing based on hash:", hash);
+
+    // Teardown project-specific things before potentially switching away
     teardownEventListeners_Editor();
 
-    if (!hash || hash === '#') { showView('dashboard'); }
-    else if (hash.startsWith('#/course/')) { const courseId = hash.substring('#/course/'.length); showView('course', courseId); }
-    else if (hash.startsWith('#/project/')) { const projectId = hash.substring('#/project/'.length); showView('project', null, projectId); }
-    else { console.warn(`Unknown hash "${hash}", redirecting.`); showView('dashboard'); }
+    if (!hash || hash === '#') {
+        showView('dashboard');
+    } else if (hash.startsWith('#/course/')) {
+        const courseId = hash.substring('#/course/'.length);
+        showView('course', courseId);
+        applyCourseSpecificStyles(courseId); // Apply specific styles when navigating to course
+    } else if (hash.startsWith('#/project/')) {
+        const projectId = hash.substring('#/project/'.length);
+        showView('project', null, projectId); // showView will find parent courseId
+    } else {
+        console.warn(`Unknown hash "${hash}", redirecting to dashboard.`);
+        showView('dashboard');
+    }
 }
 
 // --- Initialization ---
