@@ -452,6 +452,31 @@ function getModalValue(selector, defaultValue = '', trimValue = true) {
     return trimValue ? value.trim() : value;
 }
 
+// Provides the default data structure for new project elements
+function getDefaultElementData(type) {
+    switch (type) {
+        case 'heading':
+            return { text: 'New Heading' };
+        case 'text':
+            return { text: 'New text block...' };
+        case 'image':
+            // Provide some default placeholder or leave empty
+            return { url: '', alt: '', width: 'auto', height: 'auto', heading: '', description: '' };
+        case 'video':
+            return { url: '', heading: '', description: '' };
+        case 'presentation':
+            return { url: '', heading: '', description: '' };
+        case 'challenges':
+            return { heading: 'Challenges', description: '', challenges: [] };
+        case 'quiz':
+            return { questions: [] };
+        default:
+            console.warn(`getDefaultElementData called for unknown type: ${type}`);
+            return {}; // Return empty object for unknown types
+    }
+}
+
+    
 // --- Application State ---
 let appData = {
     globalStyles: { // NEW: Global styles
