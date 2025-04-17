@@ -1135,66 +1135,106 @@ function setupGlobalEventListeners() {
     // App Settings Button
     appSettingsButton?.addEventListener('click', () => openEditModal('appStyles'));
 
-    // Dashboard View Buttons & Item Clicks (Delegated)
+    // --- Dashboard View Event Delegation ---
     dashboardView?.addEventListener('click', (e) => {
         const target = e.target;
-        const button = target.closest('button[data-action]');
-        const itemContainer = target.closest('.item-container'); // Click anywhere on card/row
+        const button = target.closest('button'); // Find closest button clicked
+        const itemContainer = target.closest('.item-container');
 
-        if (button) { // Handle specific action buttons first
-            e.stopPropagation(); // Prevent item click navigation
+        if (button) { // Handle button clicks first
+            e.stopPropagation(); // Prevent item click navigation if clicking a button
             const action = button.dataset.action;
-            const courseId = button.closest('[data-course-id]')?.dataset.courseId;
-            if (!courseId) return;
-            switch (action) {
-                case 'view-projects': showView('course', courseId); break;
-                case 'edit-course': openEditModal('course', courseId); break;
-                case 'remove-course': removeCourse(courseId); break; // Extracted remove logic
+            const buttonId = button.id; // Get the button's ID
+
+            // Handle View Toggle Buttons
+            if (buttonId === 'dashboard-grid-view-btn') {
+                setItemViewMode(courseListContainer, 'grid', dashboardGridViewBtn, dashboardListViewBtn);
+                return; // Handled
             }
+            if (buttonId === 'dashboard-list-view-btn') {
+                setItemViewMode(courseListContainer, 'list', dashboardGridViewBtn, dashboardListViewBtn);
+                return; // Handled
+            }
+             // Handle Add Course Button
+             if (buttonId === 'add-course-btn') {
+                if (appData.courses.length < MAX_COURSES) { openEditModal('course', null, null, true); }
+                else { alert(`Max courses (${MAX_COURSES}) reached.`); }
+                return; // Handled
+             }
+
+            // Handle Action Buttons on Items (Edit/Remove/View Projects)
+            const courseId = button.closest('[data-course-id]')?.dataset.courseId;
+            if (action && courseId) {
+                 switch (action) {
+                     case 'view-projects': showView('course', courseId); break;
+                     case 'edit-course': openEditModal('course', courseId); break;
+                     case 'remove-course': removeCourse(courseId); break;
+                 }
+                 return; // Handled
+            }
+
         } else if (itemContainer && itemContainer.dataset.courseId) { // Handle click on item itself
             e.stopPropagation();
             showView('course', itemContainer.dataset.courseId);
-        } else if (target === addCourseButton) { // Handle add button directly
-            if (appData.courses.length < MAX_COURSES) { openEditModal('course', null, null, true); } else { alert(`Max courses (${MAX_COURSES}) reached.`); }
-        } else if (target === dashboardGridViewBtn) { setItemViewMode(courseListContainer, 'grid', dashboardGridViewBtn, dashboardListViewBtn);
-        } else if (target === dashboardListViewBtn) { setItemViewMode(courseListContainer, 'list', dashboardGridViewBtn, dashboardListViewBtn); }
+        }
     });
 
-    // Course View Buttons & Item Clicks (Delegated)
+    // --- Course View Event Delegation ---
     courseView?.addEventListener('click', (e) => {
          const target = e.target;
-         const button = target.closest('button[data-action]');
+         const button = target.closest('button'); // Find closest button
          const itemContainer = target.closest('.item-container');
 
          if (button) {
             e.stopPropagation();
             const action = button.dataset.action;
-            const projectId = button.closest('[data-project-id]')?.dataset.projectId;
-            const courseId = button.closest('[data-course-id]')?.dataset.courseId || activeCourseId; // Use active if button isn't in item
-            if (!projectId && action !== 'back-to-dashboard') return; // Need project ID for most actions
+            const buttonId = button.id;
 
-            switch (action) {
-                case 'open-project': showView('project', courseId, projectId); break;
-                case 'edit-project': openEditModal('project', projectId, courseId); break;
-                case 'remove-project': removeProject(projectId, courseId); break; // Extracted remove logic
-                case 'back-to-dashboard': showView('dashboard'); break; // Handle back button if defined with data-action
+            // Handle View Toggle Buttons
+            if (buttonId === 'course-grid-view-btn') {
+                setItemViewMode(projectListContainer, 'grid', courseGridViewBtn, courseListViewBtn);
+                return; // Handled
             }
+            if (buttonId === 'course-list-view-btn') {
+                setItemViewMode(projectListContainer, 'list', courseGridViewBtn, courseListViewBtn);
+                return; // Handled
+            }
+            // Handle Add Project Button
+            if (buttonId === 'add-project-btn') {
+                const course = findCourse(activeCourseId);
+                if (course && course.projects.length < MAX_PROJECTS_PER_COURSE) { openEditModal('project', null, activeCourseId, true); }
+                else if (course) { alert(`Max projects (${MAX_PROJECTS_PER_COURSE}) reached.`); }
+                else { alert("Cannot find course."); }
+                return; // Handled
+            }
+             // Handle Back Button
+            if (buttonId === 'back-to-dashboard-btn') {
+                 showView('dashboard');
+                 return; // Handled
+            }
+
+            // Handle Action Buttons on Items
+            const projectId = button.closest('[data-project-id]')?.dataset.projectId;
+            const courseId = button.closest('[data-course-id]')?.dataset.courseId || activeCourseId;
+            if (action && projectId) {
+                 switch (action) {
+                     case 'open-project': showView('project', courseId, projectId); break;
+                     case 'edit-project': openEditModal('project', projectId, courseId); break;
+                     case 'remove-project': removeProject(projectId, courseId); break;
+                 }
+                 return; // Handled
+            }
+
          } else if (itemContainer && itemContainer.dataset.projectId) {
              e.stopPropagation();
              showView('project', itemContainer.dataset.courseId, itemContainer.dataset.projectId);
-         } else if (target === addProjectButton) {
-              const course = findCourse(activeCourseId);
-              if (course && course.projects.length < MAX_PROJECTS_PER_COURSE) { openEditModal('project', null, activeCourseId, true); } else if (course) { alert(`Max projects (${MAX_PROJECTS_PER_COURSE}) reached.`); } else { alert("Cannot find course."); }
-         } else if (target === courseGridViewBtn) { setItemViewMode(projectListContainer, 'grid', courseGridViewBtn, courseListViewBtn);
-         } else if (target === courseListViewBtn) { setItemViewMode(projectListContainer, 'list', courseGridViewBtn, courseListViewBtn);
-         } else if (target === backToDashboardButton) { // Direct button handler
-             showView('dashboard');
          }
     });
 
-    // Project View Back Button
+    // Project View Back Button (Direct listener is okay here)
     backToProjectsButton?.addEventListener('click', () => {
-        if (activeCourseId) { showView('course', activeCourseId); } else { showView('dashboard'); }
+        if (activeCourseId) { showView('course', activeCourseId); }
+        else { showView('dashboard'); }
     });
 
     // Modal Buttons
@@ -1202,7 +1242,7 @@ function setupGlobalEventListeners() {
     cancelModalButton?.addEventListener('click', closeModal);
     saveModalButton?.addEventListener('click', saveEditAction);
 
-    // Modal Form Internal Actions (Quiz/Challenges/Project Styles - Delegated)
+    // Modal Form Internal Actions (Delegated)
     modalFormContent?.addEventListener('click', handleModalFormInternalClick);
 
     // Global Keydown Listener
@@ -1212,8 +1252,9 @@ function setupGlobalEventListeners() {
     window.addEventListener('hashchange', handleHashChange);
 
     // Global listener for font size custom input toggle
-    document.addEventListener('change', (e) => { if (e.target && e.target.id === 'edit-global-style-size') { const customInput = modalFormContent.querySelector('#edit-global-style-size-custom'); if (customInput) { const showCustom = (e.target.value === 'custom'); customInput.style.display = showCustom ? 'inline-block' : 'none'; if (!showCustom) customInput.value = ''; if (showCustom) customInput.focus(); } } });
+    document.addEventListener('change', (e) => { /* ... (keep previous logic) ... */ if (e.target && e.target.id === 'edit-global-style-size') { const customInput = modalFormContent.querySelector('#edit-global-style-size-custom'); if (customInput) { const showCustom = (e.target.value === 'custom'); customInput.style.display = showCustom ? 'inline-block' : 'none'; if (!showCustom) customInput.value = ''; if (showCustom) customInput.focus(); } } });
 }
+
 
 // Extracted Remove Logic
 function removeCourse(courseId) {
