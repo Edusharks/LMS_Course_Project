@@ -113,125 +113,104 @@
         /* --- GRID VIEW STYLES --- */
         .item-list.grid-view {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Adjusted minmax for potentially better fit */
-            gap: 25px;
+            grid-template-columns: repeat(3, 1fr); /* Keep 3 columns */
+            gap: 30px; /* Optional: Slightly larger gap */
         }
 
         .item-list.grid-view .item-card {
+            /* Keep existing properties like display, flex-direction, background, border-radius, box-shadow, transition, position, overflow, cursor */
             display: flex;
             flex-direction: column;
             background-color: var(--card-bg);
             border-radius: var(--card-border-radius);
             box-shadow: var(--card-shadow);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            position: relative; /* Needed for absolute positioning of actions */
+            position: relative;
             overflow: hidden;
             cursor: pointer;
-            /* Removed min-height, height determined by content */
         }
         .item-list.grid-view .item-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-4px); /* Slightly more lift on hover */
             box-shadow: var(--card-hover-shadow);
         }
 
         .item-list.grid-view .item-card .item-image {
             width: 100%;
-            height: 150px; /* Keep or adjust height as needed */
+            /* --- INCREASED IMAGE HEIGHT --- */
+            height: 190px; /* Increased from 150px (Adjust as desired) */
             object-fit: cover;
             background-color: #eee;
-            /* border-bottom: 1px solid #eee; */ /* Removed border */
             flex-shrink: 0;
             display: block;
         }
         .item-list.grid-view .item-card .item-image[data-error="true"] {
-            content: var(--error-image-fallback); object-fit: contain; padding: 10px; background-image: var(--error-image-fallback); background-size: contain; background-repeat: no-repeat; background-position: center; min-height: 150px; /* Ensure error state has height */
+             /* Keep error styles */
+             content: var(--error-image-fallback); object-fit: contain; padding: 10px; background-image: var(--error-image-fallback); background-size: contain; background-repeat: no-repeat; background-position: center;
+             /* --- MATCH INCREASED HEIGHT --- */
+             min-height: 190px; /* Ensure error state has new height */
         }
 
         .item-list.grid-view .item-card .item-content {
-            padding: 15px 15px 20px; /* Adjusted padding */
+            /* --- ADJUSTED PADDING & MIN-HEIGHT --- */
+            padding: 20px 20px 25px; /* Increased padding (top/bottom more) */
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center content horizontally */
-            justify-content: center; /* Center content vertically */
-            text-align: center; /* Center text */
-            min-height: 60px; /* Ensure space for title */
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 75px; /* Increased from 60px */
         }
 
         /* Grid view: Title (h4) styling */
         .item-list.grid-view .item-card h4 {
-            font-size: 1.05rem;
+             /* --- INCREASED FONT SIZE --- */
+            font-size: 1.15rem; /* Increased from 1.05rem */
             margin: 0;
-            /* Color applied inline by JS */
             display: inline-block;
             max-width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            /* Color applied inline by JS */
         }
-        /* Grid view: Hide description paragraph */
+
+        /* Grid view: Hide description paragraph (Keep hidden) */
         .item-list.grid-view .item-card p {
             display: none;
         }
-        /* Grid view: Remove heading container default flex behavior if it exists */
+        /* Grid view: Heading container adjustments (Keep as is) */
          .item-list.grid-view .item-card .item-heading-container {
-             display: block; /* Override default flex if necessary */
-             margin-bottom: 0;
-             width: auto; /* Allow h4 to determine width */
-             margin-top: 0;
+             display: block; margin-bottom: 0; width: auto; margin-top: 0;
          }
-
-        /* Grid view: Hide default inline actions container (we use absolute positioned one) */
+         /* Grid view: Hide default inline actions container (Keep hidden) */
          .item-list.grid-view .item-card .item-heading-container .item-inline-actions {
             display: none;
          }
 
-        /* Grid view: Absolutely positioned actions */
+        /* Grid view: Absolutely positioned actions (Keep as is) */
         .item-list.grid-view .item-card .item-inline-actions {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            display: none; /* Hidden by default */
-            background-color: rgba(255, 255, 255, 0.85); /* Slightly more opaque background */
-            border-radius: 5px;
-            padding: 4px;
-            z-index: 10;
-            gap: 5px; /* Space between buttons */
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Optional subtle shadow */
+            position: absolute; top: 8px; right: 8px; display: none; background-color: rgba(255, 255, 255, 0.85); border-radius: 5px; padding: 4px; z-index: 10; gap: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        /* Show actions on card hover */
-        .item-list.grid-view .item-card:hover .item-inline-actions {
-            display: flex;
+        .item-list.grid-view .item-card:hover .item-inline-actions { display: flex; }
+        .item-list.grid-view .item-card .item-inline-actions .action-btn { padding: 4px 5px; font-size: 0.9rem; background-color: transparent; border: none; opacity: 0.7; transition: all 0.2s ease; color: #444; }
+        .item-list.grid-view .item-card .item-inline-actions .action-btn:hover { opacity: 1; background-color: rgba(0,0,0,0.08); color: #000; }
+        .item-list.grid-view .item-card .item-inline-actions .remove-btn.action-btn { color: var(--danger); }
+        .item-list.grid-view .item-card .item-inline-actions .remove-btn.action-btn:hover { background-color: var(--danger); color: white; }
+        .item-list.grid-view .item-card .item-inline-actions .edit-btn.action-btn { color: #333; }
+        .item-list.grid-view .item-card .item-inline-actions .edit-btn.action-btn:hover { background-color: var(--project-accent, var(--course-accent, var(--default-accent))); color: var(--dark); }
+
+
+        /* --- ADD ITEM CARD - Adjust Height to Match --- */
+        .add-item-card {
+             /* Keep existing properties */
+             display: flex; align-items: center; justify-content: center; background-color: #e9eef5; border: 2px dashed #c4cde0; border-radius: var(--card-border-radius); box-shadow: none; transition: background-color 0.2s ease, border-color 0.2s ease; cursor: pointer; color: var(--default-primary); font-size: 3rem; font-weight: bold; text-align: center;
+             /* --- ADJUSTED Min Height --- Calculated: image(190) + content-min(75) + content-padding(20+25) = ~310px */
+             min-height: 310px;
         }
-        /* Styling for action buttons within the absolute container */
-        .item-list.grid-view .item-card .item-inline-actions .action-btn {
-            padding: 4px 5px; /* Adjust padding */
-            font-size: 0.9rem; /* Adjust size */
-            background-color: transparent;
-            border: none; /* No border needed */
-            opacity: 0.7;
-            transition: all 0.2s ease;
-            color: #444; /* Slightly darker icon color */
-        }
-        .item-list.grid-view .item-card .item-inline-actions .action-btn:hover {
-            opacity: 1;
-            background-color: rgba(0,0,0,0.08);
-            color: #000;
-        }
-        .item-list.grid-view .item-card .item-inline-actions .remove-btn.action-btn {
-             color: var(--danger); /* Keep red for remove */
-        }
-         .item-list.grid-view .item-card .item-inline-actions .remove-btn.action-btn:hover {
-             background-color: var(--danger);
-             color: white;
-         }
-        .item-list.grid-view .item-card .item-inline-actions .edit-btn.action-btn {
-             color: #333; /* Default edit color */
-        }
-         .item-list.grid-view .item-card .item-inline-actions .edit-btn.action-btn:hover {
-             background-color: var(--project-accent, var(--course-accent, var(--default-accent)));
-             color: var(--dark);
-         }
+        /* Keep add-item hover and add-item-row styles */
+        .add-item-card:hover, .add-item-row:hover { background-color: #dde4f0; border-color: var(--default-primary); }
+        .item-list.list-view .add-item-row { min-height: 80px; font-size: 2rem; padding: 15px; margin-top: 10px; }
 
 
         /* --- LIST VIEW STYLES --- */
