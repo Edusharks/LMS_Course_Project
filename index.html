@@ -425,7 +425,26 @@
     }
         
         #project-view #project-tabs { margin-bottom: 15px; }
-        #project-view .tab, #project-view .sub-tab { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; margin-bottom: 8px; border-radius: 6px; cursor: pointer; border: 1px solid #eee; transition: all 0.2s ease; background-color: #fff; position: relative; }
+        
+        #project-view .tab, #project-view .sub-tab {
+            display: flex; justify-content: space-between; align-items: center;
+            /* --- INCREASED Padding --- */
+            padding: 12px 15px; /* Increased from 10px 12px */
+            margin-bottom: 8px; border-radius: 6px; cursor: pointer; border: 1px solid #eee; transition: all 0.2s ease; background-color: #fff; position: relative;
+            /* --- Optional: Increase Font Size --- */
+            /* font-size: 1.05em; */ /* Uncomment to make text slightly larger */
+        }
+        /* ... other tab styles ... */
+
+        #project-view .sub-tab {
+            margin-left: 20px;
+             /* --- INCREASED Padding --- */
+            padding: 10px 12px; /* Increased from 8px 10px */
+            /* --- Optional: Adjust Font Size (relative to parent tab) --- */
+            /* font-size: 0.95em; */ /* Adjust if parent font size changed */
+            margin-bottom: 5px; background-color: #f9f9fc;
+        }
+        
         #project-view .tab:hover:not(.active), #project-view .sub-tab:hover:not(.active) { background-color: #f0f5ff; border-color: #c4cde0; }
         #project-view .tab.active { background-color: var(--project-primary); color: white; border-color: var(--project-primary); box-shadow: 0 2px 5px rgba(var(--project-primary-rgb), 0.2); font-weight: bold; }
         #project-view .sub-tab.active { background-color: var(--project-secondary); border-color: var(--project-secondary); color: white; box-shadow: 0 2px 5px rgba(255, 122, 198, 0.2); font-weight: bold; }
