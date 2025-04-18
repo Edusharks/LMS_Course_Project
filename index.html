@@ -238,20 +238,40 @@
              --project-font-size: var(--default-font-size);
              --project-primary-rgb: 94, 129, 244; /* Default, updated by JS */
         }
-        #project-view .project-layout { display: flex; gap: 25px; transition: gap 0.3s ease; }
-        #project-view #project-sidebar {
-            width: var(--sidebar-width); flex-shrink: 0; background-color: #fff;
-            padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            height: fit-content; transition: width 0.3s ease, padding 0.3s ease, margin-right 0.3s ease, opacity 0.3s ease;
-            opacity: 1; overflow: hidden;
-        }
-        #project-view.sidebar-minimized #project-sidebar {
-             width: var(--sidebar-minimized-width);
-             padding: 0;
-             margin-right: -25px; /* Offset the gap */
-             opacity: 0;
-             pointer-events: none; /* Prevent interaction */
-        }
+        
+    #project-view .project-layout {
+        display: flex;
+        gap: 25px;
+        /* transition: gap 0.3s ease; */ /* REMOVED or commented out */
+    }
+    #project-view #project-sidebar {
+        /* CHANGED: Use max-width instead of width for animation */
+        max-width: var(--sidebar-width);
+        width: var(--sidebar-width); /* Keep width for initial layout */
+        flex-shrink: 0;
+        background-color: #fff;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        height: fit-content;
+        /* CHANGED: Transition max-width, opacity, padding. Removed margin-right */
+        transition: max-width 0.3s ease-in-out, opacity 0.25s ease-in-out, padding 0.3s ease-in-out;
+        opacity: 1;
+        overflow: hidden; /* ADDED: Important for max-width animation */
+    }
+
+        
+    #project-view.sidebar-minimized #project-sidebar {
+         /* CHANGED: Animate max-width to 0 */
+         max-width: var(--sidebar-minimized-width); /* Should be 0px */
+         padding: 0 0; /* Animate padding vertically and horizontally */
+         margin-right: 0; /* Let gap handle spacing, removed from transition */
+         opacity: 0;
+         pointer-events: none; /* Prevent interaction */
+         /* No need to set width here if max-width is 0 */
+    }
+
+        
         #project-view #project-tabs { margin-bottom: 15px; }
         #project-view .tab, #project-view .sub-tab { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; margin-bottom: 8px; border-radius: 6px; cursor: pointer; border: 1px solid #eee; transition: all 0.2s ease; background-color: #fff; position: relative; }
         #project-view .tab:hover:not(.active), #project-view .sub-tab:hover:not(.active) { background-color: #f0f5ff; border-color: #c4cde0; }
