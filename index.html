@@ -241,37 +241,39 @@
         
     #project-view .project-layout {
         display: flex;
-        /* gap: 25px; */
+        gap: 25px; 
          /* transition: gap 0.3s ease; */ /* REMOVED or commented out */
     }
 
     #project-view #project-sidebar {
-        width: var(--sidebar-width); /* Explicit width is important for translate */
+        width: var(--sidebar-width); /* Explicit width */
         flex-shrink: 0;
         background-color: #fff;
-        padding: 15px;
+        padding: 15px; /* Keep padding */
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         height: fit-content;
         opacity: 1;
-        overflow: hidden; /* Keep overflow hidden */
-        /* --- CHANGED: Animate transform and opacity --- */
-        transform: translateX(0); /* Start in default position */
-        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        /* Remove width/max-width/padding from transition */
+        overflow: hidden;
+        /* --- CHANGED: Animate transform and opacity ONLY --- */
+        transform: translateX(0);
+        /* Make opacity transition slightly faster */
+        transition: transform 0.3s ease-in-out, opacity 0.25s ease-in-out;
     }
 
         
     #project-view.sidebar-minimized #project-sidebar {
          /* --- CHANGED: Use transform to slide left and fade out --- */
-         transform: translateX(-100%); /* Slide completely to the left */
+         transform: translateX(calc(-100% - 25px)); /* Slide left by width + gap */
          opacity: 0;
-         pointer-events: none; /* Prevent interaction */
-         /* --- ADDED: Also remove padding/width when hidden to prevent layout shifts --- */
+         pointer-events: none;
+         /* --- ADDED: Instantly collapse size/margins AFTER animation is triggered --- */
+         width: 0;
          padding-left: 0;
          padding-right: 0;
-         width: 0; /* Collapse width instantly or with faster transition if needed */
-         /* margin-right: 0; Remove if still present */
+         margin-right: -25px; /* Compensate for the gap space */
+         /* Optional: Add a slight delay to width/padding collapse if needed */
+         /* transition: transform 0.3s ease-in-out, opacity 0.25s ease-in-out, width 0s 0.3s, padding 0s 0.3s, margin-right 0s 0.3s; */
     }
         
         #project-view #project-tabs { margin-bottom: 15px; }
@@ -306,15 +308,10 @@
          color: var(--project-text-color);
          font-family: var(--project-font-family);
          font-size: var(--project-font-size);
-         /* --- ADDED: Handle margin based on sidebar presence --- */
-         margin-left: calc(var(--sidebar-width) + 25px); /* Add space for sidebar + original gap */
-         transition: margin-left 0.3s ease-in-out; /* Animate the margin shift */
+         /* margin-left: calc(var(--sidebar-width) + 25px); */ /* REMOVED */
+         /* transition: margin-left 0.3s ease-in-out; */ /* REMOVED */
     }
 
-    /* --- ADDED: Adjust main content margin when sidebar is minimized --- */
-    #project-view.sidebar-minimized #project-main-content {
-         margin-left: 0; /* Remove the left margin */
-    }
 
         #project-view #tab-content-area { margin-bottom: 30px; }
         #project-view #tab-content-area > p { text-align: center; color: #888; margin-top: 30px; font-style: italic; }
