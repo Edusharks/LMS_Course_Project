@@ -2578,30 +2578,62 @@ function teardownEventListeners_Editor() {
     isProjectEditorListenersActive = false;
 }
 
-function handleProjectSidebarClick(e) { if (currentView !== 'project' || projectView.classList.contains('student-mode')) return; // Ignore clicks in student mode for add/edit/remove
-    const target = e.target;
-    const btn = target.closest('button[data-action]');
-    const name = target.closest('.tab-name, .sub-tab-name'); // Allow selection even if student mode
+function handleProjectSidebarClick(e) {
+    // Only proceed if we are actually in the project view
+    if (currentView !== 'project') return;
 
-    if (btn && !projectView.classList.contains('student-mode')) { // Only process button actions in editor mode
-        e.stopPropagation();
-        const act = btn.dataset.action;
-        const tId = btn.dataset.tabId || btn.dataset.parentTabId;
-        const sId = btn.dataset.subTabId;
-        if (!tId && ['edit-subtab', 'remove-subtab', 'add-subtab'].includes(act)) { console.warn("Action requires tab ID."); return; }
-        switch (act) {
-            case 'edit-tab': openEditModal('tab', tId); break;
-            case 'remove-tab': removeTabAction_Editor(tId); break;
-            case 'add-subtab': addSubTabAction_Editor(tId); break;
-            case 'edit-subtab': openEditModal('subtab', sId, tId); break;
-            case 'remove-subtab': removeSubTabAction_Editor(tId, sId); break;
+    const target = e.target;
+    const btn = target.closest('button[data-action]'); // Check if an action button was clicked
+    const name = target.closest('.tab-name, .sub-tab-name'); // Check if a tab/sub-tab name was clicked
+    const isStudent = projectView.classList.contains('student-mode');
+
+    // --- Handle Action Button Clicks ---
+    if (btn) {
+        // If an action button was clicked AND we are in student mode, ignore the click entirely.
+        if (isStudent) {
+            e.stopPropagation(); // Stop further processing
+            console.log("Sidebar action button clicked in student mode - ignoring.");
+            return;
+        } else {
+            // Otherwise (action button clicked in EDITOR mode), process the action.
+            e.stopPropagation();
+            const act = btn.dataset.action;
+            const tId = btn.dataset.tabId || btn.dataset.parentTabId;
+            const sId = btn.dataset.subTabId;
+
+            // Basic validation for actions requiring a tab ID
+            if (!tId && ['edit-subtab', 'remove-subtab', 'add-subtab'].includes(act)) {
+                console.warn("Action requires tab ID.");
+                return;
+            }
+
+            // Perform the action based on the button's data attributes
+            switch (act) {
+                case 'edit-tab': openEditModal('tab', tId); break;
+                case 'remove-tab': removeTabAction_Editor(tId); break;
+                case 'add-subtab': addSubTabAction_Editor(tId); break;
+                case 'edit-subtab': openEditModal('subtab', sId, tId); break;
+                case 'remove-subtab': removeSubTabAction_Editor(tId, sId); break;
+                default: console.warn(`Unknown sidebar action: ${act}`);
+            }
+            return; // Action handled, no need to check for name click
         }
-    } else if (name) { // Allow tab/subtab selection in both modes
-        e.stopPropagation(); // Prevent potential parent clicks
-        if (name?.classList.contains('sub-tab-name')) { setActiveTab_Editor(name.dataset.parentTabId, name.dataset.subTabId); }
-        else if (name?.classList.contains('tab-name')) { setActiveTab_Editor(name.dataset.tabId); }
+    }
+
+    // --- Handle Tab/Sub-tab Name Clicks (for navigation) ---
+    // Allow navigation clicks in BOTH student and editor mode.
+    if (name) {
+        e.stopPropagation(); // Prevent potential event bubbling issues
+        if (name.classList.contains('sub-tab-name')) {
+            // Clicked on a sub-tab name
+            setActiveTab_Editor(name.dataset.parentTabId, name.dataset.subTabId);
+        } else if (name.classList.contains('tab-name')) {
+            // Clicked on a main tab name
+            setActiveTab_Editor(name.dataset.tabId);
+        }
     }
 }
+
 function handleProjectAddControlsClick(e) { if (currentView !== 'project' || projectView.classList.contains('student-mode')) return; // Only allow adding in editor mode
     if (e.target.tagName === 'BUTTON' && e.target.dataset.type) { addElementAction_Editor(e.target.dataset.type); } }
 function handleProjectContentAreaClick(e) {
