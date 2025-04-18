@@ -429,8 +429,8 @@
         #project-view .tab, #project-view .sub-tab {
             display: flex; justify-content: space-between; align-items: center;
             /* --- INCREASED Padding --- */
-            padding: 12px 15px; /* Increased from 10px 12px */
-            margin-bottom: 8px; border-radius: 6px; cursor: pointer; border: 1px solid #eee; transition: all 0.2s ease; background-color: #fff; position: relative;
+            padding: 15px 20px; /* Increased from 10px 12px */
+            margin-bottom: 10px; border-radius: 8px; cursor: pointer; border: 1px solid #eee; transition: all 0.2s ease; background-color: #fff; position: relative;
             /* --- Optional: Increase Font Size --- */
             /* font-size: 1.05em; */ /* Uncomment to make text slightly larger */
         }
@@ -439,10 +439,12 @@
         #project-view .sub-tab {
             margin-left: 20px;
              /* --- INCREASED Padding --- */
-            padding: 10px 12px; /* Increased from 8px 10px */
+            padding: 12px 15px; /* Increased from 8px 10px */
             /* --- Optional: Adjust Font Size (relative to parent tab) --- */
             /* font-size: 0.95em; */ /* Adjust if parent font size changed */
-            margin-bottom: 5px; background-color: #f9f9fc;
+            margin-bottom: 6px; 
+            background-color: #f9f9fc;
+            border-radius: 6px;
         }
         
         #project-view .tab:hover:not(.active), #project-view .sub-tab:hover:not(.active) { background-color: #f0f5ff; border-color: #c4cde0; }
