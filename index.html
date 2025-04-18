@@ -2096,8 +2096,8 @@ function openEditModal(type, id = null, parentId = null, isNew = false, elementT
                  break; // Styles edited via project editor
             case 'courseStyles': // Edit existing course info & styles
                  title = 'Edit Course Info & Styles';
-                 const courseForStyles = findCourse(activeCourseId); // Use activeCourseId directly
-                 if (!courseForStyles) throw new Error(`Cannot edit styles: Active course not found (ID: ${activeCourseId}).`); // CHANGED: Improved error
+                 const courseForStyles = findCourse(id); // Use activeCourseId directly
+                 if (!courseForStyles) throw new Error(`Cannot edit styles: Active course not found (ID: ${id}).`); // CHANGED: Improved error
                  currentData = courseForStyles; formHtml = generateCourseStyleForm(currentData); break;
             case 'course-element':
                  const courseForElement = findCourse(activeCourseId); if (!courseForElement) throw new Error("Cannot edit element: Active course not found."); title = isNew ? `Add New ${elementTypeForNew || 'Element'} to Course` : 'Edit Course Element';
@@ -2447,8 +2447,8 @@ function saveEditAction() {
                  saveAppData(); renderCourseView(parentId);
                  break;
             case 'courseStyles': // Editing existing course info & styles
-                  const courseToStyle = findCourse(activeCourseId);
-                  if (!courseToStyle) throw new Error("Course not found for saving styles.");
+                  const courseToStyle = findCourse(editingContext.id);
+                  if (!courseToStyle) throw new Error("Course not found for saving styles (ID: ${editingContext.id}).");
                   courseToStyle.name = getModalValue('#edit-item-name') || courseToStyle.name;
                   courseToStyle.description = getModalValue('#edit-item-description', '', false);
                   courseToStyle.imageUrl = getModalValue('#edit-item-imageurl') || null; // Cover
