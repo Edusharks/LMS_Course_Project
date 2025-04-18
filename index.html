@@ -105,67 +105,203 @@
         .view-controls { display: flex; gap: 10px; align-items: center; }
 
         /* --- Dashboard & Course View Styles --- */
-        .item-list { margin-bottom: 30px; transition: all var(--transition-speed) ease;}
-        .item-list.grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
-        .item-card { display: flex; flex-direction: column; background-color: var(--card-bg); border-radius: var(--card-border-radius); box-shadow: var(--card-shadow); transition: transform 0.2s ease, box-shadow 0.2s ease; position: relative; overflow: hidden; cursor: pointer; min-height: 280px; /* Adjust min-height for better alignment */ }
-        .item-card:hover { transform: translateY(-3px); box-shadow: var(--card-hover-shadow); }
-        .item-card .item-image { width: 100%; height: 150px; object-fit: cover; background-color: #eee; border-bottom: 1px solid #eee; flex-shrink: 0; }
-        .item-card .item-image[data-error="true"] { content: var(--error-image-fallback); object-fit: contain; padding: 10px; background-image: var(--error-image-fallback); background-size: contain; background-repeat: no-repeat; background-position: center; }
-        .item-card .item-content { padding: var(--card-padding); flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .item-card .item-heading-container { margin-bottom: 8px; width: 100%; }
-        .item-card p { font-size: 0.9rem; color: #555; margin-bottom: 15px; word-break: break-word; }
-        .item-card .item-card-actions { display: none; }
+        .item-list {
+            margin-bottom: 30px;
+            transition: all var(--transition-speed) ease;
+        }
 
+        /* --- GRID VIEW STYLES --- */
+        .item-list.grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Adjusted minmax for potentially better fit */
+            gap: 25px;
+        }
+
+        .item-list.grid-view .item-card {
+            display: flex;
+            flex-direction: column;
+            background-color: var(--card-bg);
+            border-radius: var(--card-border-radius);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative; /* Needed for absolute positioning of actions */
+            overflow: hidden;
+            cursor: pointer;
+            /* Removed min-height, height determined by content */
+        }
+        .item-list.grid-view .item-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        .item-list.grid-view .item-card .item-image {
+            width: 100%;
+            height: 150px; /* Keep or adjust height as needed */
+            object-fit: cover;
+            background-color: #eee;
+            /* border-bottom: 1px solid #eee; */ /* Removed border */
+            flex-shrink: 0;
+            display: block;
+        }
+        .item-list.grid-view .item-card .item-image[data-error="true"] {
+            content: var(--error-image-fallback); object-fit: contain; padding: 10px; background-image: var(--error-image-fallback); background-size: contain; background-repeat: no-repeat; background-position: center; min-height: 150px; /* Ensure error state has height */
+        }
+
+        .item-list.grid-view .item-card .item-content {
+            padding: 15px 15px 20px; /* Adjusted padding */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content horizontally */
+            justify-content: center; /* Center content vertically */
+            text-align: center; /* Center text */
+            min-height: 60px; /* Ensure space for title */
+        }
+
+        /* Grid view: Title (h4) styling */
+        .item-list.grid-view .item-card h4 {
+            font-size: 1.05rem;
+            margin: 0;
+            /* Color applied inline by JS */
+            display: inline-block;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        /* Grid view: Hide description paragraph */
+        .item-list.grid-view .item-card p {
+            display: none;
+        }
+        /* Grid view: Remove heading container default flex behavior if it exists */
+         .item-list.grid-view .item-card .item-heading-container {
+             display: block; /* Override default flex if necessary */
+             margin-bottom: 0;
+             width: auto; /* Allow h4 to determine width */
+             margin-top: 0;
+         }
+
+        /* Grid view: Hide default inline actions container (we use absolute positioned one) */
+         .item-list.grid-view .item-card .item-heading-container .item-inline-actions {
+            display: none;
+         }
+
+        /* Grid view: Absolutely positioned actions */
+        .item-list.grid-view .item-card .item-inline-actions {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: none; /* Hidden by default */
+            background-color: rgba(255, 255, 255, 0.85); /* Slightly more opaque background */
+            border-radius: 5px;
+            padding: 4px;
+            z-index: 10;
+            gap: 5px; /* Space between buttons */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Optional subtle shadow */
+        }
+        /* Show actions on card hover */
+        .item-list.grid-view .item-card:hover .item-inline-actions {
+            display: flex;
+        }
+        /* Styling for action buttons within the absolute container */
+        .item-list.grid-view .item-card .item-inline-actions .action-btn {
+            padding: 4px 5px; /* Adjust padding */
+            font-size: 0.9rem; /* Adjust size */
+            background-color: transparent;
+            border: none; /* No border needed */
+            opacity: 0.7;
+            transition: all 0.2s ease;
+            color: #444; /* Slightly darker icon color */
+        }
+        .item-list.grid-view .item-card .item-inline-actions .action-btn:hover {
+            opacity: 1;
+            background-color: rgba(0,0,0,0.08);
+            color: #000;
+        }
+        .item-list.grid-view .item-card .item-inline-actions .remove-btn.action-btn {
+             color: var(--danger); /* Keep red for remove */
+        }
+         .item-list.grid-view .item-card .item-inline-actions .remove-btn.action-btn:hover {
+             background-color: var(--danger);
+             color: white;
+         }
+        .item-list.grid-view .item-card .item-inline-actions .edit-btn.action-btn {
+             color: #333; /* Default edit color */
+        }
+         .item-list.grid-view .item-card .item-inline-actions .edit-btn.action-btn:hover {
+             background-color: var(--project-accent, var(--course-accent, var(--default-accent)));
+             color: var(--dark);
+         }
+
+
+        /* --- LIST VIEW STYLES --- */
+        .item-list.list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .item-list.list-view .item-row { /* Use .item-row for list view items */
+            display: flex; align-items: center; gap: 15px; background-color: var(--card-bg); border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.06); padding: var(--list-item-padding); transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; border: 1px solid #eee; position: relative; /* Added for consistency */
+        }
+        .item-list.list-view .item-row:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); border-color: #ddd; }
+
+        .item-list.list-view .item-row .item-image { width: 80px; height: 60px; object-fit: cover; background-color: #eee; border-radius: 6px; flex-shrink: 0; }
+        .item-list.list-view .item-row .item-image[data-error="true"] { content: var(--error-image-fallback); object-fit: contain; padding: 5px; background-image: var(--error-image-fallback); background-size: contain; background-repeat: no-repeat; background-position: center; }
+
+        .item-list.list-view .item-row .item-content { flex-grow: 1; display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 0; /* Remove padding from card content */ }
+        .item-list.list-view .item-row .item-text-details { flex-grow: 1; }
+
+        /* List view: Use original heading container for title + inline actions */
+        .item-list.list-view .item-row .item-heading-container { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: nowrap; width: 100%; margin-top: 0; margin-bottom: 4px; }
+        .item-list.list-view .item-row .item-heading-container h4 { margin: 0; flex-grow: 1; flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--project-primary, var(--course-primary, var(--default-primary))); font-size: 1.05rem; word-break: break-word; display: inline; /* Ensure h4 itself doesn't cause wrapping issues */ }
+
+        /* List view: Inline actions specific styles (same as before) */
+        .item-list.list-view .item-row .item-inline-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; position: static; /* Override absolute positioning */ background: none; padding: 0; box-shadow: none; }
+        .item-list.list-view .item-row .item-inline-actions .action-btn { padding: 4px; font-size: 1rem; background-color: transparent; border: 1px solid transparent; opacity: 0.6; transition: all 0.2s ease; }
+        .item-list.list-view .item-row .item-inline-actions .action-btn:hover { opacity: 1; background-color: rgba(0,0,0,0.08); border-color: #ccc; }
+        .item-list.list-view .item-row .item-inline-actions .remove-btn.action-btn { color: var(--danger); opacity: 0.7; }
+        .item-list.list-view .item-row .item-inline-actions .remove-btn.action-btn:hover { color: white; background-color: var(--danger); border-color: var(--danger); opacity: 1; }
+        .item-list.list-view .item-row .item-inline-actions .edit-btn.action-btn { color: #555; }
+        .item-list.list-view .item-row .item-inline-actions .edit-btn.action-btn:hover { color: var(--dark); background-color: var(--project-accent, var(--course-accent, var(--default-accent))); border-color: var(--project-accent, var(--course-accent, var(--default-accent))); opacity: 1; }
+
+        /* List view: Description */
+        .item-list.list-view .item-row p { font-size: 0.9rem; color: #555; margin-bottom: 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+
+
+        /* --- ADD ITEM STYLES (Unchanged) --- */
         .add-item-card, .add-item-row {
              display: flex; align-items: center; justify-content: center;
              background-color: #e9eef5; border: 2px dashed #c4cde0;
              border-radius: var(--card-border-radius); box-shadow: none;
              transition: background-color 0.2s ease, border-color 0.2s ease;
              cursor: pointer; color: var(--default-primary); /* Use default primary for add */
-             font-size: 3rem; font-weight: bold; text-align: center; min-height: 280px;
+             font-size: 3rem; font-weight: bold; text-align: center;
         }
+        /* Adjust min-height for add card to match new layout */
+         .add-item-card { min-height: calc(150px + 60px + 35px); /* image height + content min-height + approx padding */ }
+         .add-item-row { min-height: 80px; font-size: 2rem; padding: 15px; margin-top: 10px; }
+
         .add-item-card:hover, .add-item-row:hover {
             background-color: #dde4f0; border-color: var(--default-primary); /* Use default primary */
         }
-        .item-list.list-view .add-item-row { min-height: 80px; font-size: 2rem; padding: 15px; margin-top: 10px; }
 
-        #project-list .item-card .item-card-actions { display: none; }
-        #course-list .item-card .item-card-actions:empty { display: none; }
-
-        /* Add this near other item list styles */
+        /* --- COMPLETED PROJECT STYLING (Applied to both Grid and List) --- */
         .item-container.project-completed {
            border-left: 5px solid var(--success); /* Add a green left border */
-           /* Or other styles like slight background change */
-           /* background-color: #f0fff4; */
-         }
-        /* Ensure checkmark span is vertically aligned */
-        .item-heading-container h4 span {
-           vertical-align: middle;
-         }
+           /* background-color: #f0fff4; */ /* Optional subtle background */
+        }
+        /* Ensure checkmark span is vertically aligned (can apply generally) */
+        .item-heading-container h4 span[title="Completed"],
+        .item-list.grid-view .item-card h4 span[title="Completed"] {
+             vertical-align: middle;
+             font-size: 1.1em; /* Make check slightly bigger */
+             margin-left: 4px; /* Space before check */
+        }
 
-        .item-card-actions .action-btn { padding: 6px; font-size: 1.1rem;}
-        .item-heading-container { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: nowrap; width: 100%; margin-top: 5px; }
-        /* Heading color will depend on context */
-        .item-heading-container h4 { margin: 0; flex-grow: 1; flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--project-primary, var(--course-primary, var(--default-primary))); }
-        .item-inline-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-        .item-inline-actions .action-btn { padding: 4px; font-size: 1rem; background-color: transparent; border: 1px solid transparent; opacity: 0.6; transition: all 0.2s ease; }
-        .item-inline-actions .action-btn:hover { opacity: 1; background-color: rgba(0,0,0,0.08); border-color: #ccc; }
-        .item-inline-actions .remove-btn.action-btn { color: var(--danger); opacity: 0.7; }
-        .item-inline-actions .remove-btn.action-btn:hover { color: white; background-color: var(--danger); border-color: var(--danger); opacity: 1; }
-        /* Edit button color/hover depends on context */
-        .item-inline-actions .edit-btn.action-btn { color: #555; }
-        .item-inline-actions .edit-btn.action-btn:hover { color: var(--dark); background-color: var(--project-accent, var(--course-accent, var(--default-accent))); border-color: var(--project-accent, var(--course-accent, var(--default-accent))); opacity: 1; }
-
-        .item-list.list-view { display: flex; flex-direction: column; gap: 10px; max-width: 800px; margin-left: auto; margin-right: auto; }
-        .item-row { display: flex; align-items: center; gap: 15px; background-color: var(--card-bg); border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.06); padding: var(--list-item-padding); transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; border: 1px solid #eee; }
-        .item-row:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); border-color: #ddd; }
-        .item-row .item-image { width: 80px; height: 60px; object-fit: cover; background-color: #eee; border-radius: 6px; flex-shrink: 0; }
-        .item-row .item-image[data-error="true"] { content: var(--error-image-fallback); object-fit: contain; padding: 5px; background-image: var(--error-image-fallback); background-size: contain; background-repeat: no-repeat; background-position: center; }
-        .item-row .item-content { flex-grow: 1; display: flex; justify-content: space-between; align-items: center; gap: 15px; }
-        .item-row .item-text-details { flex-grow: 1; }
-        /* Row heading color depends on context */
-        .item-row h4 { margin-bottom: 4px; color: var(--project-primary, var(--course-primary, var(--default-primary))); font-size: 1.05rem; word-break: break-word; }
-        .item-row p { font-size: 0.9rem; color: #555; margin-bottom: 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
 
         /* View toggle uses context primary color */
         .view-toggle button { background: none; border: 1px solid #ccc; border-radius: 4px; padding: 5px; width: var(--view-toggle-size); height: var(--view-toggle-size); display: inline-flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #555; }
@@ -1351,91 +1487,84 @@ function renderProjectListForCourse(courseId) {
     }
 }
 
-// CHANGED: Added isStudentMode parameter and completion check logic
+// (Keep the start of the function: itemElement creation, dataset, isComplete check...)
 function createItemElement(itemData, viewType, itemType, isStudentMode = false) {
     const itemElement = document.createElement('div');
     itemElement.className = `${viewType === 'list' ? 'item-row' : 'item-card'} item-container`;
     itemElement.dataset[itemType === 'course' ? 'courseId' : 'projectId'] = itemData.id;
+    let isProjectComplete = false; // Flag for completion
 
     if (itemType === 'project') {
-        itemElement.dataset.courseId = activeCourseId; // Associate project with its course
-        // --- ADDED: Add 'project-completed' class if project is marked complete in course data ---
+        itemElement.dataset.courseId = activeCourseId;
         if (itemData.isComplete) {
             itemElement.classList.add('project-completed');
-            // Optional: console.log(`Rendering project ${itemData.id} as completed.`); // For debugging
+            isProjectComplete = true;
         }
-        // --- END ADDED ---
     }
 
     const imageUrl = itemData.imageUrl || (itemType === 'course' ? DEFAULT_COURSE_IMAGE : DEFAULT_PROJECT_IMAGE);
-    const descriptionHtml = itemData.description ? `<p>${escapeHtml(itemData.description)}</p>` : '';
+    const descriptionHtml = itemData.description ? `<p>${escapeHtml(itemData.description)}</p>` : ''; // Keep description data if needed elsewhere
     const editAction = itemType === 'course' ? 'edit-course' : 'edit-project';
     const removeAction = itemType === 'course' ? 'remove-course' : 'remove-project';
 
-    // Conditionally create actions HTML based on student mode
+    // --- Actions HTML (Generated separately now for absolute positioning) ---
     const inlineActionsHtml = isStudentMode ? '' : `
         <div class="item-inline-actions">
             <button class="edit-btn action-btn" data-action="${editAction}" title="Edit ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}">✏️</button>
             <button class="remove-btn action-btn" data-action="${removeAction}" title="Remove ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}">×</button>
         </div>`;
 
-    // --- CHANGED: Add checkmark indicator to heading if project is complete ---
-    const completedIndicator = (itemType === 'project' && itemData.isComplete) ? ' <span title="Completed" style="color:var(--success); font-size: 1.1em; vertical-align: middle;">✓</span>' : '';
-    const headingHtml = `
-        <div class="item-heading-container">
-            <h4>${escapeHtml(itemData.name)}${completedIndicator}</h4>
-            ${inlineActionsHtml}
-        </div>`;
-    // --- END CHANGED ---
+    // --- Title HTML (with indicator) ---
+    const completedIndicator = isProjectComplete ? ' <span title="Completed" style="color:var(--success); font-size: 1.1em; vertical-align: middle;">✓</span>' : '';
+    const titleHtml = `<h4>${escapeHtml(itemData.name)}${completedIndicator}</h4>`;
 
-    // Use course/project specific styles if available for the heading color
-    let itemStyle = null;
-    if (itemType === 'course') {
-         itemStyle = findCourse(itemData.id)?.styles;
-    } else if (itemType === 'project') {
-         // Project list item usually inherits course style for consistency, but could check project-specific if desired
-         const parentCourseStyle = findProjectCourse(itemData.id)?.styles;
-         itemStyle = parentCourseStyle;
-    }
-    const primaryColor = itemStyle?.primaryColor || DEFAULT_PRIMARY_COLOR;
 
-    // Construct inner HTML based on view type
+    // --- Construct inner HTML ---
+    // NOTE: Structure changed for grid view to match Image 2 layout
     if (viewType === 'list') {
+        // List view remains similar (heading container holds title + actions)
+         const listHeadingHtml = `
+            <div class="item-heading-container">
+                 ${titleHtml}
+                 ${inlineActionsHtml}
+            </div>`;
         itemElement.innerHTML = `
             <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(itemData.name)}" class="item-image" onerror="handleImageError(this)" data-error="false" data-error-fallback-applied="false">
             <div class="item-content">
                 <div class="item-text-details">
-                    ${headingHtml}
+                    ${listHeadingHtml}
                     ${descriptionHtml}
                 </div>
             </div>`;
-    } else { // Grid View
+    } else { // Grid View - New Structure
         itemElement.innerHTML = `
             <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(itemData.name)}" class="item-image" onerror="handleImageError(this)" data-error="false" data-error-fallback-applied="false">
             <div class="item-content">
-                ${headingHtml}
-                ${descriptionHtml || '<p style="flex-grow: 1; visibility: hidden; margin:0; padding: 0; height: 1px;"></p>'}
-                <div class="item-card-actions"></div> <!-- Actions for grid view if ever needed -->
-            </div>`;
+                ${titleHtml}
+                <!-- Description <p> is hidden by CSS in grid view -->
+                ${descriptionHtml}
+            </div>
+            ${inlineActionsHtml} <!-- Actions are placed outside content, positioned absolutely -->
+            `;
     }
 
-    // Apply specific color to heading text (after innerHTML is set)
+    // Apply specific heading color (Find h4 after innerHTML is set)
     const h4 = itemElement.querySelector('h4');
     if(h4) {
-        // Find the first text node within h4 to apply color, avoiding the span
+        let itemStyle = null;
+        if (itemType === 'course') { itemStyle = findCourse(itemData.id)?.styles; }
+        else if (itemType === 'project') { itemStyle = findProjectCourse(itemData.id)?.styles; }
+        const primaryColor = itemStyle?.primaryColor || DEFAULT_PRIMARY_COLOR;
+
+        // Wrap text node to apply color, avoiding the checkmark span
         const textNode = Array.from(h4.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
         if (textNode) {
-             // Wrap text node in a span to apply color without affecting checkmark span
              const textSpan = document.createElement('span');
              textSpan.style.color = primaryColor;
              textSpan.textContent = textNode.textContent;
              h4.replaceChild(textSpan, textNode);
-        } else {
-             // Fallback if no text node (empty heading?)
-             h4.style.color = primaryColor;
-        }
+        } else { h4.style.color = primaryColor; } // Fallback
     }
-
 
     // Image error handling
     const img = itemElement.querySelector('.item-image');
@@ -1443,6 +1572,8 @@ function createItemElement(itemData, viewType, itemType, isStudentMode = false) 
 
     return itemElement;
 }
+
+
 
 function createAddItemElement(viewType, itemType) {
     const addElement = document.createElement('div');
