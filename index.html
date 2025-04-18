@@ -1351,17 +1351,18 @@ function renderProjectListForCourse(courseId) {
     }
 }
 
-// CHANGED: Added isStudentMode parameter and completion check
+// CHANGED: Added isStudentMode parameter and completion check logic
 function createItemElement(itemData, viewType, itemType, isStudentMode = false) {
     const itemElement = document.createElement('div');
     itemElement.className = `${viewType === 'list' ? 'item-row' : 'item-card'} item-container`;
     itemElement.dataset[itemType === 'course' ? 'courseId' : 'projectId'] = itemData.id;
+
     if (itemType === 'project') {
-        itemElement.dataset.courseId = activeCourseId;
-        // --- ADDED: Add 'completed' class if project is marked complete ---
+        itemElement.dataset.courseId = activeCourseId; // Associate project with its course
+        // --- ADDED: Add 'project-completed' class if project is marked complete in course data ---
         if (itemData.isComplete) {
             itemElement.classList.add('project-completed');
-            console.log(`Rendering project ${itemData.id} as completed.`); // Debug log
+            // Optional: console.log(`Rendering project ${itemData.id} as completed.`); // For debugging
         }
         // --- END ADDED ---
     }
@@ -1370,14 +1371,16 @@ function createItemElement(itemData, viewType, itemType, isStudentMode = false) 
     const descriptionHtml = itemData.description ? `<p>${escapeHtml(itemData.description)}</p>` : '';
     const editAction = itemType === 'course' ? 'edit-course' : 'edit-project';
     const removeAction = itemType === 'course' ? 'remove-course' : 'remove-project';
+
+    // Conditionally create actions HTML based on student mode
     const inlineActionsHtml = isStudentMode ? '' : `
         <div class="item-inline-actions">
             <button class="edit-btn action-btn" data-action="${editAction}" title="Edit ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}">✏️</button>
             <button class="remove-btn action-btn" data-action="${removeAction}" title="Remove ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}">×</button>
         </div>`;
 
-    // --- CHANGED: Add checkmark to heading if project is complete ---
-    const completedIndicator = (itemType === 'project' && itemData.isComplete) ? ' <span title="Completed" style="color:var(--success); font-size: 1.1em;">✓</span>' : '';
+    // --- CHANGED: Add checkmark indicator to heading if project is complete ---
+    const completedIndicator = (itemType === 'project' && itemData.isComplete) ? ' <span title="Completed" style="color:var(--success); font-size: 1.1em; vertical-align: middle;">✓</span>' : '';
     const headingHtml = `
         <div class="item-heading-container">
             <h4>${escapeHtml(itemData.name)}${completedIndicator}</h4>
@@ -1385,22 +1388,61 @@ function createItemElement(itemData, viewType, itemType, isStudentMode = false) 
         </div>`;
     // --- END CHANGED ---
 
-    // ... (rest of the function remains the same) ...
-    let itemStyle = null; /* ... */
+    // Use course/project specific styles if available for the heading color
+    let itemStyle = null;
+    if (itemType === 'course') {
+         itemStyle = findCourse(itemData.id)?.styles;
+    } else if (itemType === 'project') {
+         // Project list item usually inherits course style for consistency, but could check project-specific if desired
+         const parentCourseStyle = findProjectCourse(itemData.id)?.styles;
+         itemStyle = parentCourseStyle;
+    }
     const primaryColor = itemStyle?.primaryColor || DEFAULT_PRIMARY_COLOR;
 
-    if (viewType === 'list') { /* ... */ }
-    else { /* Grid View */ /* ... */ }
+    // Construct inner HTML based on view type
+    if (viewType === 'list') {
+        itemElement.innerHTML = `
+            <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(itemData.name)}" class="item-image" onerror="handleImageError(this)" data-error="false" data-error-fallback-applied="false">
+            <div class="item-content">
+                <div class="item-text-details">
+                    ${headingHtml}
+                    ${descriptionHtml}
+                </div>
+            </div>`;
+    } else { // Grid View
+        itemElement.innerHTML = `
+            <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(itemData.name)}" class="item-image" onerror="handleImageError(this)" data-error="false" data-error-fallback-applied="false">
+            <div class="item-content">
+                ${headingHtml}
+                ${descriptionHtml || '<p style="flex-grow: 1; visibility: hidden; margin:0; padding: 0; height: 1px;"></p>'}
+                <div class="item-card-actions"></div> <!-- Actions for grid view if ever needed -->
+            </div>`;
+    }
 
+    // Apply specific color to heading text (after innerHTML is set)
     const h4 = itemElement.querySelector('h4');
-    if(h4) h4.style.color = primaryColor;
+    if(h4) {
+        // Find the first text node within h4 to apply color, avoiding the span
+        const textNode = Array.from(h4.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
+        if (textNode) {
+             // Wrap text node in a span to apply color without affecting checkmark span
+             const textSpan = document.createElement('span');
+             textSpan.style.color = primaryColor;
+             textSpan.textContent = textNode.textContent;
+             h4.replaceChild(textSpan, textNode);
+        } else {
+             // Fallback if no text node (empty heading?)
+             h4.style.color = primaryColor;
+        }
+    }
 
+
+    // Image error handling
     const img = itemElement.querySelector('.item-image');
     if (img) { setTimeout(() => checkRenderedImageError(img), 0); }
 
     return itemElement;
 }
-
 
 function createAddItemElement(viewType, itemType) {
     const addElement = document.createElement('div');
