@@ -241,36 +241,38 @@
         
     #project-view .project-layout {
         display: flex;
-        gap: 25px;
+        /* gap: 25px; */
          /* transition: gap 0.3s ease; */ /* REMOVED or commented out */
     }
+
     #project-view #project-sidebar {
-        /* CHANGED: Use max-width instead of width for animation */
-        max-width: var(--sidebar-width);
-        width: var(--sidebar-width); /* Keep width for initial layout */
+        width: var(--sidebar-width); /* Explicit width is important for translate */
         flex-shrink: 0;
         background-color: #fff;
         padding: 15px;
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         height: fit-content;
-        /* CHANGED: Transition max-width, opacity, padding. Removed margin-right */
-        transition: max-width 0.3s ease-in-out, opacity 0.25s ease-in-out, padding 0.3s ease-in-out;
         opacity: 1;
-        overflow: hidden; /* ADDED: Important for max-width animation */
+        overflow: hidden; /* Keep overflow hidden */
+        /* --- CHANGED: Animate transform and opacity --- */
+        transform: translateX(0); /* Start in default position */
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        /* Remove width/max-width/padding from transition */
     }
 
         
     #project-view.sidebar-minimized #project-sidebar {
-         /* CHANGED: Animate max-width to 0 */
-         max-width: var(--sidebar-minimized-width); /* Should be 0px */
-         padding: 0 0; /* Animate padding vertically and horizontally */
-         margin-right: 0; /* Let gap handle spacing, removed from transition */
+         /* --- CHANGED: Use transform to slide left and fade out --- */
+         transform: translateX(-100%); /* Slide completely to the left */
          opacity: 0;
          pointer-events: none; /* Prevent interaction */
-         /* No need to set width here if max-width is 0 */
+         /* --- ADDED: Also remove padding/width when hidden to prevent layout shifts --- */
+         padding-left: 0;
+         padding-right: 0;
+         width: 0; /* Collapse width instantly or with faster transition if needed */
+         /* margin-right: 0; Remove if still present */
     }
-
         
         #project-view #project-tabs { margin-bottom: 15px; }
         #project-view .tab, #project-view .sub-tab { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; margin-bottom: 8px; border-radius: 6px; cursor: pointer; border: 1px solid #eee; transition: all 0.2s ease; background-color: #fff; position: relative; }
@@ -296,15 +298,24 @@
         #project-view .tab-controls, #project-view .sub-tab-controls { display: none; flex-shrink: 0; }
         #project-view .sidebar-actions { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; text-align: center; }
         #project-view .sidebar-actions .add-btn { width: 80%; }
-        #project-view #project-main-content {
-             flex-grow: 1; background-color: #fff; padding: 25px; border-radius: 10px;
-             box-shadow: 0 2px 8px rgba(0,0,0,0.06); min-height: 400px;
-             /* Font family, size, color applied via inline CSS variables on #project-view */
-             transition: margin-left 0.3s ease; /* Adjust if sidebar push/pull needed */
-             color: var(--project-text-color); /* Ensures content area inherits */
-             font-family: var(--project-font-family);
-             font-size: var(--project-font-size);
-        }
+        
+    #project-view #project-main-content {
+         flex-grow: 1; background-color: #fff; padding: 25px; border-radius: 10px;
+         box-shadow: 0 2px 8px rgba(0,0,0,0.06); min-height: 400px;
+         /* Font family, size, color applied via inline CSS variables on #project-view */
+         color: var(--project-text-color);
+         font-family: var(--project-font-family);
+         font-size: var(--project-font-size);
+         /* --- ADDED: Handle margin based on sidebar presence --- */
+         margin-left: calc(var(--sidebar-width) + 25px); /* Add space for sidebar + original gap */
+         transition: margin-left 0.3s ease-in-out; /* Animate the margin shift */
+    }
+
+    /* --- ADDED: Adjust main content margin when sidebar is minimized --- */
+    #project-view.sidebar-minimized #project-main-content {
+         margin-left: 0; /* Remove the left margin */
+    }
+
         #project-view #tab-content-area { margin-bottom: 30px; }
         #project-view #tab-content-area > p { text-align: center; color: #888; margin-top: 30px; font-style: italic; }
         #project-view .element-controls p { color: var(--project-primary); }
