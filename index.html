@@ -597,8 +597,9 @@
         .student-mode .add-item-row {
             display: none !important;
         }
-        /* Specific button hiding */
-        #dashboard-view.student-mode #toggle-dashboard-view-mode-btn, /* Keep view toggle visible */
+
+        /* Specific element hiding in student mode */
+        /* REMOVED: #dashboard-view.student-mode #toggle-dashboard-view-mode-btn */
         #dashboard-view.student-mode .add-item-card,
         #dashboard-view.student-mode .add-item-row,
         #dashboard-view.student-mode .item-inline-actions { display: none !important; }
@@ -606,7 +607,9 @@
         #course-view.student-mode #edit-course-styles-btn { display: none !important; }
 
         #project-view.student-mode #edit-project-styles-btn { display: none !important; }
-        /* CHANGED: Keep sidebar toggle and progress bar visible in student mode */
+
+        /* Keep sidebar toggle and progress bar visible in student mode */
+        /* (Commented section remains commented as requested previously) */
         /*
         #project-view.student-mode #toggle-sidebar-btn,
         #project-view.student-mode #project-progress-container {
@@ -614,6 +617,18 @@
         }
         */
         #project-view.student-mode .sidebar-actions { display: none !important; } /* Keep sidebar actions hidden */
+
+        /* ----- ADDED RULES TO KEEP VIEW TOGGLES VISIBLE ----- */
+        #dashboard-view.student-mode #toggle-dashboard-view-mode-btn,
+        #course-view.student-mode #toggle-view-mode-btn,
+        #project-view.student-mode #toggle-project-view-mode-btn {
+            display: inline-flex !important; /* Use inline-flex as it's an icon button */
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important; /* Ensure it remains clickable */
+        }
+        /* ----- END ADDED RULES ----- */
+
 
         /* Remove borders and hover effects in student mode */
         .student-mode .content-element {
@@ -647,7 +662,6 @@
              pointer-events: none !important; /* Disable clicking after completion */
              opacity: 0.8; /* Slightly fade */
         }
-
 
         /* Responsive Styles */
         @media (max-width: 900px) {
