@@ -132,6 +132,17 @@
         #project-list .item-card .item-card-actions { display: none; }
         #course-list .item-card .item-card-actions:empty { display: none; }
 
+        /* Add this near other item list styles */
+        .item-container.project-completed {
+           border-left: 5px solid var(--success); /* Add a green left border */
+           /* Or other styles like slight background change */
+           /* background-color: #f0fff4; */
+         }
+        /* Ensure checkmark span is vertically aligned */
+        .item-heading-container h4 span {
+           vertical-align: middle;
+         }
+
         .item-card-actions .action-btn { padding: 6px; font-size: 1.1rem;}
         .item-heading-container { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: nowrap; width: 100%; margin-top: 5px; }
         /* Heading color will depend on context */
@@ -161,6 +172,7 @@
         .view-toggle button:hover { background-color: #eee; }
         .view-toggle button.active { background-color: var(--project-primary, var(--course-primary, var(--default-primary))); color: white; border-color: var(--project-primary, var(--course-primary, var(--default-primary))); }
         .view-toggle button svg { width: 18px; height: 18px; fill: currentColor; }
+
         /* Specific style for icon-only buttons */
         button.icon-btn {
              background-color: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.5);
@@ -1339,14 +1351,55 @@ function renderProjectListForCourse(courseId) {
     }
 }
 
-// CHANGED: Added isStudentMode parameter to conditionally hide inline actions
+// CHANGED: Added isStudentMode parameter and completion check
 function createItemElement(itemData, viewType, itemType, isStudentMode = false) {
     const itemElement = document.createElement('div');
     itemElement.className = `${viewType === 'list' ? 'item-row' : 'item-card'} item-container`;
     itemElement.dataset[itemType === 'course' ? 'courseId' : 'projectId'] = itemData.id;
     if (itemType === 'project') {
         itemElement.dataset.courseId = activeCourseId;
+        // --- ADDED: Add 'completed' class if project is marked complete ---
+        if (itemData.isComplete) {
+            itemElement.classList.add('project-completed');
+            console.log(`Rendering project ${itemData.id} as completed.`); // Debug log
+        }
+        // --- END ADDED ---
     }
+
+    const imageUrl = itemData.imageUrl || (itemType === 'course' ? DEFAULT_COURSE_IMAGE : DEFAULT_PROJECT_IMAGE);
+    const descriptionHtml = itemData.description ? `<p>${escapeHtml(itemData.description)}</p>` : '';
+    const editAction = itemType === 'course' ? 'edit-course' : 'edit-project';
+    const removeAction = itemType === 'course' ? 'remove-course' : 'remove-project';
+    const inlineActionsHtml = isStudentMode ? '' : `
+        <div class="item-inline-actions">
+            <button class="edit-btn action-btn" data-action="${editAction}" title="Edit ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}">✏️</button>
+            <button class="remove-btn action-btn" data-action="${removeAction}" title="Remove ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}">×</button>
+        </div>`;
+
+    // --- CHANGED: Add checkmark to heading if project is complete ---
+    const completedIndicator = (itemType === 'project' && itemData.isComplete) ? ' <span title="Completed" style="color:var(--success); font-size: 1.1em;">✓</span>' : '';
+    const headingHtml = `
+        <div class="item-heading-container">
+            <h4>${escapeHtml(itemData.name)}${completedIndicator}</h4>
+            ${inlineActionsHtml}
+        </div>`;
+    // --- END CHANGED ---
+
+    // ... (rest of the function remains the same) ...
+    let itemStyle = null; /* ... */
+    const primaryColor = itemStyle?.primaryColor || DEFAULT_PRIMARY_COLOR;
+
+    if (viewType === 'list') { /* ... */ }
+    else { /* Grid View */ /* ... */ }
+
+    const h4 = itemElement.querySelector('h4');
+    if(h4) h4.style.color = primaryColor;
+
+    const img = itemElement.querySelector('.item-image');
+    if (img) { setTimeout(() => checkRenderedImageError(img), 0); }
+
+    return itemElement;
+}
 
     const imageUrl = itemData.imageUrl || (itemType === 'course' ? DEFAULT_COURSE_IMAGE : DEFAULT_PROJECT_IMAGE);
     const descriptionHtml = itemData.description ? `<p>${escapeHtml(itemData.description)}</p>` : '';
@@ -1824,16 +1877,70 @@ function getSectionCompletionStatus(sectionId, sectionType) {
      }
      return sectionData ? sectionData.isComplete : false;
 }
-function updateProjectProgress() {
-    if (!currentProjectData || !projectEditorElements.progressBarFill || !projectEditorElements.progressBarContainer) return;
-    let totalSections = 0; let completedSections = 0;
-    currentProjectData.tabs.forEach(tab => { if (!tab) return; if (Array.isArray(tab.subTabs) && tab.subTabs.length > 0) { tab.subTabs.forEach(subTab => { if(subTab) { totalSections++; if (subTab.isComplete) completedSections++; }}); } else { totalSections++; if (tab.isComplete) completedSections++; } });
-    const percentage = totalSections > 0 ? Math.round((completedSections / totalSections) * 100) : 0;
-    projectEditorElements.progressBarFill.style.width = `${percentage}%`;
-    projectEditorElements.progressBarFill.textContent = `${percentage}%`;
-    projectEditorElements.progressBarContainer.title = `${completedSections} / ${totalSections} Sections Complete`;
-    console.log(`Project Progress: ${completedSections}/${totalSections} (${percentage}%)`);
-}
+
+
+    // --- Project Editor Functions ---
+    // ... other functions ...
+
+    function updateProjectProgress() {
+        if (!currentProjectData || !projectEditorElements.progressBarFill || !projectEditorElements.progressBarContainer) return;
+
+        let totalSections = 0;
+        let completedSections = 0;
+
+        currentProjectData.tabs.forEach(tab => {
+            if (!tab) return;
+            if (Array.isArray(tab.subTabs) && tab.subTabs.length > 0) {
+                // Count subtabs if they exist
+                tab.subTabs.forEach(subTab => {
+                    if (subTab) {
+                        totalSections++;
+                        if (subTab.isComplete) {
+                            completedSections++;
+                        }
+                    }
+                });
+            } else {
+                // Count the main tab if it has no subtabs
+                totalSections++;
+                if (tab.isComplete) {
+                    completedSections++;
+                }
+            }
+        });
+
+        const percentage = totalSections > 0 ? Math.round((completedSections / totalSections) * 100) : 0;
+        projectEditorElements.progressBarFill.style.width = `${percentage}%`;
+        projectEditorElements.progressBarFill.textContent = `${percentage}%`;
+        projectEditorElements.progressBarContainer.title = `${completedSections} / ${totalSections} Sections Complete`;
+        console.log(`Project Progress: ${completedSections}/${totalSections} (${percentage}%)`);
+
+        // --- ADDED: Check for 100% completion and update course data ---
+        if (percentage === 100 && totalSections > 0) {
+            markProjectAsCompleteInCourseData(activeProjectId);
+        }
+        // --- END ADDED ---
+    }
+
+    // --- ADDED: Helper function to update project completion in appData ---
+    function markProjectAsCompleteInCourseData(projectIdToMark) {
+        const course = findProjectCourse(projectIdToMark);
+        if (course) {
+            const projectMeta = course.projects.find(p => p.id === projectIdToMark);
+            if (projectMeta && !projectMeta.isComplete) { // Check if not already marked complete
+                projectMeta.isComplete = true;
+                console.log(`Project ${projectIdToMark} marked as complete in course data.`);
+                saveAppData(); // Save the updated course data
+                 // Optional: Force re-render of course view if it's the active view (though unlikely)
+                 // if(currentView === 'course' && activeCourseId === course.id) {
+                 //    renderProjectListForCourse(activeCourseId);
+                 // }
+            }
+        } else {
+            console.warn(`Could not find parent course for project ${projectIdToMark} to mark as complete.`);
+        }
+    }
+
 
 // --- Global Modal & Saving ---
 function openEditModal(type, id = null, parentId = null, isNew = false, elementTypeForNew = null) {
