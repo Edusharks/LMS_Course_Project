@@ -1401,60 +1401,6 @@ function createItemElement(itemData, viewType, itemType, isStudentMode = false) 
     return itemElement;
 }
 
-    const imageUrl = itemData.imageUrl || (itemType === 'course' ? DEFAULT_COURSE_IMAGE : DEFAULT_PROJECT_IMAGE);
-    const descriptionHtml = itemData.description ? `<p>${escapeHtml(itemData.description)}</p>` : '';
-    const editAction = itemType === 'course' ? 'edit-course' : 'edit-project';
-    const removeAction = itemType === 'course' ? 'remove-course' : 'remove-project';
-    // Conditionally create actions HTML
-    const inlineActionsHtml = isStudentMode ? '' : `
-        <div class="item-inline-actions">
-            <button class="edit-btn action-btn" data-action="${editAction}" title="Edit ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}">✏️</button>
-            <button class="remove-btn action-btn" data-action="${removeAction}" title="Remove ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}">×</button>
-        </div>`;
-    const headingHtml = `
-        <div class="item-heading-container">
-            <h4>${escapeHtml(itemData.name)}</h4>
-            ${inlineActionsHtml}
-        </div>`;
-
-    // Use course/project specific styles if available for the heading color
-    let itemStyle = null;
-    if (itemType === 'course') {
-         itemStyle = findCourse(itemData.id)?.styles;
-    } else if (itemType === 'project') {
-         const parentCourseStyle = findProjectCourse(itemData.id)?.styles; // Project usually inherits course style in list view
-         itemStyle = parentCourseStyle; // Could also load project-specific style if needed here
-    }
-    const primaryColor = itemStyle?.primaryColor || DEFAULT_PRIMARY_COLOR;
-
-    if (viewType === 'list') {
-        itemElement.innerHTML = `
-            <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(itemData.name)}" class="item-image" onerror="handleImageError(this)" data-error="false" data-error-fallback-applied="false">
-            <div class="item-content">
-                <div class="item-text-details">
-                    ${headingHtml}
-                    ${descriptionHtml}
-                </div>
-            </div>`;
-    } else { // Grid View
-        itemElement.innerHTML = `
-            <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(itemData.name)}" class="item-image" onerror="handleImageError(this)" data-error="false" data-error-fallback-applied="false">
-            <div class="item-content">
-                ${headingHtml}
-                ${descriptionHtml || '<p style="flex-grow: 1; visibility: hidden; margin:0; padding: 0; height: 1px;"></p>'}
-                <div class="item-card-actions"></div>
-            </div>`;
-    }
-
-    const h4 = itemElement.querySelector('h4');
-    if(h4) h4.style.color = primaryColor; // Apply specific heading color
-
-    const img = itemElement.querySelector('.item-image');
-    if (img) { setTimeout(() => checkRenderedImageError(img), 0); }
-
-    return itemElement;
-}
-
 
 function createAddItemElement(viewType, itemType) {
     const addElement = document.createElement('div');
