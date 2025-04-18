@@ -246,34 +246,36 @@
     }
 
     #project-view #project-sidebar {
-        width: var(--sidebar-width); /* Explicit width */
+        width: var(--sidebar-width);
         flex-shrink: 0;
         background-color: #fff;
-        padding: 15px; /* Keep padding */
+        padding: 15px; /* Keep default padding */
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         height: fit-content;
         opacity: 1;
         overflow: hidden;
-        /* --- CHANGED: Animate transform and opacity ONLY --- */
         transform: translateX(0);
-        /* Make opacity transition slightly faster */
-        transition: transform 0.3s ease-in-out, opacity 0.25s ease-in-out;
+        margin-right: 0; /* Default margin */
+        /* --- CHANGED: Define transitions for all animated properties --- */
+        transition: transform 0.3s ease-in-out,
+                    opacity 0.25s ease-in-out,
+                    width 0.3s ease-in-out, /* Add width back to transition */
+                    padding 0.3s ease-in-out, /* Add padding back to transition */
+                    margin-right 0.3s ease-in-out; /* Add margin back */
     }
 
         
     #project-view.sidebar-minimized #project-sidebar {
-         /* --- CHANGED: Use transform to slide left and fade out --- */
+         /* --- TARGET STATE WHEN MINIMIZED --- */
          transform: translateX(calc(-100% - 25px)); /* Slide left by width + gap */
          opacity: 0;
          pointer-events: none;
-         /* --- ADDED: Instantly collapse size/margins AFTER animation is triggered --- */
-         width: 0;
-         padding-left: 0;
+         width: 0; /* Final width is 0 */
+         padding-left: 0; /* Final padding is 0 */
          padding-right: 0;
-         margin-right: -25px; /* Compensate for the gap space */
-         /* Optional: Add a slight delay to width/padding collapse if needed */
-         /* transition: transform 0.3s ease-in-out, opacity 0.25s ease-in-out, width 0s 0.3s, padding 0s 0.3s, margin-right 0s 0.3s; */
+         margin-right: -25px; /* Compensate for the gap */
+         /* The transition defined in the default state handles the animation */
     }
         
         #project-view #project-tabs { margin-bottom: 15px; }
@@ -302,14 +304,16 @@
         #project-view .sidebar-actions .add-btn { width: 80%; }
         
     #project-view #project-main-content {
-         flex-grow: 1; background-color: #fff; padding: 25px; border-radius: 10px;
-         box-shadow: 0 2px 8px rgba(0,0,0,0.06); min-height: 400px;
-         /* Font family, size, color applied via inline CSS variables on #project-view */
+         flex-grow: 1; /* This makes it fill the space */
+         background-color: #fff;
+         padding: 25px;
+         border-radius: 10px;
+         box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+         min-height: 400px;
          color: var(--project-text-color);
          font-family: var(--project-font-family);
          font-size: var(--project-font-size);
-         /* margin-left: calc(var(--sidebar-width) + 25px); */ /* REMOVED */
-         /* transition: margin-left 0.3s ease-in-out; */ /* REMOVED */
+         /* Ensure NO margin-left or transition: margin-left here */
     }
 
 
