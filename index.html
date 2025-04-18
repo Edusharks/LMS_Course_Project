@@ -426,26 +426,25 @@
         
         #project-view #project-tabs { margin-bottom: 15px; }
         
-        #project-view .tab, #project-view .sub-tab {
-            display: flex; justify-content: space-between; align-items: center;
-            /* --- INCREASED Padding --- */
-            padding: 15px 20px; /* Increased from 10px 12px */
-            margin-bottom: 10px; border-radius: 8px; cursor: pointer; border: 1px solid #eee; transition: all 0.2s ease; background-color: #fff; position: relative;
-            /* --- Optional: Increase Font Size --- */
-            /* font-size: 1.05em; */ /* Uncomment to make text slightly larger */
-        }
-        /* ... other tab styles ... */
+    #project-view .tab, #project-view .sub-tab {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 12px 15px; /* Keep increased padding */
+        margin-bottom: 8px; border-radius: 6px; cursor: pointer; border: 1px solid #eee; transition: all 0.2s ease; background-color: #fff; position: relative;
+        /* --- ADD Minimum Height & Font Size --- */
+        min-height: 45px; /* Force a minimum height (adjust value) */
+        font-size: 1.05em; /* Make text slightly larger */
+        font-weight: 500; /* Optional: Make text bolder */
+    }
 
-        #project-view .sub-tab {
-            margin-left: 20px;
-             /* --- INCREASED Padding --- */
-            padding: 12px 15px; /* Increased from 8px 10px */
-            /* --- Optional: Adjust Font Size (relative to parent tab) --- */
-            /* font-size: 0.95em; */ /* Adjust if parent font size changed */
-            margin-bottom: 6px; 
-            background-color: #f9f9fc;
-            border-radius: 6px;
-        }
+    #project-view .sub-tab {
+        margin-left: 20px;
+        padding: 10px 12px; /* Keep increased padding */
+        margin-bottom: 5px; background-color: #f9f9fc;
+        border-radius: 6px;
+        /* --- ADD Minimum Height & Font Size --- */
+        min-height: 40px; /* Force a minimum height (adjust value) */
+        font-size: 0.95em; /* Make text slightly larger */
+    }
         
         #project-view .tab:hover:not(.active), #project-view .sub-tab:hover:not(.active) { background-color: #f0f5ff; border-color: #c4cde0; }
         #project-view .tab.active { background-color: var(--project-primary); color: white; border-color: var(--project-primary); box-shadow: 0 2px 5px rgba(var(--project-primary-rgb), 0.2); font-weight: bold; }
